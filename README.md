@@ -1,5 +1,7 @@
 # @reactions/router
 
+Next generation routing for React.
+
 ## Installation
 
 ```bash
@@ -56,9 +58,9 @@ render(
 );
 ```
 
-### Navigate with Link
+### Navigate With Link
 
-To navigate around the app, render a `Link` somewhere.
+To navigate around the app, render a `Link` somewhere. It doesn’t have to be a child of Router, it can be anywhere.
 
 ```jsx
 render(
@@ -74,17 +76,17 @@ render(
 );
 ```
 
-### Parse data from the URL
+### Parse Data From the URL
 
 If you need to parse the data out of the URL, use a dynamic segment--they start with a `:`. The parsed value will become a prop sent to the matched component.
 
 ```jsx
-// at url "/23"
+// at url "/invoice/23"
 
 render(
   <Router>
     <Home path="/" />
-    <Invoice path=":invoiceId" />
+    <Invoice path="invoice/:invoiceId" />
   </Router>
 );
 
@@ -101,7 +103,7 @@ It's the same as rendering the component directly.
 <Invoice invoiceId={23} />
 ```
 
-### Ambiguous paths and ranking
+### Ambiguous Paths and Ranking
 
 Even though two paths might be ambiguous--like "/:invoiceId" and "/invoices"--Router ranks the paths and renders the one that makes the most sense.
 
@@ -117,7 +119,7 @@ render(
 
 The URL "/invoices" will render `<Invoices/>` and "/123" will render `<Invoice invoiceId={123}/>`. Same thing with the `Home` component. Even though it’s defined first, and every path will match "/", `Home` won't render unless the path is exactly "/". So don't worry about the order of your paths.
 
-### Nested Router children and paths
+### Nested Component Paths
 
 You can nest components inside of a Router, and the paths will nest too. The matched child component will come in as the `children` prop, the same as if you'd rendered it directly. (Internally `Router` just renders another `Router` with a `basepath`, but I digress...)
 
@@ -172,7 +174,7 @@ const Dash = ({ children }) => (
 
 This also makes it trivial to render any section of your app as its own application.
 
-### "Index" paths
+### "Index" Paths
 
 Nested components can use the path `/` to signify they should render
 at the path of the parent component, like an index.html file inside
@@ -191,7 +193,7 @@ render(
 );
 ```
 
-### Not found "default" components
+### Not Found "Default" Components
 
 Put a default prop on a component and Router will render it when nothing else matches.
 
@@ -267,7 +269,7 @@ const Dash = () => (
 
 This allows you to have all of your routes configured at the top of the app, or to configure only where you need them, which is really helpful for code-splitting and very large apps.
 
-### Navigating programmatically
+### Navigating Programmatically
 
 If you need to navigate programmatically (like after a form submits)
 use the `navigate` prop that comes to your component
@@ -335,7 +337,7 @@ class Invoices extends React.Component {
 
 ## React Suspense and Time Slicing Ready
 
-### History stack handling
+### History Stack Handling
 
 With React Suspense a user may click on a link, and while data is loading they may change their mind and click on a different link. The browser navigation history will contain all three entries:
 
@@ -353,7 +355,7 @@ Reactions Router will not add the cancelled page to the history stack, so it wou
 
 Now when the user clicks back, they don’t end up on a page they never even saw. This is how browsers work with plain HTML pages, too.
 
-### Low priority updates
+### Low Priority Updates
 
 Router takes advantage of "Time Slicing" in React . It's very common to hook a user input up to a query string in the URL. Every time the user types, the url updates, and then React rerenders. Router state is given "low priority" so these inputs will not bind the CPU like they would have otherwise.
 
