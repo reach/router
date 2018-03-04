@@ -5,6 +5,7 @@ import warning from "warning";
 import invariant from "invariant";
 import resolveUrl from "resolve-url";
 import Component from "react-component-component";
+const globalHistory = createHistory();
 
 ////////////////////////////////////////////////////////////////////////
 // Public Components
@@ -233,7 +234,7 @@ const shouldNavigate = event =>
 //////////////////////////////////////////////////////////////
 // History management
 
-const createHistory = () => {
+function createHistory() {
   let listeners = [];
   let location = { ...window.location };
   let transitioning = false;
@@ -289,9 +290,7 @@ const createHistory = () => {
       });
     }
   };
-};
-
-const globalHistory = createHistory();
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Path matching/ranking
