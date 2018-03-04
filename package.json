@@ -44,7 +44,10 @@
   },
   "author": "Ryan Florence",
   "license": "MIT",
-  "repository": "https://github.com/reactions/router",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reactions/router.git"
+  },
   "keywords": ["react", "react router"],
   "prettier": {
     "printWidth": 72
@@ -57,5 +60,9 @@
     "react-component-component": "^1.1.2",
     "resolve-url": "0.2.1",
     "warning": "^3.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/reactions/router/issues"
+  },
+  "homepage": "https://github.com/reactions/router#readme"
 }
