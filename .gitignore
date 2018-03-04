@@ -1,0 +1,5 @@
+/es
+/node_modules
+/umd
+/index.js
+npm-debug.log*
