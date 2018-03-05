@@ -41,7 +41,12 @@ const Router = ({ children, basepath = "/" }) => (
                 <BaseUrlContext.Provider value={url}>
                   {cloneElement(
                     element,
-                    { ...params, location, navigate: history.navigate },
+                    {
+                      ...params,
+                      url,
+                      location,
+                      navigate: history.navigate
+                    },
                     element.props.children ? (
                       <Router basepath={`${element.props.path}`}>
                         {element.props.children}
@@ -68,12 +73,13 @@ const Link = ({ to, state, onTransition, ...props }) => (
             <a
               {...props}
               href={href}
-              onClick={async event => {
+              onClick={event => {
                 if (props.onClick) props.onClick(event);
                 if (shouldNavigate(event)) {
                   event.preventDefault();
-                  await navigate({ to: href, state });
-                  onTransition && onTransition();
+                  navigate({ to: href, state }).then(() => {
+                    onTransition && onTransition();
+                  });
                 }
               }}
             />

@@ -36,7 +36,7 @@ ReactionsRouter.Router;
 ReactionsRouter.Link;
 ```
 
-## Take 5 minutes and read this first
+## How To
 
 ### Rendering
 
@@ -246,7 +246,10 @@ render(
 
 ### Nested Routers
 
-You can render a router anywhere you want in your app, even deep inside another Router. All the matching and linking will be relative to all the parents.
+You can render a router anywhere you want in your app, even deep inside another Router.
+
+1.  Use a wildcard path on the parent component so nested paths match it.
+2.  Set the basename in the child router to the `url` of the parent.
 
 ```jsx
 render(
@@ -256,10 +259,10 @@ render(
   </Router>
 );
 
-const Dash = () => (
+const Dash = ({ url }) => (
   <div>
     <p>A nested router</p>
-    <Router>
+    <Router basename={url}>
       <DashboardGraphs path="/" />
       <InvoiceList path="invoices" />
     </Router>
@@ -267,7 +270,7 @@ const Dash = () => (
 );
 ```
 
-This allows you to have all of your routes configured at the top of the app, or to configure only where you need them, which is really helpful for code-splitting and very large apps.
+This allows you to have all of your routes configured at the top of the app, or to configure only where you need them, which is really helpful for code-splitting and very large apps. You can even render `Dash` as an independent application.
 
 ### Navigating Programmatically
 
@@ -358,6 +361,36 @@ Now when the user clicks back, they don’t end up on a page they never even saw
 ### Low Priority Updates
 
 Router takes advantage of "Time Slicing" in React . It's very common to hook a user input up to a query string in the URL. Every time the user types, the url updates, and then React rerenders. Router state is given "low priority" so these inputs will not bind the CPU like they would have otherwise.
+
+## API
+
+```jsx
+<Router basepath={string}>
+  <AnyComponent path={string} />
+  <AnyComponent default />
+  <Redirect from={string} to={string} />
+</Router>
+```
+
+```jsx
+<Link to={url} state={obj} onTransition={fn} {...normalAnchorProps} />
+```
+
+```jsx
+<Match path={string}>
+  {({ match, location, navigate }) => (...)}
+</Match>
+```
+
+```jsx
+<Redirect to={string} />
+```
+
+```jsx
+<Location>
+  {({ location, navigate }) => (...)}
+</Location>
+```
 
 ## Legal
 
