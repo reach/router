@@ -274,11 +274,12 @@ This allows you to have all of your routes configured at the top of the app, or 
 
 ### Navigating Programmatically
 
-If you need to navigate programmatically (like after a form submits)
-use the `navigate` prop that comes to your component
+If you need to navigate programmatically (like after a form submits), import `navigate`.
 
 ```jsx
-const Invoices = ({ navigate }) => (
+import { navigate } from "@reactions/router";
+
+const Invoices = () => (
   <div>
     <NewInvoiceForm
       onSubmit={async event => {
@@ -286,26 +287,6 @@ const Invoices = ({ navigate }) => (
         navigate(`/invoice/${newInvoice.id}`);
       }}
     />
-  </div>
-);
-```
-
-Or get it from context if you're deep in the render tree.
-
-```jsx
-const NotARouterChildComponent = () => (
-  <div>
-    <p>Somewhere deep</p>
-    <Location>
-      {({ navigate }) => (
-        <NewInvoiceForm
-          onSubmit={async event => {
-            const newInvoice = await createInvoice(event.target);
-            navigate(`/invoice/${newInvoice.id}`);
-          }}
-        />
-      )}
-    </Location>
   </div>
 );
 ```
@@ -319,7 +300,6 @@ class Invoices extends React.Component {
   };
 
   render() {
-    const { navigate } = this.props;
     return (
       <div>
         <LoadingBar animate={this.state.creatingNewInvoice} />
@@ -370,7 +350,8 @@ import {
   Link,
   Match,
   Redirect,
-  Location
+  Location,
+  navigate
 } from "@reactions/router";
 ```
 
@@ -383,7 +364,15 @@ import {
 ```
 
 ```jsx
-<Link to={url} state={obj} onTransition={fn} {...normalAnchorProps} />
+<Link to={str} replace={bool} state={obj} {...anchorProps} />
+```
+
+```jsx
+navigate(to);
+navigate({ to, replace, state });
+
+await navigate(...)
+navigate.then(...)
 ```
 
 ```jsx

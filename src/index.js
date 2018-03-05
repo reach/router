@@ -96,7 +96,7 @@ const Match = ({ path, children }) => (
       <Location>
         {location => {
           const match = getMatch(location, { path });
-          return children({ navigate, ...match });
+          return children({ navigate, match, location });
         }}
       </Location>
     )}
@@ -133,25 +133,6 @@ const LocationProvider = ({
   />
 );
 
-const History = ({ children }) => (
-  <HistoryContext.Consumer>
-    {({ navigate }) => (
-      <Location>
-        {location => children({ navigate, location })}
-      </Location>
-    )}
-  </HistoryContext.Consumer>
-);
-
-//////////////////////////////////////////////////////////////
-// Private components
-
-const LocationContext = createContext();
-
-const HistoryContext = createContext(globalHistory);
-
-const BaseUrlContext = React.createContext();
-
 const Location = ({ children }) => (
   <LocationContext.Consumer>
     {location =>
@@ -163,6 +144,17 @@ const Location = ({ children }) => (
     }
   </LocationContext.Consumer>
 );
+
+const navigate = (...args) => globalHistory.navigate(...args);
+
+//////////////////////////////////////////////////////////////
+// Private components
+
+const LocationContext = createContext();
+
+const HistoryContext = createContext(globalHistory);
+
+const BaseUrlContext = React.createContext();
 
 //////////////////////////////////////////////////////////////
 // component utils
@@ -397,4 +389,12 @@ End of Preact Router adaptation
 
 ////////////////////////////////////////////////////////////////////////
 // Exports
-export { Router, Link, Redirect, Match, History, LocationProvider };
+export {
+  Router,
+  Link,
+  Redirect,
+  Match,
+  History,
+  LocationProvider,
+  navigate
+};
