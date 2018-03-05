@@ -1,4 +1,4 @@
-# @reactions/router
+# Reactions Router
 
 Next generation routing for React.
 
@@ -255,7 +255,7 @@ You can render a router anywhere you want in your app, even deep inside another 
 render(
   <Router>
     <Home path="/" />
-    <Dash path="dashboard" />
+    <Dash path="dashboard/*" />
   </Router>
 );
 
@@ -363,6 +363,16 @@ Now when the user clicks back, they don’t end up on a page they never even saw
 Router takes advantage of "Time Slicing" in React . It's very common to hook a user input up to a query string in the URL. Every time the user types, the url updates, and then React rerenders. Router state is given "low priority" so these inputs will not bind the CPU like they would have otherwise.
 
 ## API
+
+```jsx
+import {
+  Router,
+  Link,
+  Match,
+  Redirect,
+  Location
+} from "@reactions/router";
+```
 
 ```jsx
 <Router basepath={string}>
