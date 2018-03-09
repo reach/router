@@ -1,6 +1,7 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
-import React, { Children, createContext, cloneElement } from "react";
-import ReactDOM from "react-dom";
+import React, { Children, cloneElement } from "react";
+import createContext from "create-react-context";
+// import ReactDOM from "react-dom";
 import warning from "warning";
 import invariant from "invariant";
 import resolveUrl from "resolve-url";
@@ -119,11 +120,11 @@ const LocationProvider = ({ history = globalHistory, children }) => (
     }}
     didMount={({ setState, state }) => {
       state.refs.unlisten = history.listen(() => {
-        ReactDOM.unstable_deferredUpdates(() => {
-          setState(() => ({
-            location: { ...history.location }
-          }));
-        });
+        // ReactDOM.unstable_deferredUpdates(() => {
+        setState(() => ({
+          location: { ...history.location }
+        }));
+        // });
       });
     }}
     willUnmout={({ state }) => {
@@ -131,9 +132,11 @@ const LocationProvider = ({ history = globalHistory, children }) => (
     }}
     render={({ state }) => (
       <LocationContext.Provider value={state.location}>
-        {typeof children === "function"
-          ? children(state.location)
-          : children}
+        <HistoryContext.Provider value={history}>
+          {typeof children === "function"
+            ? children(state.location)
+            : children}
+        </HistoryContext.Provider>
       </LocationContext.Provider>
     )}
   />
@@ -160,7 +163,7 @@ const LocationContext = createContext();
 
 const HistoryContext = createContext(globalHistory);
 
-const BaseUrlContext = React.createContext();
+const BaseUrlContext = createContext();
 
 //////////////////////////////////////////////////////////////
 // component utils
@@ -278,7 +281,7 @@ function createHistory(source = window) {
     navigate(pathOrOptions) {
       const args =
         typeof pathOrOptions === "string"
-          ? { path: pathOrOptions }
+          ? { to: pathOrOptions }
           : pathOrOptions;
       const { to, replace = false, state = null } = args;
 
@@ -287,12 +290,14 @@ function createHistory(source = window) {
       } else {
         source.history.pushState(state, null, to);
       }
+
       location = { ...source.location };
       transitioning = true;
-      listeners.forEach(fn => fn());
-      return new Promise(res => {
+      const transition = new Promise(res => {
         resolveTransition = res;
       });
+      listeners.forEach(fn => fn());
+      return transition;
     }
   };
 }

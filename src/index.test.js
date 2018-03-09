@@ -24,18 +24,27 @@ const Reports = ({ children }) => (
 const ANNUAL_REPORT_TEXT = "Annual";
 const AnnualReport = () => <div>{ANNUAL_REPORT_TEXT}</div>;
 
+const Group = ({ groupId, children }) => (
+  <div>
+    {groupId} {children}
+  </div>
+);
+
 ////////////////////////////////////////////////////////////////////////////////
 
 const createHistorySource = initialPathname => {
   let listeners = [];
+  let location = { pathname: initialPathname };
 
   function notify() {
-    listeners.foreach(fn => fn());
+    listeners.forEach(fn => fn());
   }
 
   return {
-    location: {
-      pathname: initialPathname
+    testHistory: true,
+
+    get location() {
+      return location;
     },
     addEventListener(name, fn) {
       if (name === "popstate") {
@@ -47,13 +56,13 @@ const createHistorySource = initialPathname => {
         listeners = listeners.filter(listener => fn !== listener);
       }
     },
-    pushState(_, __, pathname) {
-      this.location = { pathname };
-      notify();
-    },
-    replaceState(_, __, pathname) {
-      this.location = { pathname };
-      notify();
+    history: {
+      pushState(_, __, pathname) {
+        location = { pathname };
+      },
+      replaceState(_, __, pathname) {
+        location = { pathname };
+      }
     }
   };
 };
@@ -70,11 +79,37 @@ const render = ({ pathname = "/", element }) => {
   return Promise.resolve(div);
 };
 
+const snapshot = ({ pathname, element }) => {
+  const testHistory = createHistory(createHistorySource(pathname));
+  const result = renderer.create(
+    <LocationProvider history={testHistory}>{element}</LocationProvider>
+  );
+  const tree = result.toJSON();
+  expect(tree).toMatchSnapshot();
+};
+
+function runWithNavigation(element, pathname = "/") {
+  const testHistory = createHistory(createHistorySource(pathname));
+  const div = document.createElement("div");
+  document.body.appendChild(div);
+  ReactDOM.render(
+    <LocationProvider history={testHistory}>
+      {element}
+    </LocationProvider>,
+    div
+  );
+
+  const snapshot = string => {
+    expect(div.innerHTML).toBe(string);
+  };
+  return { navigate: testHistory.navigate, snapshot };
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Okay finally some assertions
 
-it("renders a root path component", async () => {
-  const node = await render({
+it("renders a root path component", () => {
+  snapshot({
     pathname: "/",
     element: (
       <Router>
@@ -82,11 +117,10 @@ it("renders a root path component", async () => {
       </Router>
     )
   });
-  expect(node.innerHTML).toContain(HOME_TEXT);
 });
 
-it("renders a more specific path", async () => {
-  const node = await render({
+it("renders a more specific path", () => {
+  snapshot({
     pathname: "/dashboard",
     element: (
       <Router>
@@ -95,12 +129,10 @@ it("renders a more specific path", async () => {
       </Router>
     )
   });
-  expect(node.innerHTML).toContain(DASH_TEXT);
-  expect(node.innerHTML).not.toContain(HOME_TEXT);
 });
 
-it("renders a nested path", async () => {
-  const node = await render({
+it("renders a nested path", () => {
+  snapshot({
     pathname: "/dash/reports",
     element: (
       <Router>
@@ -111,13 +143,10 @@ it("renders a nested path", async () => {
       </Router>
     )
   });
-  expect(node.innerHTML).toContain(DASH_TEXT);
-  expect(node.innerHTML).toContain(REPORTS_TEXT);
-  expect(node.innerHTML).not.toContain(HOME_TEXT);
 });
 
-it("renders a really nested path", async () => {
-  const node = await render({
+it("renders a really nested path", () => {
+  snapshot({
     pathname: "/dash/reports/annual",
     element: (
       <Router>
@@ -130,38 +159,13 @@ it("renders a really nested path", async () => {
       </Router>
     )
   });
-  expect(node.innerHTML).not.toContain(HOME_TEXT);
-  expect(node.innerHTML).toContain(DASH_TEXT);
-  expect(node.innerHTML).toContain(REPORTS_TEXT);
-  expect(node.innerHTML).toContain(ANNUAL_REPORT_TEXT);
 });
 
-it("renders a really nested path", async () => {
-  const node = await render({
-    pathname: "/dash/reports/annual",
-    element: (
-      <Router>
-        <Home path="/" />
-        <Dash path="dash">
-          <Reports path="reports">
-            <AnnualReport path="annual" />
-          </Reports>
-        </Dash>
-      </Router>
-    )
-  });
-
-  expect(node.innerHTML).not.toContain(HOME_TEXT);
-  expect(node.innerHTML).toContain(DASH_TEXT);
-  expect(node.innerHTML).toContain(REPORTS_TEXT);
-  expect(node.innerHTML).toContain(ANNUAL_REPORT_TEXT);
-});
-
-it("parses params as component props", async () => {
+it("parses params as component props", () => {
   const USER_ID = "ryan";
   const User = ({ id }) => <div>{id}</div>;
 
-  const node = await render({
+  snapshot({
     pathname: `/users/${USER_ID}`,
     element: (
       <Router>
@@ -169,11 +173,9 @@ it("parses params as component props", async () => {
       </Router>
     )
   });
-
-  expect(node.innerHTML).toContain(USER_ID);
 });
 
-it("parses multiple params as component props", async () => {
+it("parses multiple params as component props", () => {
   const USER_ID = "ryan";
   const GROUP_ID = "party-pooper";
   const User = ({ userId, groupId }) => (
@@ -182,7 +184,7 @@ it("parses multiple params as component props", async () => {
     </div>
   );
 
-  const node = await render({
+  snapshot({
     pathname: `/${GROUP_ID}/user/${USER_ID}`,
     element: (
       <Router>
@@ -190,22 +192,14 @@ it("parses multiple params as component props", async () => {
       </Router>
     )
   });
-
-  expect(node.innerHTML).toContain(USER_ID);
-  expect(node.innerHTML).toContain(GROUP_ID);
 });
 
-it("parses multiple params when nested", async () => {
+it("parses multiple params when nested", () => {
   const USER_ID = "ryan";
   const GROUP_ID = "party-pooper";
-  const Group = ({ groupId, children }) => (
-    <div>
-      {groupId} {children}
-    </div>
-  );
-  const User = ({ userId }) => <div> {userId} </div>;
+  const User = ({ userId }) => <div>{userId}</div>;
 
-  const node = await render({
+  snapshot({
     pathname: `/group/${GROUP_ID}/user/${USER_ID}`,
     element: (
       <Router>
@@ -215,35 +209,131 @@ it("parses multiple params when nested", async () => {
       </Router>
     )
   });
-
-  expect(node.innerHTML).toContain(USER_ID);
-  expect(node.innerHTML).toContain(GROUP_ID);
 });
 
-const snapshot = ({ pathname, element }) => {
-  const testHistory = createHistory(createHistorySource(pathname));
-  const tree = renderer
-    .create(
-      <LocationProvider history={testHistory}>
-        {element}
-      </LocationProvider>
+it("shadows params in nested paths", () => {
+  snapshot({
+    pathname: `/groups/burger/groups/milkshake`,
+    element: (
+      <Router>
+        <Group path="groups/:groupId">
+          <Group path="groups/:groupId" />
+        </Group>
+      </Router>
     )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
-};
+  });
+});
 
-it.only("what does it do with the same param?", async () => {
-  const GROUP_ID = "burger";
-  const GROUP_ID_2 = "milkshake";
+it("selects a static path over a dynamic segment", () => {
+  snapshot({
+    pathname: `/home`,
+    element: (
+      <Router>
+        <Group path=":groupId" />
+        <Home path="home" />
+      </Router>
+    )
+  });
+});
 
-  const Group = ({ groupId, children }) => (
+it("selects a static path over a dynamic segment", () => {
+  snapshot({
+    pathname: `/home`,
+    element: (
+      <Router>
+        <Group path=":groupId" />
+        <Home path="home" />
+      </Router>
+    )
+  });
+});
+
+it("allows arbitrary Router nesting", () => {
+  const Chat = ({ url }) => (
     <div>
-      {groupId} {children}
+      Home
+      <ChatApp basepath={url} />
     </div>
   );
 
+  const ChatApp = ({ basepath }) => (
+    <Router basepath={basepath}>
+      <ChatHome path="/" />
+    </Router>
+  );
+
+  const ChatHome = ({ url }) => <div>Chat Home</div>;
+
   snapshot({
-    pathname: `/groups/${GROUP_ID}/groups/${GROUP_ID_2}`,
-    element: <div>Hello</div>
+    pathname: `/chat`,
+    element: (
+      <Router>
+        <Chat path="/chat" />
+      </Router>
+    )
   });
+});
+
+it("matches on specificity", () => {
+  const Groups = ({ children }) => <div>Groups {children}</div>;
+  const Group = ({ groupId, children }) => (
+    <div>
+      Group: {groupId} {children}
+    </div>
+  );
+  const Users = ({ children }) => <div>Users {children}</div>;
+  const User = ({ userId, children }) => (
+    <div>
+      User: {userId} {children}
+    </div>
+  );
+
+  const Winner = () => <div>Yes I am</div>;
+
+  const element = (
+    <Router>
+      <Home path="/" />
+      <Groups path="groups">
+        <Group path=":groupId">
+          <Users path="users">
+            <User path=":userId" />
+          </Users>
+        </Group>
+      </Groups>
+      <Groups path="groups">
+        <Group path="mine">
+          <Users path="users">
+            <User path="me" />
+          </Users>
+        </Group>
+      </Groups>
+      <Winner path="groups/gonna/users/win" />
+    </Router>
+  );
+
+  snapshot({ element, pathname: "/" });
+
+  snapshot({ element, pathname: "/groups" });
+  snapshot({ element, pathname: "/groups/123" });
+  snapshot({ element, pathname: "/groups/123/users" });
+  snapshot({ element, pathname: "/groups/123/users/abc" });
+  snapshot({ element, pathname: "/groups/mine/users/me" });
+
+  snapshot({ element, pathname: "/groups/mine" });
+  snapshot({ element, pathname: "/groups/mine/users" });
+  snapshot({ element, pathname: "/groups/mine/users/me" });
+
+  snapshot({ element, pathname: "/groups/gonna/users/win" });
+});
+
+it.only("transitions pages", async () => {
+  const { snapshot, navigate } = runWithNavigation(
+    <Router>
+      <Home path="/" />
+      <Reports path="reports" />
+    </Router>
+  );
+  snapshot("<div>Home</div>");
+  await navigate("/reports");
+  snapshot("<div>Reports </div>");
 });

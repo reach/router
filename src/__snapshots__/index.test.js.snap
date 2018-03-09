@@ -1,9 +1,220 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`what does it do with the same param? 1`] = `
+exports[`allows arbitrary Router nesting 1`] = `
 <div>
+  Home
   <div>
-    Hello
+    Chat Home
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 1`] = `
+<div>
+  Home
+</div>
+`;
+
+exports[`matches on specificity 2`] = `
+<div>
+  Groups 
+</div>
+`;
+
+exports[`matches on specificity 3`] = `
+<div>
+  Groups 
+  <div>
+    Group: 
+    123
+     
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 4`] = `
+<div>
+  Groups 
+  <div>
+    Group: 
+    123
+     
+    <div>
+      Users 
+    </div>
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 5`] = `
+<div>
+  Groups 
+  <div>
+    Group: 
+    123
+     
+    <div>
+      Users 
+      <div>
+        User: 
+        abc
+         
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 6`] = `
+<div>
+  Groups 
+  <div>
+    Group: 
+    mine
+     
+    <div>
+      Users 
+      <div>
+        User: 
+        me
+         
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 7`] = `
+<div>
+  Groups 
+  <div>
+    Group: 
+    mine
+     
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 8`] = `
+<div>
+  Groups 
+  <div>
+    Group: 
+    mine
+     
+    <div>
+      Users 
+    </div>
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 9`] = `
+<div>
+  Groups 
+  <div>
+    Group: 
+    mine
+     
+    <div>
+      Users 
+      <div>
+        User: 
+        me
+         
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`matches on specificity 10`] = `
+<div>
+  Yes I am
+</div>
+`;
+
+exports[`parses multiple params as component props 1`] = `
+<div>
+  ryan
+   
+  party-pooper
+</div>
+`;
+
+exports[`parses multiple params when nested 1`] = `
+<div>
+  party-pooper
+   
+  <div>
+    ryan
+  </div>
+</div>
+`;
+
+exports[`parses params as component props 1`] = `
+<div>
+  ryan
+</div>
+`;
+
+exports[`renders a more specific path 1`] = `
+<div>
+  Dashboard
+   
+</div>
+`;
+
+exports[`renders a nested path 1`] = `
+<div>
+  Dashboard
+   
+  <div>
+    Reports
+     
+  </div>
+</div>
+`;
+
+exports[`renders a really nested path 1`] = `
+<div>
+  Dashboard
+   
+  <div>
+    Reports
+     
+    <div>
+      Annual
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders a root path component 1`] = `
+<div>
+  Home
+</div>
+`;
+
+exports[`selects a static path over a dynamic segment 1`] = `
+<div>
+  Home
+</div>
+`;
+
+exports[`selects a static path over a dynamic segment 2`] = `
+<div>
+  Home
+</div>
+`;
+
+exports[`shadows params in nested paths 1`] = `
+<div>
+  burger
+   
+  <div>
+    milkshake
+     
   </div>
 </div>
 `;
