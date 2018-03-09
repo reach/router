@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`what does it do with the same param? 1`] = `
+<div>
+  <div>
+    Hello
+  </div>
+</div>
+`;

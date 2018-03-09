@@ -10,7 +10,8 @@
     "umd"
   ],
   "scripts": {
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "test": "jest **/*.test.js"
   },
   "peerDependencies": {
     "react": "16.4.0-alpha.0911da3",
@@ -33,10 +34,12 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
     "gzip-size": "^4.1.0",
+    "jest": "^22.4.2",
     "prettier": "^1.10.2",
     "pretty-bytes": "^4.0.2",
     "react": "16.4.0-alpha.0911da3",
     "react-dom": "16.4.0-alpha.0911da3",
+    "react-test-renderer": "^16.2.0",
     "render-markdown-js": "^1.3.0",
     "rollup": "^0.56.3",
     "rollup-plugin-babel": "^3.0.3",
@@ -63,8 +66,8 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "@reactions/component": "^2.0.2",
     "invariant": "^2.2.3",
-    "react-component-component": "^1.1.2",
     "resolve-url": "0.2.1",
     "warning": "^3.0.0"
   },

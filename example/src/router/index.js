@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import warning from "warning";
 import invariant from "invariant";
 import resolveUrl from "resolve-url";
-import Component from "@reactions/component";
+import Component from "react-component-component";
 const globalHistory = createHistory();
 
 ////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,7 @@ const Router = ({ children, basepath = "/" }) => (
                       navigate: history.navigate
                     },
                     element.props.children ? (
-                      <Router
-                        basepath={`${match.path.replace(/\/\*$/, "")}`}
-                      >
+                      <Router basepath={`${element.props.path}`}>
                         {element.props.children}
                       </Router>
                     ) : null
@@ -111,7 +109,10 @@ const Redirect = ({ to }) => (
   </Location>
 );
 
-const LocationProvider = ({ history = globalHistory, children }) => (
+const LocationProvider = ({
+  history = globalHistory,
+  children = null
+}) => (
   <Component
     initialState={{
       location: { ...history.location },
@@ -194,6 +195,7 @@ const makeRouteFromChild = basepath => child => {
 };
 
 const getMatchingRoute = (location, routes) => {
+  debugger;
   let result = null;
   rankRoutes(routes)
     .sort(pathRankSort)
@@ -239,9 +241,9 @@ const shouldNavigate = event =>
 //////////////////////////////////////////////////////////////
 // History management
 
-function createHistory(source = window) {
+function createHistory() {
   let listeners = [];
-  let location = { ...source.location };
+  let location = { ...window.location };
   let transitioning = false;
   let resolveTransition = null;
 
@@ -263,14 +265,14 @@ function createHistory(source = window) {
       listeners.push(listener);
 
       const popstateListener = () => {
-        location = { ...source.location };
+        location = { ...window.location };
         listener();
       };
 
-      source.addEventListener("popstate", popstateListener);
+      window.addEventListener("popstate", popstateListener);
 
       return () => {
-        source.removeEventListener("popstate", popstateListener);
+        window.removeEventListener("popstate", popstateListener);
         listeners = listeners.filter(fn => fn !== listener);
       };
     },
@@ -283,11 +285,11 @@ function createHistory(source = window) {
       const { to, replace = false, state = null } = args;
 
       if (transitioning || replace) {
-        source.history.replaceState(state, null, to);
+        window.history.replaceState(state, null, to);
       } else {
-        source.history.pushState(state, null, to);
+        window.history.pushState(state, null, to);
       }
-      location = { ...source.location };
+      location = { ...window.location };
       transitioning = true;
       listeners.forEach(fn => fn());
       return new Promise(res => {
@@ -403,6 +405,5 @@ export {
   Match,
   History,
   LocationProvider,
-  createHistory,
   navigate
 };
