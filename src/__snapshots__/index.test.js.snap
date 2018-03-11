@@ -9,6 +9,12 @@ exports[`allows arbitrary Router nesting 1`] = `
 </div>
 `;
 
+exports[`keeps the stack right on interrupted transitions 1`] = `
+<div>
+  Annual
+</div>
+`;
+
 exports[`matches on specificity 1`] = `
 <div>
   Home
@@ -216,5 +222,18 @@ exports[`shadows params in nested paths 1`] = `
     milkshake
      
   </div>
+</div>
+`;
+
+exports[`transitions pages 1`] = `
+<div>
+  Home
+</div>
+`;
+
+exports[`transitions pages 2`] = `
+<div>
+  Reports
+   
 </div>
 `;

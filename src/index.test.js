@@ -1,8 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Component from "@reactions/component";
-import { Router, LocationProvider, createHistory } from "./index";
+import { Router, LocationProvider, createHistory, Link } from "./index";
 import renderer from "react-test-renderer";
+import Enzyme, { mount } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 const HOME_TEXT = "Home";
 const Home = () => <div>{HOME_TEXT}</div>;
@@ -33,76 +36,67 @@ const Group = ({ groupId, children }) => (
 ////////////////////////////////////////////////////////////////////////////////
 
 const createHistorySource = initialPathname => {
-  let listeners = [];
-  let location = { pathname: initialPathname };
-
-  function notify() {
-    listeners.forEach(fn => fn());
-  }
+  let index = 0;
+  let stack = [{ pathname: initialPathname }];
+  let states = [];
 
   return {
-    testHistory: true,
-
     get location() {
-      return location;
+      return stack[index];
     },
-    addEventListener(name, fn) {
-      if (name === "popstate") {
-        listeners.push(fn);
-      }
-    },
-    removeEventListener(name, fn) {
-      if (name === "popstate") {
-        listeners = listeners.filter(listener => fn !== listener);
-      }
-    },
+    addEventListener(name, fn) {},
+    removeEventListener(name, fn) {},
     history: {
-      pushState(_, __, pathname) {
-        location = { pathname };
+      get entries() {
+        return stack;
       },
-      replaceState(_, __, pathname) {
-        location = { pathname };
+      get index() {
+        return index;
+      },
+      get state() {
+        return states[index];
+      },
+      pushState(state, _, pathname) {
+        index++;
+        stack.push({ pathname });
+        states.push(state);
+      },
+      replaceState(state, _, pathname) {
+        stack[index] = { pathname };
+        states[index] = state;
       }
     }
   };
 };
 
-const render = ({ pathname = "/", element }) => {
-  const testHistory = createHistory(createHistorySource(pathname));
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <LocationProvider history={testHistory}>
-      {element}
-    </LocationProvider>,
-    div
-  );
-  return Promise.resolve(div);
-};
-
 const snapshot = ({ pathname, element }) => {
   const testHistory = createHistory(createHistorySource(pathname));
-  const result = renderer.create(
+  const wrapper = renderer.create(
     <LocationProvider history={testHistory}>{element}</LocationProvider>
   );
-  const tree = result.toJSON();
+  const tree = wrapper.toJSON();
   expect(tree).toMatchSnapshot();
 };
 
 function runWithNavigation(element, pathname = "/") {
-  const testHistory = createHistory(createHistorySource(pathname));
-  const div = document.createElement("div");
-  document.body.appendChild(div);
-  ReactDOM.render(
-    <LocationProvider history={testHistory}>
-      {element}
-    </LocationProvider>,
-    div
+  const history = createHistory(createHistorySource(pathname));
+  const wrapper = renderer.create(
+    <LocationProvider history={history}>{element}</LocationProvider>
   );
 
   const snapshot = string => {
-    expect(div.innerHTML).toBe(string);
+    expect(wrapper.toJSON()).toMatchSnapshot();
   };
-  return { navigate: testHistory.navigate, snapshot };
+
+  return { history, snapshot, wrapper };
+}
+
+function runInDOM(element, pathname) {
+  const history = createHistory(createHistorySource(pathname));
+  const wrapper = mount(
+    <LocationProvider history={history}>{element}</LocationProvider>
+  );
+  return { wrapper, history };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -326,14 +320,62 @@ it("matches on specificity", () => {
   snapshot({ element, pathname: "/groups/gonna/users/win" });
 });
 
-it.only("transitions pages", async () => {
-  const { snapshot, navigate } = runWithNavigation(
+it("transitions pages", async () => {
+  const { snapshot, history: { navigate } } = runWithNavigation(
     <Router>
       <Home path="/" />
       <Reports path="reports" />
     </Router>
   );
-  snapshot("<div>Home</div>");
+  snapshot();
   await navigate("/reports");
-  snapshot("<div>Reports </div>");
+  snapshot();
+});
+
+it("keeps the stack right on interrupted transitions", async () => {
+  const {
+    snapshot,
+    history,
+    history: { navigate }
+  } = runWithNavigation(
+    <Router>
+      <Home path="/" />
+      <Reports path="reports" />
+      <AnnualReport path="annual-report" />
+    </Router>
+  );
+  navigate("/reports");
+  await navigate("/annual-report");
+  snapshot();
+  expect(history.index === 1);
+});
+
+it.skip("supports relative links", async () => {
+  // something is up with jsdom (maybe), relative links work in the browser,
+  // but the href doesn't resolve correctly in here, will look into later
+  const Reports = () => (
+    <div>
+      <Link to="annual-report">Annual Report</Link>
+    </div>
+  );
+
+  const { wrapper, history } = runInDOM(
+    <Router>
+      <Home path="/" />
+      <Reports path="reports">
+        <AnnualReport path="annual-report" />
+      </Reports>
+    </Router>,
+    "/reports"
+  );
+  expect(wrapper.html()).toEqual(
+    '<div><a href="annual-report">Annual Report</a></div>'
+  );
+  await new Promise(res => {
+    history.listen(res);
+    wrapper.find("a").simulate("click", { button: 0 });
+  });
+  expect(wrapper.html()).toEqual(
+    '<div><a href="annual-report">Annual Report</a></div>'
+  );
 });

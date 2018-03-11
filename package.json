@@ -27,6 +27,8 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.18.2",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.34.1",
@@ -70,6 +72,7 @@
     "@reactions/component": "^2.0.2",
     "create-react-context": "^0.2.1",
     "invariant": "^2.2.3",
+    "react-test-utils": "^0.0.1",
     "resolve-url": "0.2.1",
     "warning": "^3.0.0"
   },
