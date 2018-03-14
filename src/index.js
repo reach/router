@@ -8,13 +8,10 @@ import resolveUrl from "resolve-url";
 import Component from "@reactions/component";
 const globalHistory = createHistory();
 
-console.log(React.version, "please");
+let { createContext } = React;
 
-if (!React.createContext) {
-  console.log("did not find");
-  React.createContext = createContextPolyfill;
-} else {
-  console.log("found!");
+if (createContext === undefined) {
+  createContext = createContextPolyfill;
 }
 
 ////////////////////////////////////////////////////////////////////////
