@@ -1,11 +1,20 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
-import React, { Children, createContext, cloneElement } from "react";
+import React, { Children, cloneElement } from "react";
+import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
 import warning from "warning";
 import invariant from "invariant";
 import resolveUrl from "resolve-url";
-import Component from "react-component-component";
+import Component from "@reactions/component";
 const globalHistory = createHistory();
+
+if (!React.createContext) {
+  React.createContext = createContextPolyfill;
+}
+
+if (!ReactDOM.unstable_deferredUpdates) {
+  ReactDOM.unstable_deferredUpdates = fn => fn();
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Public Components
@@ -48,7 +57,9 @@ const Router = ({ children, basepath = "/" }) => (
                       navigate: history.navigate
                     },
                     element.props.children ? (
-                      <Router basepath={`${element.props.path}`}>
+                      <Router
+                        basepath={`${match.path.replace(/\/\*$/, "")}`}
+                      >
                         {element.props.children}
                       </Router>
                     ) : null
@@ -109,10 +120,7 @@ const Redirect = ({ to }) => (
   </Location>
 );
 
-const LocationProvider = ({
-  history = globalHistory,
-  children = null
-}) => (
+const LocationProvider = ({ history = globalHistory, children }) => (
   <Component
     initialState={{
       location: { ...history.location },
@@ -132,9 +140,11 @@ const LocationProvider = ({
     }}
     render={({ state }) => (
       <LocationContext.Provider value={state.location}>
-        {typeof children === "function"
-          ? children(state.location)
-          : children}
+        <HistoryContext.Provider value={history}>
+          {typeof children === "function"
+            ? children(state.location)
+            : children}
+        </HistoryContext.Provider>
       </LocationContext.Provider>
     )}
   />
@@ -157,9 +167,9 @@ const navigate = (...args) => globalHistory.navigate(...args);
 //////////////////////////////////////////////////////////////
 // Private components
 
-const LocationContext = createContext();
+const LocationContext = React.createContext();
 
-const HistoryContext = createContext(globalHistory);
+const HistoryContext = React.createContext(globalHistory);
 
 const BaseUrlContext = React.createContext();
 
@@ -195,7 +205,6 @@ const makeRouteFromChild = basepath => child => {
 };
 
 const getMatchingRoute = (location, routes) => {
-  debugger;
   let result = null;
   rankRoutes(routes)
     .sort(pathRankSort)
@@ -241,9 +250,9 @@ const shouldNavigate = event =>
 //////////////////////////////////////////////////////////////
 // History management
 
-function createHistory() {
+function createHistory(source = window) {
   let listeners = [];
-  let location = { ...window.location };
+  let location = { ...source.location };
   let transitioning = false;
   let resolveTransition = null;
 
@@ -265,14 +274,14 @@ function createHistory() {
       listeners.push(listener);
 
       const popstateListener = () => {
-        location = { ...window.location };
+        location = { ...source.location };
         listener();
       };
 
-      window.addEventListener("popstate", popstateListener);
+      source.addEventListener("popstate", popstateListener);
 
       return () => {
-        window.removeEventListener("popstate", popstateListener);
+        source.removeEventListener("popstate", popstateListener);
         listeners = listeners.filter(fn => fn !== listener);
       };
     },
@@ -280,21 +289,23 @@ function createHistory() {
     navigate(pathOrOptions) {
       const args =
         typeof pathOrOptions === "string"
-          ? { path: pathOrOptions }
+          ? { to: pathOrOptions }
           : pathOrOptions;
       const { to, replace = false, state = null } = args;
 
       if (transitioning || replace) {
-        window.history.replaceState(state, null, to);
+        source.history.replaceState(state, null, to);
       } else {
-        window.history.pushState(state, null, to);
+        source.history.pushState(state, null, to);
       }
-      location = { ...window.location };
+
+      location = { ...source.location };
       transitioning = true;
-      listeners.forEach(fn => fn());
-      return new Promise(res => {
+      const transition = new Promise(res => {
         resolveTransition = res;
       });
+      listeners.forEach(fn => fn());
+      return transition;
     }
   };
 }
@@ -405,5 +416,6 @@ export {
   Match,
   History,
   LocationProvider,
+  createHistory,
   navigate
 };
