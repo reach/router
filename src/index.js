@@ -1,12 +1,21 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
 import React, { Children, cloneElement } from "react";
-import createContext from "create-react-context";
+import createContextPolyfill from "create-react-context";
 // import ReactDOM from "react-dom";
 import warning from "warning";
 import invariant from "invariant";
 import resolveUrl from "resolve-url";
 import Component from "@reactions/component";
 const globalHistory = createHistory();
+
+console.log(React.version, "please");
+
+if (!React.createContext) {
+  console.log("did not find");
+  React.createContext = createContextPolyfill;
+} else {
+  console.log("found!");
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Public Components
@@ -159,11 +168,11 @@ const navigate = (...args) => globalHistory.navigate(...args);
 //////////////////////////////////////////////////////////////
 // Private components
 
-const LocationContext = createContext();
+const LocationContext = React.createContext();
 
-const HistoryContext = createContext(globalHistory);
+const HistoryContext = React.createContext(globalHistory);
 
-const BaseUrlContext = createContext();
+const BaseUrlContext = React.createContext();
 
 //////////////////////////////////////////////////////////////
 // component utils

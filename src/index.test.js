@@ -2,10 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Router, LocationProvider, createHistory, Link } from "./index";
 import renderer from "react-test-renderer";
-import Enzyme, { mount } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-
-Enzyme.configure({ adapter: new Adapter() });
+// import Enzyme, { mount } from "enzyme";
+// import Adapter from "enzyme-adapter-react-16";
+// Enzyme.configure({ adapter: new Adapter() });
 
 const HOME_TEXT = "Home";
 const Home = () => <div>{HOME_TEXT}</div>;
@@ -91,13 +90,13 @@ function runWithNavigation(element, pathname = "/") {
   return { history, snapshot, wrapper };
 }
 
-function runInDOM(element, pathname) {
-  const history = createHistory(createHistorySource(pathname));
-  const wrapper = mount(
-    <LocationProvider history={history}>{element}</LocationProvider>
-  );
-  return { wrapper, history };
-}
+// function runInDOM(element, pathname) {
+//   const history = createHistory(createHistorySource(pathname));
+//   const wrapper = mount(
+//     <LocationProvider history={history}>{element}</LocationProvider>
+//   );
+//   return { wrapper, history };
+// }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Okay finally some assertions
@@ -353,29 +352,28 @@ it("keeps the stack right on interrupted transitions", async () => {
 it.skip("supports relative links", async () => {
   // something is up with jsdom (maybe), relative links work in the browser,
   // but the href doesn't resolve correctly in here, will look into later
-  const Reports = () => (
-    <div>
-      <Link to="annual-report">Annual Report</Link>
-    </div>
-  );
-
-  const { wrapper, history } = runInDOM(
-    <Router>
-      <Home path="/" />
-      <Reports path="reports">
-        <AnnualReport path="annual-report" />
-      </Reports>
-    </Router>,
-    "/reports"
-  );
-  expect(wrapper.html()).toEqual(
-    '<div><a href="annual-report">Annual Report</a></div>'
-  );
-  await new Promise(res => {
-    history.listen(res);
-    wrapper.find("a").simulate("click", { button: 0 });
-  });
-  expect(wrapper.html()).toEqual(
-    '<div><a href="annual-report">Annual Report</a></div>'
-  );
+  // const Reports = () => (
+  //   <div>
+  //     <Link to="annual-report">Annual Report</Link>
+  //   </div>
+  // );
+  // const { wrapper, history } = runInDOM(
+  //   <Router>
+  //     <Home path="/" />
+  //     <Reports path="reports">
+  //       <AnnualReport path="annual-report" />
+  //     </Reports>
+  //   </Router>,
+  //   "/reports"
+  // );
+  // expect(wrapper.html()).toEqual(
+  //   '<div><a href="annual-report">Annual Report</a></div>'
+  // );
+  // await new Promise(res => {
+  //   history.listen(res);
+  //   wrapper.find("a").simulate("click", { button: 0 });
+  // });
+  // expect(wrapper.html()).toEqual(
+  //   '<div><a href="annual-report">Annual Report</a></div>'
+  // );
 });

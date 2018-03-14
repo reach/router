@@ -4,11 +4,7 @@
   "description": "Next generation Routing for React.",
   "main": "index.js",
   "module": "es/index.js",
-  "files": [
-    "es",
-    "index.js",
-    "umd"
-  ],
+  "files": ["es", "index.js", "umd"],
   "scripts": {
     "build": "node build/build.js",
     "test": "jest **/*.test.js"
@@ -40,8 +36,6 @@
     "prettier": "^1.10.2",
     "pretty-bytes": "^4.0.2",
     "prop-types": "^15.6.1",
-    "react": "16",
-    "react-dom": "16",
     "react-test-renderer": "16",
     "render-markdown-js": "^1.3.0",
     "rollup": "^0.56.3",
@@ -58,10 +52,7 @@
     "type": "git",
     "url": "git+https://github.com/reactions/router.git"
   },
-  "keywords": [
-    "react",
-    "react router"
-  ],
+  "keywords": ["react", "react router"],
   "prettier": {
     "printWidth": 72
   },
@@ -72,7 +63,6 @@
     "@reactions/component": "^2.0.2",
     "create-react-context": "^0.2.1",
     "invariant": "^2.2.3",
-    "react-test-utils": "^0.0.1",
     "resolve-url": "0.2.1",
     "warning": "^3.0.0"
   },
