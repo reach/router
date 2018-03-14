@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from "react";
-import { SimpleCache, createResource } from "simple-cache-provider";
+import { createResource } from "simple-cache-provider";
 import withCache from "./withCache";
 
 function loadImage(src) {

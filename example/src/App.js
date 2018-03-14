@@ -1,5 +1,8 @@
-import React from "react";
-import { Router, Link } from "./Router";
+// Fast network always
+// slow initial load
+// show loading quickly on initial load, don't show top level placeholder on navigation
+import React, { Fragment, Loading, Timeout } from "react";
+import { Router, Link, navigate } from "./Router";
 import {
   login,
   readContacts,
@@ -10,6 +13,8 @@ import withCache from "./withCache";
 import Img from "./Img";
 import Component from "@reactions/component";
 
+console.log("", React.version);
+
 const Contacts = withCache(({ cache, children }) => {
   const { contacts } = readContacts(cache);
 
@@ -17,12 +22,13 @@ const Contacts = withCache(({ cache, children }) => {
     <div>
       <h1>Contacts</h1>
       <p>
-        <Link to="new">New Contact</Link>
+        <Link to="contact/new">New Contact</Link> |{" "}
+        <Link to="/">Home</Link>
       </p>
       <ul>
         {contacts.map(contact => (
           <li key={contact.id}>
-            <Link to={contact.id}>{contact.first}</Link>
+            <Link to={`contact/${contact.id}`}>{contact.first}</Link>
           </li>
         ))}
       </ul>
@@ -31,14 +37,22 @@ const Contacts = withCache(({ cache, children }) => {
   );
 });
 
-const Card = withCache(({ cache, id }) => {
-  const { contact } = readContact(cache, id);
+const Card = withCache(({ cache, id, children }) => {
+  const result = readContact(cache, id);
+  if (!result.contact) {
+    return result.status === 404 ? <NotFound /> : <Error />;
+  }
+  const { contact } = result;
   return (
     <div>
       <h2>
         {contact.first} {contact.last}
       </h2>
+      <p>
+        <Link to="whatever">Whatever</Link>
+      </p>
       <Img src={contact.avatar} height="200" />
+      {children}
     </div>
   );
 });
@@ -65,12 +79,24 @@ const Field = ({ title }) => (
   </label>
 );
 
+const CreateStates = {
+  IDLE: 0,
+  SAVING: 1,
+  ERROR: 2
+};
+
 const Create = withCache(({ cache }) => (
-  <Component initialState={{ error: null }}>
+  <Component
+    initialState={{
+      state: CreateStates.IDLE,
+      error: null
+    }}
+  >
     {({ setState, state }) => (
       <form
         onSubmit={async event => {
           event.preventDefault();
+          setState(() => ({ state: CreateStates.SAVING }));
           const form = event.target;
           const contact = {
             first: form.elements[0].value || "Noname",
@@ -80,9 +106,9 @@ const Create = withCache(({ cache }) => (
               .toString(32)
               .substr(2, 8)
           };
-          await createContact(contact);
-          // cache.invalidate();
-          form.reset();
+          const res = await createContact(contact);
+          cache.invalidate(); // refetches data
+          navigate(`/contacts/${res.contact.id}`);
         }}
       >
         <p>
@@ -91,6 +117,7 @@ const Create = withCache(({ cache }) => (
           <Field title="Avatar URL" />
         </p>
         <button
+          disabled={state.state === CreateStates.SAVING}
           type="submit"
           style={{
             margin: "10px 0",
@@ -135,17 +162,46 @@ const Create = withCache(({ cache }) => (
   </Component>
 ));
 
+const NotFound = () => <div>Sorry, nothing here.</div>;
+const Error = () => <div>Sorry, something's wrong on the server.</div>;
+// const Whatever = props => <pre>{JSON.stringify(props, null, 2)}</pre>;
+
 const App = withCache(({ cache }) => {
   login(cache);
   return (
     <Router>
       <Contacts path="/">
         <About path="/" />
-        <Card path=":id" />
-        <Create path="new" />
+        <Card path="contact/:id" />
+        <Create path="contact/new" />
+        <NotFound default />
       </Contacts>
     </Router>
   );
 });
 
-export default App;
+const LoadingBar = ({ animate }) =>
+  animate ? <div className="loading-bar" /> : null;
+
+export default class Root extends React.Component {
+  render() {
+    return (
+      <Timeout ms={50000}>
+        {didTimeout =>
+          didTimeout ? (
+            <LoadingBar animate={true} />
+          ) : (
+            <Loading>
+              {isLoading => (
+                <Fragment>
+                  <LoadingBar animate={isLoading} />
+                  <App />
+                </Fragment>
+              )}
+            </Loading>
+          )
+        }
+      </Timeout>
+    );
+  }
+}

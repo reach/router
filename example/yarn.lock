@@ -96,6 +96,10 @@
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.6.tgz#a4b81ca8cdeb1acbc7923289a4a514f61b59db86"
 
+"@reactions/component@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@reactions/component/-/component-2.0.2.tgz#40f8c1c2c37baabe57a0c944edb9310dc1ec6642"
+
 "@reactions/router@0.0.0-alpha.2":
   version "0.0.0-alpha.2"
   resolved "https://registry.yarnpkg.com/@reactions/router/-/router-0.0.0-alpha.2.tgz#ff11fd240d2428c151a1805756e09794dd6eaba7"
@@ -5713,7 +5717,7 @@ react-dev-utils@^5.0.0:
     strip-ansi "3.0.1"
     text-table "0.2.0"
 
-react-dom@16.4.0-alpha.0911da3:
+react-dom@^16.4.0-alpha.0911da3:
   version "16.4.0-alpha.0911da3"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.0-alpha.0911da3.tgz#4f50568a3f44fade1da7d0747b1308d46281210c"
   dependencies:
@@ -5726,7 +5730,7 @@ react-error-overlay@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.0.tgz#d198408a85b4070937a98667f500c832f86bd5d4"
 
-react@16.4.0-alpha.0911da3:
+react@^16.4.0-alpha.0911da3:
   version "16.4.0-alpha.0911da3"
   resolved "https://registry.yarnpkg.com/react/-/react-16.4.0-alpha.0911da3.tgz#5dbd38a7432b07853f5fd517a14ee614499f8093"
   dependencies:

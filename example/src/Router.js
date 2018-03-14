@@ -8,12 +8,14 @@ import resolveUrl from "resolve-url";
 import Component from "@reactions/component";
 const globalHistory = createHistory();
 
-if (!React.createContext) {
-  React.createContext = createContextPolyfill;
+let { createContext } = React;
+if (createContext === undefined) {
+  createContext = createContextPolyfill;
 }
 
-if (!ReactDOM.unstable_deferredUpdates) {
-  ReactDOM.unstable_deferredUpdates = fn => fn();
+let { unstable_deferredUpdates } = ReactDOM;
+if (unstable_deferredUpdates === undefined) {
+  unstable_deferredUpdates = fn => fn();
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -128,7 +130,7 @@ const LocationProvider = ({ history = globalHistory, children }) => (
     }}
     didMount={({ setState, state }) => {
       state.refs.unlisten = history.listen(() => {
-        ReactDOM.unstable_deferredUpdates(() => {
+        unstable_deferredUpdates(() => {
           setState(() => ({
             location: { ...history.location }
           }));
@@ -136,6 +138,7 @@ const LocationProvider = ({ history = globalHistory, children }) => (
       });
     }}
     willUnmout={({ state }) => {
+      console.log("router unmounted");
       state.refs.unlisten();
     }}
     render={({ state }) => (
@@ -167,11 +170,11 @@ const navigate = (...args) => globalHistory.navigate(...args);
 //////////////////////////////////////////////////////////////
 // Private components
 
-const LocationContext = React.createContext();
+const LocationContext = createContext();
 
-const HistoryContext = React.createContext(globalHistory);
+const HistoryContext = createContext(globalHistory);
 
-const BaseUrlContext = React.createContext();
+const BaseUrlContext = createContext();
 
 //////////////////////////////////////////////////////////////
 // component utils
@@ -224,7 +227,7 @@ const getMatchingRoute = (location, routes) => {
 
 const warnIfNoMatch = (basepath, match, routes, location) => {
   warning(
-    !(basepath === "" && !match),
+    !!match,
     `<Router> Nothing matched \`${
       location.pathname
     }\`. Paths checked: ${routes
@@ -235,10 +238,11 @@ const warnIfNoMatch = (basepath, match, routes, location) => {
 };
 
 const makeRelativeHref = (to, basepath) => {
-  if (basepath == null || basepath === "" || basepath === "/") {
+  if (basepath == null || basepath === "") {
     return to;
   } else {
-    return resolveUrl(basepath + "/", to);
+    basepath = basepath === "/" ? basepath : `${basepath}/`;
+    return resolveUrl(basepath, to);
   }
 };
 

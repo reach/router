@@ -25,11 +25,18 @@ export const login = createResource(
 );
 
 const API = `https://contacts.now.sh`;
-const fetchContacts = (url, opts = { headers: {} }) =>
-  fetch(`${API}${url}`, {
+const fetchContacts = async (url, opts = { headers: {} }) => {
+  return fetch(`${API}${url}`, {
     ...opts,
     headers: { authorization: token, ...opts.headers }
-  }).then(res => res.json());
+  }).then(res => {
+    if (res.ok) {
+      return res.json();
+    } else {
+      return res;
+    }
+  });
+};
 
 export const readContacts = createResource(() =>
   fetchContacts("/contacts")

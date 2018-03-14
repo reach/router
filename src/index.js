@@ -1,7 +1,7 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
 import React, { Children, cloneElement } from "react";
 import createContextPolyfill from "create-react-context";
-// import ReactDOM from "react-dom";
+import ReactDOM from "react-dom";
 import warning from "warning";
 import invariant from "invariant";
 import resolveUrl from "resolve-url";
@@ -9,9 +9,15 @@ import Component from "@reactions/component";
 const globalHistory = createHistory();
 
 let { createContext } = React;
-
 if (createContext === undefined) {
+  console.log("ayyy");
   createContext = createContextPolyfill;
+}
+
+let { unstable_deferredUpdates } = ReactDOM;
+if (unstable_deferredUpdates === undefined) {
+  console.log("yo");
+  unstable_deferredUpdates = fn => fn();
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -126,11 +132,11 @@ const LocationProvider = ({ history = globalHistory, children }) => (
     }}
     didMount={({ setState, state }) => {
       state.refs.unlisten = history.listen(() => {
-        // ReactDOM.unstable_deferredUpdates(() => {
-        setState(() => ({
-          location: { ...history.location }
-        }));
-        // });
+        unstable_deferredUpdates(() => {
+          setState(() => ({
+            location: { ...history.location }
+          }));
+        });
       });
     }}
     willUnmout={({ state }) => {
