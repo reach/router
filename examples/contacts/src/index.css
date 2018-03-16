@@ -18,6 +18,5 @@ body {
   left: -100%;
   height: 2px;
   animation: loading infinite 2s linear;
-  animation-delay: 500ms;
   background: hsl(200, 50%, 50%);
 }

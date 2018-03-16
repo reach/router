@@ -10,47 +10,55 @@ import {
   createContact
 } from "./utils";
 import withCache from "./withCache";
-import Img from "./Img";
+import Img, { preload as preloadImg } from "./Img";
 import Component from "@reactions/component";
 
-console.log("", React.version);
+console.log(React.version);
 
 const Contacts = withCache(({ cache, children }) => {
   const { contacts } = readContacts(cache);
 
   return (
     <div>
-      <h1>Contacts</h1>
-      <p>
-        <Link to="contact/new">New Contact</Link> |{" "}
-        <Link to="/">Home</Link>
-      </p>
-      <ul>
-        {contacts.map(contact => (
-          <li key={contact.id}>
-            <Link to={`contact/${contact.id}`}>{contact.first}</Link>
-          </li>
-        ))}
-      </ul>
-      {children}
+      <div style={{ display: "flex" }}>
+        <div>
+          <h1>Contacts</h1>
+          <p>
+            <Link to="contact/new">New Contact</Link> |{" "}
+            <Link to="/">Home</Link>
+          </p>
+          <ul>
+            {contacts.map(contact => (
+              <li key={contact.id}>
+                <Link to={`contact/${contact.id}`}>
+                  {contact.first}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div style={{ marginLeft: "100px" }}>{children}</div>
+      </div>
     </div>
   );
 });
 
 const Card = withCache(({ cache, id, children }) => {
+  preloadImg(cache, `https://contacts.now.sh/images/${id}.jpg`);
+
   const result = readContact(cache, id);
+
   if (!result.contact) {
     return result.status === 404 ? <NotFound /> : <Error />;
   }
+
   const { contact } = result;
+
   return (
     <div>
-      <h2>
+      <h1>
         {contact.first} {contact.last}
-      </h2>
-      <p>
-        <Link to="whatever">Whatever</Link>
-      </p>
+      </h1>
       <Img src={contact.avatar} height="200" />
       {children}
     </div>
@@ -108,7 +116,7 @@ const Create = withCache(({ cache }) => (
           };
           const res = await createContact(contact);
           cache.invalidate(); // refetches data
-          navigate(`/contacts/${res.contact.id}`);
+          navigate(`/contact/${res.contact.id}`);
         }}
       >
         <p>

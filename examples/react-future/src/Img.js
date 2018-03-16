@@ -17,4 +17,6 @@ function Img({ cache, src, ...props }) {
   return <img src={readImage(cache, src)} {...props} />;
 }
 
+export const preload = readImage.preload;
+
 export default withCache(Img);

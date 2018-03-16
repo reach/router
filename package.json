@@ -11,8 +11,8 @@
     "test": "jest **/*.test.js"
   },
   "peerDependencies": {
-    "react": "16.4.0-alpha.0911da3",
-    "react-dom": "16.4.0-alpha.0911da3"
+    "react": "15.x || 16.x || 16.4.0-alpha.0911da3",
+    "react-dom": "15.x || 16.x || 16.4.0-alpha.0911da3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
