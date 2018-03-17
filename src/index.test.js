@@ -1,6 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, LocationProvider, createHistory, Link } from "./index";
+import {
+  Router,
+  LocationProvider,
+  createHistory,
+  Link,
+  getMatch
+} from "./index";
 import renderer from "react-test-renderer";
 // import Enzyme, { mount } from "enzyme";
 // import Adapter from "enzyme-adapter-react-16";
@@ -75,6 +81,7 @@ const snapshot = ({ pathname, element }) => {
   );
   const tree = wrapper.toJSON();
   expect(tree).toMatchSnapshot();
+  return tree;
 };
 
 function runWithNavigation(element, pathname = "/") {
@@ -319,6 +326,60 @@ it("matches on specificity", () => {
   snapshot({ element, pathname: "/groups/gonna/users/win" });
 });
 
+it.only("matches some more", () => {
+  const Root = () => <div>Root</div>;
+  const Groups = () => <div>Groups</div>;
+  const Group = ({ groupId }) => <div>Group Id: {groupId}</div>;
+  const MyGroup = () => <div>MyGroup</div>;
+  const MyGroupsUsers = () => <div>MyGroupUsers</div>;
+  const Users = () => <div>Users</div>;
+  const UsersSplat = ({ splat }) => <div>Users Splat: {splat}</div>;
+  const UsersOptional = ({ userId }) => (
+    <div>Users Optional: {userId}</div>
+  );
+  const User = ({ userId, groupId }) => (
+    <div>
+      User id: {userId}, Group Id: {groupId}
+    </div>
+  );
+  const Me = () => <div>Me!</div>;
+  const MyGroupsAndMe = () => <div>Mine and Me!</div>;
+  const Fiver = ({ one, two, three, four, five }) => (
+    <div>
+      Fiver {one} {two} {three} {four} {five}
+    </div>
+  );
+
+  const element = (
+    <Router>
+      <Root path="/" />
+      <Groups path="/groups" />
+      <Group path="/groups/:groupId" />
+      <MyGroup path="/groups/mine" />
+      <Users path="/groups/:groupId/users" />
+      <MyGroupsUsers path="/groups/mine/users" />
+      <UsersSplat path="/groups/:groupId/users/:splat*" />
+      <UsersOptional path="/groups/:groupId/users/:userId?" />
+      <User path="/groups/:groupId/users/:userId" />
+      <Me path="/groups/:groupId/users/me" />
+      <MyGroupsAndMe path="/groups/:groupId/users/me" />
+      <Fiver path="/:one/:two/:three/:four/:five*" />
+    </Router>
+  );
+
+  snapshot({ element, pathname: "/" }); // Root
+  snapshot({ element, pathname: "/groups" }); // Groups
+  snapshot({ element, pathname: "/groups/123" }); // Group
+  snapshot({ element, pathname: "/groups/mine" }); // MyGroup
+  snapshot({ element, pathname: "/groups/123/users" }); // Users
+  snapshot({ element, pathname: "/groups/mine/users" }); // MyGroupsUsers
+  snapshot({ element, pathname: "/groups/123/users/456" }); // User
+  snapshot({ element, pathname: "/groups/123/users/me" }); // Me
+  snapshot({ element, pathname: "/groups/123/users/a/bunch/of/junk" }); // UsersSplat
+  snapshot({ element, pathname: "/groups/mine/users/me" }); // MyGroupsAndMe
+  snapshot({ element, pathname: "/one/two/three/four/five" }); // Fiver
+});
+
 it("transitions pages", async () => {
   const { snapshot, history: { navigate } } = runWithNavigation(
     <Router>
@@ -377,3 +438,20 @@ it.skip("supports relative links", async () => {
   //   '<div><a href="annual-report">Annual Report</a></div>'
   // );
 });
+
+it("matches", () => {
+  getMatch({ pathname: "/foo/bar/" });
+});
+
+/*
+
+/groups/mine
+/groups/mine/users
+/groups/mine/users/me
+/groups/:groupId
+/groups/:groupId/users
+/groups/:groupId/users/me
+/groups/:groupId/users/:splat*
+/groups/:groupId/users/:userId
+
+*/

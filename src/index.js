@@ -10,13 +10,11 @@ const globalHistory = createHistory();
 
 let { createContext } = React;
 if (createContext === undefined) {
-  console.log("ayyy");
   createContext = createContextPolyfill;
 }
 
 let { unstable_deferredUpdates } = ReactDOM;
 if (unstable_deferredUpdates === undefined) {
-  console.log("yo");
   unstable_deferredUpdates = fn => fn();
 }
 
@@ -49,7 +47,7 @@ const Router = ({ children, basepath = "/" }) => (
               const match = getMatchingRoute(location, routes);
               warnIfNoMatch(basepath, match, routes, location);
               if (!match) return null;
-              const { element, params, url } = match;
+              const { element, params, url, path } = match;
               return (
                 <BaseUrlContext.Provider value={url}>
                   {cloneElement(
@@ -58,11 +56,15 @@ const Router = ({ children, basepath = "/" }) => (
                       ...params,
                       url,
                       location,
-                      navigate: history.navigate
+                      navigate: (to, options) =>
+                        history.navigate(
+                          makeRelativeHref(to, basepath),
+                          options
+                        )
                     },
                     element.props.children ? (
                       <Router
-                        basepath={`${match.path.replace(/\/\*$/, "")}`}
+                        basepath={`${match.path.replace(/\*$/, "")}`}
                       >
                         {element.props.children}
                       </Router>
@@ -78,7 +80,7 @@ const Router = ({ children, basepath = "/" }) => (
   </HistoryContext.Consumer>
 );
 
-const Link = ({ to, state, onTransition, ...props }) => (
+const Link = ({ to, state, replace, onTransition, ...props }) => (
   <HistoryContext.Consumer>
     {({ navigate }) => (
       <BaseUrlContext.Consumer>
@@ -92,7 +94,7 @@ const Link = ({ to, state, onTransition, ...props }) => (
                 if (props.onClick) props.onClick(event);
                 if (shouldNavigate(event)) {
                   event.preventDefault();
-                  navigate({ to: href, state }).then(() => {
+                  navigate(href, { state, replace }).then(() => {
                     onTransition && onTransition();
                   });
                 }
@@ -171,11 +173,11 @@ const navigate = (...args) => globalHistory.navigate(...args);
 //////////////////////////////////////////////////////////////
 // Private components
 
-const LocationContext = React.createContext();
+const LocationContext = createContext();
 
-const HistoryContext = React.createContext(globalHistory);
+const HistoryContext = createContext(globalHistory);
 
-const BaseUrlContext = React.createContext();
+const BaseUrlContext = createContext();
 
 //////////////////////////////////////////////////////////////
 // component utils
@@ -228,7 +230,7 @@ const getMatchingRoute = (location, routes) => {
 
 const warnIfNoMatch = (basepath, match, routes, location) => {
   warning(
-    !(basepath === "" && !match),
+    !!match,
     `<Router> Nothing matched \`${
       location.pathname
     }\`. Paths checked: ${routes
@@ -239,10 +241,10 @@ const warnIfNoMatch = (basepath, match, routes, location) => {
 };
 
 const makeRelativeHref = (to, basepath) => {
-  if (basepath == null || basepath === "" || basepath === "/") {
+  if (basepath == null || basepath === "") {
     return to;
   } else {
-    return resolveUrl(basepath + "/", to);
+    return resolveUrl(basepath, to);
   }
 };
 
@@ -290,13 +292,7 @@ function createHistory(source = window) {
       };
     },
 
-    navigate(pathOrOptions) {
-      const args =
-        typeof pathOrOptions === "string"
-          ? { to: pathOrOptions }
-          : pathOrOptions;
-      const { to, replace = false, state = null } = args;
-
+    navigate(to, { state = null, replace = false } = {}) {
       if (transitioning || replace) {
         source.history.replaceState(state, null, to);
       } else {

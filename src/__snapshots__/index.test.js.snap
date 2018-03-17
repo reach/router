@@ -140,6 +140,85 @@ exports[`matches on specificity 10`] = `
 </div>
 `;
 
+exports[`matches some more 1`] = `
+<div>
+  Root
+</div>
+`;
+
+exports[`matches some more 2`] = `
+<div>
+  Groups
+</div>
+`;
+
+exports[`matches some more 3`] = `
+<div>
+  Group Id: 
+  123
+</div>
+`;
+
+exports[`matches some more 4`] = `
+<div>
+  MyGroup
+</div>
+`;
+
+exports[`matches some more 5`] = `
+<div>
+  Users Optional: 
+  
+</div>
+`;
+
+exports[`matches some more 6`] = `
+<div>
+  MyGroupUsers
+</div>
+`;
+
+exports[`matches some more 7`] = `
+<div>
+  User id: 
+  456
+  , Group Id: 
+  123
+</div>
+`;
+
+exports[`matches some more 8`] = `
+<div>
+  Me!
+</div>
+`;
+
+exports[`matches some more 9`] = `
+<div>
+  Users Splat: 
+</div>
+`;
+
+exports[`matches some more 10`] = `
+<div>
+  Me!
+</div>
+`;
+
+exports[`matches some more 11`] = `
+<div>
+  Fiver 
+  one
+   
+  two
+   
+  three
+   
+  four
+   
+</div>
+`;
+
 exports[`parses multiple params as component props 1`] = `
 <div>
   ryan

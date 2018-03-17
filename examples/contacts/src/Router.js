@@ -47,7 +47,8 @@ const Router = ({ children, basepath = "/" }) => (
               const match = getMatchingRoute(location, routes);
               warnIfNoMatch(basepath, match, routes, location);
               if (!match) return null;
-              const { element, params, url } = match;
+              const { element, params, url, path } = match;
+              console.log(path);
               return (
                 <BaseUrlContext.Provider value={url}>
                   {cloneElement(
@@ -56,11 +57,15 @@ const Router = ({ children, basepath = "/" }) => (
                       ...params,
                       url,
                       location,
-                      navigate: history.navigate
+                      navigate: (to, options) =>
+                        history.navigate(
+                          makeRelativeHref(to, basepath),
+                          options
+                        )
                     },
                     element.props.children ? (
                       <Router
-                        basepath={`${match.path.replace(/\/\*$/, "")}`}
+                        basepath={`${match.path.replace(/\*$/, "")}`}
                       >
                         {element.props.children}
                       </Router>
@@ -76,12 +81,13 @@ const Router = ({ children, basepath = "/" }) => (
   </HistoryContext.Consumer>
 );
 
-const Link = ({ to, state, onTransition, ...props }) => (
+const Link = ({ to, state, replace, onTransition, ...props }) => (
   <HistoryContext.Consumer>
     {({ navigate }) => (
       <BaseUrlContext.Consumer>
         {basepath => {
           const href = makeRelativeHref(to, basepath);
+          console.log({ basepath, to, href });
           return (
             <a
               {...props}
@@ -90,7 +96,7 @@ const Link = ({ to, state, onTransition, ...props }) => (
                 if (props.onClick) props.onClick(event);
                 if (shouldNavigate(event)) {
                   event.preventDefault();
-                  navigate({ to: href, state }).then(() => {
+                  navigate(href, { state, replace }).then(() => {
                     onTransition && onTransition();
                   });
                 }
@@ -241,7 +247,7 @@ const makeRelativeHref = (to, basepath) => {
   if (basepath == null || basepath === "") {
     return to;
   } else {
-    basepath = basepath === "/" ? basepath : `${basepath}/`;
+    console.log(basepath, to);
     return resolveUrl(basepath, to);
   }
 };
@@ -290,13 +296,8 @@ function createHistory(source = window) {
       };
     },
 
-    navigate(pathOrOptions) {
-      const args =
-        typeof pathOrOptions === "string"
-          ? { to: pathOrOptions }
-          : pathOrOptions;
-      const { to, replace = false, state = null } = args;
-
+    navigate(to, { state = null, replace = false } = {}) {
+      console.log("yo", to);
       if (transitioning || replace) {
         source.history.replaceState(state, null, to);
       } else {
