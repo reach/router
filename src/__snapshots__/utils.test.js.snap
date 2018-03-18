@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dynamic segments + splat return value 1`] = `
+Object {
+  "params": Object {
+    "*": "some/deep/path",
+    "userId": "ryan",
+  },
+  "route": Object {
+    "pattern": "/users/:userId/files/*",
+  },
+  "uri": "/users/ryan/files",
+}
+`;
+
+exports[`match 1`] = `
+Object {
+  "params": Object {
+    "bar": "hello",
+  },
+  "route": Object {
+    "pattern": "/foo/:bar",
+  },
+  "uri": "/foo/hello",
+}
+`;
+
+exports[`pick return value 1`] = `
+Object {
+  "params": Object {
+    "five": "five",
+    "four": "four",
+    "one": "one",
+    "three": "three",
+    "two": "two",
+  },
+  "route": Object {
+    "pattern": "/:one/:two/:three/:four/:five",
+    "value": "Fiver",
+  },
+  "uri": "/one/two/three/four/five",
+}
+`;
+
+exports[`query strings 1`] = `
+Object {
+  "params": Object {
+    "userId": "ryan",
+  },
+  "route": Object {
+    "pattern": "/users/:userId",
+  },
+  "uri": "/users/ryan",
+}
+`;
+
+exports[`splat return value 1`] = `
+Object {
+  "params": Object {
+    "*": "some/deep/path",
+  },
+  "route": Object {
+    "pattern": "/files/*",
+    "value": "FilesDeep",
+  },
+  "uri": "/files",
+}
+`;

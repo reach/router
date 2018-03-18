@@ -4,8 +4,8 @@ import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
 import warning from "warning";
 import invariant from "invariant";
-import resolveUrl from "resolve-url";
 import Component from "@reactions/component";
+import { pick, match, resolve } from "./utils";
 const globalHistory = createHistory();
 
 let { createContext } = React;
@@ -44,23 +44,20 @@ const Router = ({ children, basepath = "/" }) => (
                 children,
                 makeRouteFromChild(basepath)
               );
-              const match = getMatchingRoute(location, routes);
+              const match = pick(routes, location.pathname);
               warnIfNoMatch(basepath, match, routes, location);
               if (!match) return null;
-              const { element, params, url, path } = match;
+              const { params, uri, value: { element } } = match;
               return (
-                <BaseUrlContext.Provider value={url}>
+                <BaseUrlContext.Provider value={uri}>
                   {cloneElement(
                     element,
                     {
                       ...params,
-                      url,
+                      uri,
                       location,
                       navigate: (to, options) =>
-                        history.navigate(
-                          makeRelativeHref(to, basepath),
-                          options
-                        )
+                        history.navigate(resolve(to, basepath), options)
                     },
                     element.props.children ? (
                       <Router
@@ -85,7 +82,7 @@ const Link = ({ to, state, replace, onTransition, ...props }) => (
     {({ navigate }) => (
       <BaseUrlContext.Consumer>
         {basepath => {
-          const href = makeRelativeHref(to, basepath);
+          const href = resolve(to, basepath);
           return (
             <a
               {...props}
@@ -112,8 +109,11 @@ const Match = ({ path, children }) => (
     {({ navigate }) => (
       <Location>
         {location => {
-          const match = getMatch(location, { path });
-          return children({ navigate, match, location });
+          return children({
+            navigate,
+            match: match(location, { pattern: path }),
+            location
+          });
         }}
       </Location>
     )}
@@ -193,39 +193,19 @@ const makeRouteFromChild = basepath => child => {
   const childPath =
     child.type === Redirect ? child.props.from : child.props.path;
   const path = isRootPath(basepath)
-    ? childPath
-    : isRootPath(childPath)
-      ? // use parent path if child is root
-        basepath
+    ? childPath // avoid "/" + "/child"
+    : isRootPath(childPath) // avoid "/" + "/"
+      ? basepath
       : `${basepath}/${childPath}`;
 
   return {
-    element: child,
-
+    value: { element: child },
     // these props are used in the path matching code
     default: child.props.default,
-    path: child.props.children
+    pattern: child.props.children
       ? `${path}/*` // ensure child routes match
       : path
   };
-};
-
-const getMatchingRoute = (location, routes) => {
-  let result = null;
-  rankRoutes(routes)
-    .sort(pathRankSort)
-    .forEach(route => {
-      if (result) return;
-      if (route.default) {
-        result = { element: route.element };
-      } else {
-        const match = getMatch(location, route);
-        if (match) {
-          result = { element: route.element, ...match };
-        }
-      }
-    });
-  return result;
 };
 
 const warnIfNoMatch = (basepath, match, routes, location) => {
@@ -238,14 +218,6 @@ const warnIfNoMatch = (basepath, match, routes, location) => {
       .map(route => `"${route.path}"`)
       .join(", ")}. You should add \`<NotFound default/>\`.`
   );
-};
-
-const makeRelativeHref = (to, basepath) => {
-  if (basepath == null || basepath === "") {
-    return to;
-  } else {
-    return resolveUrl(basepath, to);
-  }
 };
 
 const shouldNavigate = event =>
@@ -309,103 +281,6 @@ function createHistory(source = window) {
     }
   };
 }
-
-////////////////////////////////////////////////////////////////////////
-// Path matching/ranking
-
-/*!
-Path matching/parsing/ranking adapted from Preact Router
-https://github.com/developit/preact-router
-The MIT License (MIT)
-Copyright (c) 2015 Jason Miller
-*/
-
-const segmentize = pathname => {
-  return pathname.replace(/(^\/+|\/+$)/g, "").split("/");
-};
-
-const rankSegment = segment => {
-  return segment.charAt(0) === ":"
-    ? 1 + "*?".indexOf(segment.charAt(segment.length - 1)) || 4
-    : 5;
-};
-
-const rank = route => {
-  return segmentize(route.path)
-    .map(rankSegment)
-    .join("");
-};
-
-const rankRoute = route => {
-  return route.default ? 0 : rank(route);
-};
-
-const rankRoutes = routes => {
-  return routes.map((route, index) => {
-    return {
-      ...route,
-      index,
-      rank: rankRoute(route)
-    };
-  });
-};
-
-const pathRankSort = (a, b) => {
-  return a.rank < b.rank ? 1 : a.rank > b.rank ? -1 : a.index - b.index;
-};
-
-const getMatch = (location, route) => {
-  let ret;
-  let c = 0;
-  const params = {};
-
-  const pathname = segmentize(location.pathname);
-  const path = segmentize(route.path || "");
-
-  const max = Math.max(pathname.length, path.length);
-  const dynamicChars = [":", "*"];
-
-  for (let i = 0; i < max; i++) {
-    if (path[i] && dynamicChars.includes(path[i].charAt(0))) {
-      let param = path[i].replace(/(^:|[*?]+$)/g, "");
-      const flags = (path[i].match(/[*?]+$/) || {})[0] || "";
-      const star = ~flags.indexOf("*");
-      const val = pathname[i] || "";
-      if (star) param = "*";
-
-      if (!val && !star && flags.indexOf("?") < 0) {
-        ret = false;
-        break;
-      }
-
-      params[param] = decodeURIComponent(val);
-
-      if (star) {
-        params[param] = pathname
-          .slice(i)
-          .map(decodeURIComponent)
-          .join("/");
-        break;
-      }
-    } else if (path[i] !== pathname[i]) {
-      ret = false;
-      break;
-    }
-    c++;
-  }
-
-  if (route.default !== true && ret === false) return undefined;
-
-  return {
-    params,
-    path: route.path,
-    url: `/${pathname.slice(0, c).join("/")}`
-  };
-};
-
-/*!
-End of Preact Router adaptation
-*/
 
 ////////////////////////////////////////////////////////////////////////
 // Exports
