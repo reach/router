@@ -1,6 +1,9 @@
 import invariant from "invariant";
 export { pick, match, resolve };
 
+////////////////////////////////////////////////////////////////////////////////
+// pick(routes, uri)
+//
 // Ranks and picks the best route to match. Each segment gets the highest
 // amount of points, then the type of segment gets an additional amount of
 // points where
@@ -19,7 +22,7 @@ export { pick, match, resolve };
 //     { route, params, uri }
 //
 // I know, I should use TypeScript not comments for these types.
-function pick(routes, uri) {
+let pick = (routes, uri) => {
   let match;
   let default_;
 
@@ -113,16 +116,18 @@ function pick(routes, uri) {
   }
 
   return null;
-}
+};
 
-function match(path, uri) {
-  return pick([{ path }], uri);
-}
+////////////////////////////////////////////////////////////////////////////////
+// match(path, uri) - Matches just one path to a uri, also lol
+let match = (path, uri) => pick([{ path }], uri);
 
-// Resolves URIs as though every path is a directory, no files.
+////////////////////////////////////////////////////////////////////////////////
+// resolve(to, basepath)
 //
-// Relative URIs in the browser can feel awkward because not only can you be
-// "in a directory" you can be "at a file", too. For example
+// Resolves URIs as though every path is a directory, no files.  Relative URIs
+// in the browser can feel awkward because not only can you be "in a directory"
+// you can be "at a file", too. For example
 //
 //     browserSpecResolve('foo', '/bar/') => /bar/foo
 //     browserSpecResolve('foo', '/bar') => /foo
@@ -182,8 +187,8 @@ function resolve(to, base) {
   return addQuery("/" + segments.join("/"), toQuery);
 }
 
-////////////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
+// Junk
 let paramRe = /^:(.+)/;
 
 let SEGMENT_POINTS = 4;

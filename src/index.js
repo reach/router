@@ -6,7 +6,7 @@ import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
 import { pick, resolve, match } from "./utils";
 
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // React polyfills
 let { createContext } = React;
 if (createContext === undefined) {
@@ -18,8 +18,8 @@ if (unstable_deferredUpdates === undefined) {
   unstable_deferredUpdates = fn => fn();
 }
 
-////////////////////////////////////////////////////////////////////////
-// history management
+////////////////////////////////////////////////////////////////////////////////
+// createHistory(source) - wraps a history source
 let createHistory = source => {
   let listeners = [];
   let location = { ...source.location };
@@ -74,6 +74,8 @@ let createHistory = source => {
   };
 };
 
+////////////////////////////////////////////////////////////////////////////////
+// Stores history entries in memory for testing or other platforms like Native
 let createMemorySource = (initialPathname = "/") => {
   let index = 0;
   let stack = [{ pathname: initialPathname }];
@@ -108,8 +110,9 @@ let createMemorySource = (initialPathname = "/") => {
   };
 };
 
-////////////////////////////////////////////////////////////////////////
-// global history
+////////////////////////////////////////////////////////////////////////////////
+// global history - uses window.history as the source if available, otherwise a
+// memory history
 let getSource = () => {
   let canUseDOM = !!(
     typeof window !== "undefined" &&
@@ -122,10 +125,12 @@ let getSource = () => {
 let globalHistory = createHistory(getSource());
 let { navigate } = globalHistory;
 
-////////////////////////////////////////////////////////////////////////
-// Location
+////////////////////////////////////////////////////////////////////////////////
+// Location Context/Provider
 let LocationContext = createContext();
 
+// sets up a listener if there isn't one already so apps don't need to be
+// wrapped in some top level provider
 let withLocation = Comp => props => (
   <LocationContext.Consumer>
     {context =>
@@ -184,8 +189,7 @@ class LocationProvider extends React.Component {
   }
 }
 
-////////////////////////////////////////////////////////////////////////
-// Base URI context
+////////////////////////////////////////////////////////////////////////////////
 let BaseUriContext = createContext();
 let withBaseUri = Comp => props => (
   <BaseUriContext.Consumer>
@@ -193,8 +197,7 @@ let withBaseUri = Comp => props => (
   </BaseUriContext.Consumer>
 );
 
-////////////////////////////////////////////////////////////////////////
-// Router
+////////////////////////////////////////////////////////////////////////////////
 let Router = withBaseUri(
   withLocation(
     ({ location, navigate, basepath, baseUri, children }) => {
@@ -239,8 +242,7 @@ let Router = withBaseUri(
   )
 );
 
-////////////////////////////////////////////////////////////////////////
-// Link
+////////////////////////////////////////////////////////////////////////////////
 let Link = withBaseUri(
   withLocation(
     ({ baseUri, navigate, to, state, replace, ...anchorProps }) => {
@@ -262,8 +264,7 @@ let Link = withBaseUri(
   )
 );
 
-////////////////////////////////////////////////////////////////////////
-// Redirect
+////////////////////////////////////////////////////////////////////////////////
 let Redirect = withLocation(
   class Redirect extends React.Component {
     componentDidMount() {
@@ -278,8 +279,7 @@ let Redirect = withLocation(
   }
 );
 
-////////////////////////////////////////////////////////////////////////
-// MatchPath
+////////////////////////////////////////////////////////////////////////////////
 let MatchPath = withLocation(
   ({ path, location, navigate, children }) => {
     let result = match(path, location.pathname);
@@ -297,7 +297,7 @@ let MatchPath = withLocation(
   }
 );
 
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // helpers
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
 
@@ -332,7 +332,6 @@ const shouldNavigate = event =>
   !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
 
 ////////////////////////////////////////////////////////////////////////
-// exports
 export {
   createHistory,
   createMemorySource,
