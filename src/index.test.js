@@ -244,6 +244,22 @@ describe("nested rendering", () => {
     });
   });
 
+  it("renders at a path with nested paths", () => {
+    snapshot({
+      pathname: "/dash",
+      element: (
+        <Router>
+          <Home path="/" />
+          <Dash path="/dash">
+            <Reports path="reports">
+              <AnnualReport path="annual" />
+            </Reports>
+          </Dash>
+        </Router>
+      )
+    });
+  });
+
   it("renders a child 'index' nested path", () => {
     snapshot({
       pathname: "/dash",

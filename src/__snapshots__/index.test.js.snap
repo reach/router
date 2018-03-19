@@ -104,6 +104,12 @@ exports[`nested rendering renders a really nested path 1`] = `
 </div>
 `;
 
+exports[`nested rendering renders at a path with nested paths 1`] = `
+<div>
+  Dash 
+</div>
+`;
+
 exports[`nested rendering yo dawg 1`] = `
 <div>
   Dash 
