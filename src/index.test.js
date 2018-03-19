@@ -1,12 +1,14 @@
 import React from "react";
+import renderer from "react-test-renderer";
+
 import {
   createHistory,
   createMemorySource,
   Router,
   LocationProvider,
-  Link
+  Link,
+  MatchPath
 } from "./index";
-import renderer from "react-test-renderer";
 
 let snapshot = ({ pathname, element }) => {
   let testHistory = createHistory(createMemorySource(pathname));
@@ -391,6 +393,19 @@ describe("nested routers", () => {
         <Router>
           <PageWithNestedApp path="/chat/*" />
         </Router>
+      )
+    });
+  });
+});
+
+describe("MatchPath", () => {
+  it("matches a path", () => {
+    snapshot({
+      pathname: `/groups/123`,
+      element: (
+        <MatchPath path="/groups/:groupId">
+          {props => <PropsPrinter {...props} />}
+        </MatchPath>
       )
     });
   });

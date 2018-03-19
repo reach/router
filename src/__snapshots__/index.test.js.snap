@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`MatchPath matches a path 1`] = `
+<pre>
+  {
+  "location": {
+    "pathname": "/groups/123"
+  },
+  "match": {
+    "groupId": "123",
+    "uri": "/groups/123",
+    "path": "/groups/:groupId"
+  }
+}
+</pre>
+`;
+
 exports[`disrespect has complete disrespect for leading and trailing slashes 1`] = `
 <div>
   Dash 

@@ -1,3 +1,4 @@
+import invariant from "invariant";
 export { pick, match, resolve };
 
 // Ranks and picks the best route to match. Each segment gets the highest
@@ -70,6 +71,14 @@ function pick(routes, uri) {
         // Found a dynamic segment, parse it out
         // uri:   /users/123
         // route: /users/:userId
+        invariant(
+          !reservedNames.includes(dynamicMatch[1]),
+          `<Router> dynamic segment "${
+            dynamicMatch[1]
+          }" is a reserved name. Please use a different name in path "${
+            route.path
+          }".`
+        );
         let value = decodeURIComponent(uriSegment);
         params[dynamicMatch[1]] = value;
       } else if (routeSegment !== uriSegment) {
@@ -220,3 +229,5 @@ let segmentize = uri =>
 
 let addQuery = (pathname, query) =>
   pathname + (query ? `?${query}` : "");
+
+let reservedNames = ["uri", "path"];

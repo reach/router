@@ -1,9 +1,10 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
 import React, { Children, cloneElement } from "react";
 import warning from "warning";
+import invariant from "invariant";
 import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
-import { pick, resolve } from "./utils";
+import { pick, resolve, match } from "./utils";
 
 ////////////////////////////////////////////////////////////////////////
 // React polyfills
@@ -262,14 +263,61 @@ let Link = withBaseUri(
 );
 
 ////////////////////////////////////////////////////////////////////////
+// Redirect
+let Redirect = withLocation(
+  class Redirect extends React.Component {
+    componentDidMount() {
+      const { props: { navigate, to, replace = true, state } } = this;
+      navigate(to, { replace, state });
+    }
+    render() {
+      // TODO: throw a redirect with Suspense to prevent ever even rendering
+      // down this far
+      return null;
+    }
+  }
+);
+
+////////////////////////////////////////////////////////////////////////
+// MatchPath
+let MatchPath = withLocation(
+  ({ path, location, navigate, children }) => {
+    let result = match(path, location.pathname);
+    return children({
+      navigate,
+      location,
+      match: result
+        ? {
+            ...result.params,
+            uri: result.uri,
+            path
+          }
+        : null
+    });
+  }
+);
+
+////////////////////////////////////////////////////////////////////////
 // helpers
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
 
 let createRoute = basepath => element => {
+  invariant(
+    element.props.path ||
+      element.props.default ||
+      element.type === Redirect,
+    `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
+      element.type
+    }\``
+  );
+
+  let elementPath =
+    element.type === Redirect ? element.props.from : element.props.path;
+
   let path =
-    element.props.path === "/"
+    elementPath === "/"
       ? basepath
-      : `${basepath}/${stripSlashes(element.props.path)}`;
+      : `${basepath}/${stripSlashes(elementPath)}`;
 
   return {
     value: element,
@@ -291,5 +339,7 @@ export {
   navigate,
   LocationProvider,
   Router,
-  Link
+  Link,
+  Redirect,
+  MatchPath
 };
