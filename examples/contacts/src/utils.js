@@ -1,7 +1,7 @@
 const sleep = (ms = 1000) => new Promise(res => setTimeout(res, ms));
 
-// const API = `https://contacts.now.sh`;
-const API = `http://localhost:5000`;
+const API = `https://contacts.now.sh`;
+// const API = `http://localhost:5000`;
 
 let token = null;
 

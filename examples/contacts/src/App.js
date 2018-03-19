@@ -56,7 +56,7 @@ class Contacts extends React.Component {
               <ul>
                 {contacts.map(contact => (
                   <li key={contact.id}>
-                    <Link to={`contact/${contact.id}/`}>
+                    <Link to={`contact/${contact.id}`}>
                       {contact.first}
                     </Link>
                   </li>

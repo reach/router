@@ -40,14 +40,14 @@ test("splat return value", () => {
 });
 
 test("dynamic segments + splat return value", () => {
-  let routes = [{ pattern: "/users/:userId/files/*" }];
+  let routes = [{ path: "/users/:userId/files/*" }];
   expect(
     pick(routes, "/users/ryan/files/some/deep/path")
   ).toMatchSnapshot();
 });
 
 test("query strings", () => {
-  let routes = [{ pattern: "/users/:userId" }];
+  let routes = [{ path: "/users/:userId" }];
   expect(pick(routes, "/users/ryan?cool=stuff")).toMatchSnapshot();
 });
 
@@ -55,18 +55,23 @@ test("resolve", () => {
   expect(resolve("/somewhere/else", "/users/123")).toEqual(
     "/somewhere/else"
   );
-  expect(resolve("456", "/users/123")).toEqual("/users/456");
-  expect(resolve("./", "/users/123")).toEqual("/users");
-  expect(resolve(".", "/users/123")).toEqual("/users");
-  expect(resolve("../", "/users/123")).toEqual("/");
-  expect(resolve("..", "/users/123")).toEqual("/");
-  expect(resolve("../.././3", "/u/1/g/4")).toEqual("/u/3");
-  expect(resolve("../.././3?beef=boof", "/u/1/g/4")).toEqual(
-    "/u/3?beef=boof"
+  expect(resolve("settings", "/users/123")).toEqual(
+    "/users/123/settings"
   );
-  expect(resolve("../.././3", "/u/1/g/4?beef=boof")).toEqual("/u/3");
+  expect(
+    resolve("../../one/../two/.././three", "/a/b/c/d/e/f/g")
+  ).toEqual("/a/b/c/d/e/three");
+  expect(resolve("./", "/users/123")).toEqual("/users/123");
+  expect(resolve(".", "/users/123")).toEqual("/users/123");
+  expect(resolve("../", "/users/123")).toEqual("/users");
+  expect(resolve("../..", "/users/123")).toEqual("/");
+  expect(resolve("../.././3", "/u/1/g/4")).toEqual("/u/1/3");
+  expect(resolve("../.././s?beef=boof", "/u/1/g/4")).toEqual(
+    "/u/1/s?beef=boof"
+  );
+  expect(resolve("../.././3", "/u/1/g/4?beef=boof")).toEqual("/u/1/3");
   expect(resolve("stinky/barf", "/u/1/g/4")).toEqual(
-    "/u/1/g/stinky/barf"
+    "/u/1/g/4/stinky/barf"
   );
   expect(resolve("?some=query", "/users/123?some=thing")).toEqual(
     "/users/123?some=query"
@@ -79,55 +84,55 @@ test("resolve", () => {
 const routes = shuffle([
   {
     value: "MainGroupMe",
-    pattern: "/groups/main/users/me"
+    path: "/groups/main/users/me"
   },
   {
     value: "GroupMe",
-    pattern: "/groups/:groupId/users/me"
+    path: "/groups/:groupId/users/me"
   },
   {
     value: "GroupUser",
-    pattern: "/groups/:groupId/users/:userId"
+    path: "/groups/:groupId/users/:userId"
   },
   {
     value: "Fiver",
-    pattern: "/:one/:two/:three/:four/:five"
+    path: "/:one/:two/:three/:four/:five"
   },
   {
     value: "GroupUsersSplat",
-    pattern: "/groups/:groupId/users/*"
+    path: "/groups/:groupId/users/*"
   },
   {
     value: "MainGroupUsers",
-    pattern: "/groups/main/users"
+    path: "/groups/main/users"
   },
   {
     value: "GroupUsers",
-    pattern: "/groups/:groupId/users"
+    path: "/groups/:groupId/users"
   },
   {
     value: "MainGroup",
-    pattern: "/groups/main"
+    path: "/groups/main"
   },
   {
     value: "Group",
-    pattern: "/groups/:groupId"
+    path: "/groups/:groupId"
   },
   {
     value: "Groups",
-    pattern: "/groups"
+    path: "/groups"
   },
   {
     value: "FilesDeep",
-    pattern: "/files/*"
+    path: "/files/*"
   },
   {
     value: "Files",
-    pattern: "/files"
+    path: "/files"
   },
   {
     value: "Root",
-    pattern: "/"
+    path: "/"
   },
   {
     value: "Default",

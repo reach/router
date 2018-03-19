@@ -1,6 +1,107 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`allows arbitrary Router nesting 1`] = `
+exports[`disrespect has complete disrespect for leading and trailing slashes 1`] = `
+<div>
+  Dash 
+  <div>
+    Reports 
+    <div>
+      Annual Report
+    </div>
+  </div>
+</div>
+`;
+
+exports[`links renders links with relative hrefs 1`] = `
+<div>
+  <h1>
+    Parent
+  </h1>
+  <a
+    href="/dash/reports"
+    location={
+      Object {
+        "pathname": "/dash/reports",
+      }
+    }
+    onClick={[Function]}
+  >
+    /dash/reports
+  </a>
+  <div>
+    <h2>
+      Child
+    </h2>
+    <a
+      href="/dash"
+      location={
+        Object {
+          "pathname": "/dash/reports",
+        }
+      }
+      onClick={[Function]}
+    >
+      /dash
+    </a>
+  </div>
+</div>
+`;
+
+exports[`nested rendering matches multiple nested / down to a child with a path 1`] = `
+<div>
+  Dash 
+  <div>
+    Dash 
+    <div>
+      Dash 
+    </div>
+  </div>
+</div>
+`;
+
+exports[`nested rendering renders a child 'index' nested path 1`] = `
+<div>
+  Dash 
+  <div>
+    Reports 
+  </div>
+</div>
+`;
+
+exports[`nested rendering renders a nested path 1`] = `
+<div>
+  Dash 
+  <div>
+    Reports 
+  </div>
+</div>
+`;
+
+exports[`nested rendering renders a really nested path 1`] = `
+<div>
+  Dash 
+  <div>
+    Reports 
+    <div>
+      Annual Report
+    </div>
+  </div>
+</div>
+`;
+
+exports[`nested rendering yo dawg 1`] = `
+<div>
+  Dash 
+  <div>
+    Dash 
+    <div>
+      Dash 
+    </div>
+  </div>
+</div>
+`;
+
+exports[`nested routers allows arbitrary Router nesting through context 1`] = `
 <div>
   Home
   <div>
@@ -9,176 +110,75 @@ exports[`allows arbitrary Router nesting 1`] = `
 </div>
 `;
 
-exports[`keeps the stack right on interrupted transitions 1`] = `
+exports[`passed props parses dynamic segments and passes to components 1`] = `
 <div>
-  Annual
+  Group: 
+  123
 </div>
 `;
 
-exports[`matches on specificity 1`] = `
+exports[`passed props parses multiple params when nested 1`] = `
 <div>
-  Home
-</div>
-`;
-
-exports[`matches on specificity 2`] = `
-<div>
-  Groups 
-</div>
-`;
-
-exports[`matches on specificity 3`] = `
-<div>
-  Groups 
+  123
   <div>
-    Group: 
     123
-     
+     - 
+    456
   </div>
 </div>
 `;
 
-exports[`matches on specificity 4`] = `
+exports[`passed props passes the matched URI to the component 1`] = `
+<pre>
+  {
+  "path": "/groups/:groupId/users/:userId",
+  "groupId": "123",
+  "userId": "456",
+  "uri": "/groups/123/users/456",
+  "location": {
+    "pathname": "/groups/123/users/456"
+  }
+}
+</pre>
+`;
+
+exports[`passed props shadows params in nested paths 1`] = `
 <div>
-  Groups 
+  Group: 
+  burger
   <div>
     Group: 
-    123
-     
-    <div>
-      Users 
-    </div>
+    milkshake
   </div>
 </div>
 `;
 
-exports[`matches on specificity 5`] = `
-<div>
-  Groups 
-  <div>
-    Group: 
-    123
-     
-    <div>
-      Users 
-      <div>
-        User: 
-        abc
-         
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`matches on specificity 6`] = `
-<div>
-  Groups 
-  <div>
-    Group: 
-    mine
-     
-    <div>
-      Users 
-      <div>
-        User: 
-        me
-         
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`matches on specificity 7`] = `
-<div>
-  Groups 
-  <div>
-    Group: 
-    mine
-     
-  </div>
-</div>
-`;
-
-exports[`matches on specificity 8`] = `
-<div>
-  Groups 
-  <div>
-    Group: 
-    mine
-     
-    <div>
-      Users 
-    </div>
-  </div>
-</div>
-`;
-
-exports[`matches on specificity 9`] = `
-<div>
-  Groups 
-  <div>
-    Group: 
-    mine
-     
-    <div>
-      Users 
-      <div>
-        User: 
-        me
-         
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`matches on specificity 10`] = `
-<div>
-  Yes I am
-</div>
-`;
-
-exports[`matches some more 1`] = `
+exports[`route ranking / 1`] = `
 <div>
   Root
 </div>
 `;
 
-exports[`matches some more 2`] = `
+exports[`route ranking /groups 1`] = `
 <div>
   Groups
 </div>
 `;
 
-exports[`matches some more 3`] = `
+exports[`route ranking /groups/123 1`] = `
 <div>
   Group Id: 
   123
 </div>
 `;
 
-exports[`matches some more 4`] = `
+exports[`route ranking /groups/123/users 1`] = `
 <div>
-  MyGroup
+  Users
 </div>
 `;
 
-exports[`matches some more 5`] = `
-<div>
-  Users Optional: 
-  
-</div>
-`;
-
-exports[`matches some more 6`] = `
-<div>
-  MyGroupUsers
-</div>
-`;
-
-exports[`matches some more 7`] = `
+exports[`route ranking /groups/123/users/456 1`] = `
 <div>
   User id: 
   456
@@ -187,25 +187,37 @@ exports[`matches some more 7`] = `
 </div>
 `;
 
-exports[`matches some more 8`] = `
-<div>
-  Me!
-</div>
-`;
-
-exports[`matches some more 9`] = `
+exports[`route ranking /groups/123/users/a/bunch/of/junk 1`] = `
 <div>
   Users Splat: 
 </div>
 `;
 
-exports[`matches some more 10`] = `
+exports[`route ranking /groups/123/users/me 1`] = `
 <div>
   Me!
 </div>
 `;
 
-exports[`matches some more 11`] = `
+exports[`route ranking /groups/mine 1`] = `
+<div>
+  MyGroup
+</div>
+`;
+
+exports[`route ranking /groups/mine/users 1`] = `
+<div>
+  MyGroupUsers
+</div>
+`;
+
+exports[`route ranking /groups/mine/users/me 1`] = `
+<div>
+  Mine and Me!
+</div>
+`;
+
+exports[`route ranking /one/two/three/four/five 1`] = `
 <div>
   Fiver 
   one
@@ -216,103 +228,36 @@ exports[`matches some more 11`] = `
    
   four
    
+  five
 </div>
 `;
 
-exports[`parses multiple params as component props 1`] = `
+exports[`smoke tests renders at a path 1`] = `
 <div>
-  ryan
-   
-  party-pooper
+  Dash 
 </div>
 `;
 
-exports[`parses multiple params when nested 1`] = `
-<div>
-  party-pooper
-   
-  <div>
-    ryan
-  </div>
-</div>
-`;
-
-exports[`parses params as component props 1`] = `
-<div>
-  ryan
-</div>
-`;
-
-exports[`renders a more specific path 1`] = `
-<div>
-  Dashboard
-   
-</div>
-`;
-
-exports[`renders a nested path 1`] = `
-<div>
-  Dashboard
-   
-  <div>
-    Reports
-     
-  </div>
-</div>
-`;
-
-exports[`renders a really nested path 1`] = `
-<div>
-  Dashboard
-   
-  <div>
-    Reports
-     
-    <div>
-      Annual
-    </div>
-  </div>
-</div>
-`;
-
-exports[`renders a root path component 1`] = `
+exports[`smoke tests renders the root component at "/" 1`] = `
 <div>
   Home
 </div>
 `;
 
-exports[`selects a static path over a dynamic segment 1`] = `
+exports[`transitions keeps the stack right on interrupted transitions 1`] = `
+<div>
+  Annual Report
+</div>
+`;
+
+exports[`transitions transitions pages 1`] = `
 <div>
   Home
 </div>
 `;
 
-exports[`selects a static path over a dynamic segment 2`] = `
+exports[`transitions transitions pages 2`] = `
 <div>
-  Home
-</div>
-`;
-
-exports[`shadows params in nested paths 1`] = `
-<div>
-  burger
-   
-  <div>
-    milkshake
-     
-  </div>
-</div>
-`;
-
-exports[`transitions pages 1`] = `
-<div>
-  Home
-</div>
-`;
-
-exports[`transitions pages 2`] = `
-<div>
-  Reports
-   
+  Reports 
 </div>
 `;

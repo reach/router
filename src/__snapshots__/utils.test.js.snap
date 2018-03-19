@@ -7,7 +7,7 @@ Object {
     "userId": "ryan",
   },
   "route": Object {
-    "pattern": "/users/:userId/files/*",
+    "path": "/users/:userId/files/*",
   },
   "uri": "/users/ryan/files",
 }
@@ -19,7 +19,7 @@ Object {
     "bar": "hello",
   },
   "route": Object {
-    "pattern": "/foo/:bar",
+    "path": "/foo/:bar",
   },
   "uri": "/foo/hello",
 }
@@ -35,7 +35,7 @@ Object {
     "two": "two",
   },
   "route": Object {
-    "pattern": "/:one/:two/:three/:four/:five",
+    "path": "/:one/:two/:three/:four/:five",
     "value": "Fiver",
   },
   "uri": "/one/two/three/four/five",
@@ -48,7 +48,7 @@ Object {
     "userId": "ryan",
   },
   "route": Object {
-    "pattern": "/users/:userId",
+    "path": "/users/:userId",
   },
   "uri": "/users/ryan",
 }
@@ -60,7 +60,7 @@ Object {
     "*": "some/deep/path",
   },
   "route": Object {
-    "pattern": "/files/*",
+    "path": "/files/*",
     "value": "FilesDeep",
   },
   "uri": "/files",

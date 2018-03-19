@@ -1,13 +1,12 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
 import React, { Children, cloneElement } from "react";
+import warning from "warning";
 import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
-import warning from "warning";
-import invariant from "invariant";
-import Component from "@reactions/component";
-import { pick, match, resolve } from "./utils";
-const globalHistory = createHistory();
+import { pick, resolve } from "./utils";
 
+////////////////////////////////////////////////////////////////////////
+// React polyfills
 let { createContext } = React;
 if (createContext === undefined) {
   createContext = createContextPolyfill;
@@ -19,216 +18,8 @@ if (unstable_deferredUpdates === undefined) {
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Public Components
-
-const Router = ({ children, basepath = "/" }) => (
-  <HistoryContext.Consumer>
-    {history => (
-      <Location>
-        {location => (
-          <Component
-            location={location}
-            didUpdate={({ props, prevProps }) => {
-              // though Routers can be nested, the innermost is the only one
-              // that calls this as the parents will bail because `transitioning` has
-              // been updated
-              if (history.transitioning) {
-                if (props.location !== prevProps.location) {
-                  history._onTransitionComplete();
-                }
-              }
-            }}
-          >
-            {() => {
-              const routes = Children.map(
-                children,
-                makeRouteFromChild(basepath)
-              );
-              const match = pick(routes, location.pathname);
-              warnIfNoMatch(basepath, match, routes, location);
-              if (!match) return null;
-              const { params, uri, value: { element } } = match;
-              return (
-                <BaseUrlContext.Provider value={uri}>
-                  {cloneElement(
-                    element,
-                    {
-                      ...params,
-                      uri,
-                      location,
-                      navigate: (to, options) =>
-                        history.navigate(resolve(to, basepath), options)
-                    },
-                    element.props.children ? (
-                      <Router
-                        basepath={`${match.path.replace(/\*$/, "")}`}
-                      >
-                        {element.props.children}
-                      </Router>
-                    ) : null
-                  )}
-                </BaseUrlContext.Provider>
-              );
-            }}
-          </Component>
-        )}
-      </Location>
-    )}
-  </HistoryContext.Consumer>
-);
-
-const Link = ({ to, state, replace, onTransition, ...props }) => (
-  <HistoryContext.Consumer>
-    {({ navigate }) => (
-      <BaseUrlContext.Consumer>
-        {basepath => {
-          const href = resolve(to, basepath);
-          return (
-            <a
-              {...props}
-              href={href}
-              onClick={event => {
-                if (props.onClick) props.onClick(event);
-                if (shouldNavigate(event)) {
-                  event.preventDefault();
-                  navigate(href, { state, replace }).then(() => {
-                    onTransition && onTransition();
-                  });
-                }
-              }}
-            />
-          );
-        }}
-      </BaseUrlContext.Consumer>
-    )}
-  </HistoryContext.Consumer>
-);
-
-const Match = ({ path, children }) => (
-  <HistoryContext.Consumer>
-    {({ navigate }) => (
-      <Location>
-        {location => {
-          return children({
-            navigate,
-            match: match(location, { pattern: path }),
-            location
-          });
-        }}
-      </Location>
-    )}
-  </HistoryContext.Consumer>
-);
-
-const Redirect = ({ to }) => (
-  <Location>
-    {({ navigate }) => <Component didMount={() => navigate(to)} />}
-  </Location>
-);
-
-const LocationProvider = ({ history = globalHistory, children }) => (
-  <Component
-    initialState={{
-      location: { ...history.location },
-      refs: { unlisten: null }
-    }}
-    didMount={({ setState, state }) => {
-      state.refs.unlisten = history.listen(() => {
-        unstable_deferredUpdates(() => {
-          setState(() => ({
-            location: { ...history.location }
-          }));
-        });
-      });
-    }}
-    willUnmout={({ state }) => {
-      state.refs.unlisten();
-    }}
-    render={({ state }) => (
-      <LocationContext.Provider value={state.location}>
-        <HistoryContext.Provider value={history}>
-          {typeof children === "function"
-            ? children(state.location)
-            : children}
-        </HistoryContext.Provider>
-      </LocationContext.Provider>
-    )}
-  />
-);
-
-const Location = ({ children }) => (
-  <LocationContext.Consumer>
-    {location =>
-      location ? (
-        children(location)
-      ) : (
-        <LocationProvider>{children}</LocationProvider>
-      )
-    }
-  </LocationContext.Consumer>
-);
-
-const navigate = (...args) => globalHistory.navigate(...args);
-
-//////////////////////////////////////////////////////////////
-// Private components
-
-const LocationContext = createContext();
-
-const HistoryContext = createContext(globalHistory);
-
-const BaseUrlContext = createContext();
-
-//////////////////////////////////////////////////////////////
-// component utils
-const isRootPath = path => path === "/";
-
-const makeRouteFromChild = basepath => child => {
-  invariant(
-    child.props.path || child.props.default || child.type === Redirect,
-    `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a <Redirect>. None found on element type \`${
-      child.type
-    }\``
-  );
-  const childPath =
-    child.type === Redirect ? child.props.from : child.props.path;
-  const path = isRootPath(basepath)
-    ? childPath // avoid "/" + "/child"
-    : isRootPath(childPath) // avoid "/" + "/"
-      ? basepath
-      : `${basepath}/${childPath}`;
-
-  return {
-    value: { element: child },
-    // these props are used in the path matching code
-    default: child.props.default,
-    pattern: child.props.children
-      ? `${path}/*` // ensure child routes match
-      : path
-  };
-};
-
-const warnIfNoMatch = (basepath, match, routes, location) => {
-  warning(
-    !!match,
-    `<Router> Nothing matched \`${
-      location.pathname
-    }\`. Paths checked: ${routes
-      .filter(route => route.path)
-      .map(route => `"${route.path}"`)
-      .join(", ")}. You should add \`<NotFound default/>\`.`
-  );
-};
-
-const shouldNavigate = event =>
-  !event.defaultPrevented &&
-  event.button === 0 &&
-  !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
-
-//////////////////////////////////////////////////////////////
-// History management
-
-function createHistory(source = window) {
+// history management
+let createHistory = source => {
   let listeners = [];
   let location = { ...source.location };
   let transitioning = false;
@@ -280,17 +71,225 @@ function createHistory(source = window) {
       return transition;
     }
   };
+};
+
+let createMemorySource = (initialPathname = "/") => {
+  let index = 0;
+  let stack = [{ pathname: initialPathname }];
+  let states = [];
+
+  return {
+    get location() {
+      return stack[index];
+    },
+    addEventListener(name, fn) {},
+    removeEventListener(name, fn) {},
+    history: {
+      get entries() {
+        return stack;
+      },
+      get index() {
+        return index;
+      },
+      get state() {
+        return states[index];
+      },
+      pushState(state, _, pathname) {
+        index++;
+        stack.push({ pathname });
+        states.push(state);
+      },
+      replaceState(state, _, pathname) {
+        stack[index] = { pathname };
+        states[index] = state;
+      }
+    }
+  };
+};
+
+////////////////////////////////////////////////////////////////////////
+// global history
+let getSource = () => {
+  let canUseDOM = !!(
+    typeof window !== "undefined" &&
+    window.document &&
+    window.document.createElement
+  );
+  return canUseDOM ? window : createMemorySource();
+};
+
+let globalHistory = createHistory(getSource());
+let { navigate } = globalHistory;
+
+////////////////////////////////////////////////////////////////////////
+// Location
+let LocationContext = createContext();
+
+let withLocation = Comp => props => (
+  <LocationContext.Consumer>
+    {context =>
+      context ? (
+        <Comp {...context} {...props} />
+      ) : (
+        <LocationProvider>
+          {context => <Comp {...context} {...props} />}
+        </LocationProvider>
+      )
+    }
+  </LocationContext.Consumer>
+);
+
+class LocationProvider extends React.Component {
+  static defaultProps = {
+    history: globalHistory
+  };
+
+  state = {
+    context: this.getContext(),
+    refs: { unlisten: null }
+  };
+
+  getContext() {
+    let { props: { history: { navigate, location } } } = this;
+    return { navigate, location: { ...location } };
+  }
+
+  componentDidMount() {
+    let { state: { refs }, props: { history } } = this;
+    refs.unlisten = history.listen(() => {
+      unstable_deferredUpdates(() => {
+        this.setState(
+          () => ({ context: this.getContext() }),
+          history._onTransitionComplete
+        );
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    let { state: { refs } } = this;
+    refs.unlisten();
+  }
+
+  render() {
+    let { state: { context }, props: { children } } = this;
+    return (
+      <LocationContext.Provider value={context}>
+        {typeof children === "function"
+          ? children(context)
+          : children || null}
+      </LocationContext.Provider>
+    );
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Exports
+// Base URI context
+let BaseUriContext = createContext();
+let withBaseUri = Comp => props => (
+  <BaseUriContext.Consumer>
+    {baseUri => <Comp {...props} baseUri={baseUri} />}
+  </BaseUriContext.Consumer>
+);
+
+////////////////////////////////////////////////////////////////////////
+// Router
+let Router = withBaseUri(
+  withLocation(
+    ({ location, navigate, basepath, baseUri, children }) => {
+      basepath = basepath || baseUri || "/"; // prop > context > default
+      let routes = Children.map(children, createRoute(basepath));
+      let match = pick(routes, location.pathname);
+      if (match) {
+        let { params, uri, route, route: { value: element } } = match;
+        let props = { ...params, uri, location };
+        let clone = cloneElement(
+          element,
+          props,
+          element.props.children ? (
+            <Router basepath={route.path.replace(/\/\*$/, "")}>
+              {element.props.children}
+            </Router>
+          ) : (
+            undefined
+          )
+        );
+        return (
+          <BaseUriContext.Provider value={uri}>
+            {clone}
+          </BaseUriContext.Provider>
+        );
+      } else {
+        warning(
+          true,
+          `<Router basepath="${basepath}">\n\nNothing matched:\n\t${
+            location.pathname
+          }\n\nPaths checked: \n\t${routes
+            .map(route => route.path)
+            .join(
+              "\n\t"
+            )}\n\nTo get rid of this warning, add a default NotFound component as child of Router:
+        \n\tconst NotFound = () => <div>Not Found!</div>
+        \n\t<Router>\n\t  <NotFound default/>\n\t  {/* ... */}\n\t</Router>`
+        );
+        return null;
+      }
+    }
+  )
+);
+
+////////////////////////////////////////////////////////////////////////
+// Link
+let Link = withBaseUri(
+  withLocation(
+    ({ baseUri, navigate, to, state, replace, ...anchorProps }) => {
+      const href = resolve(to, baseUri);
+      return (
+        <a
+          {...anchorProps}
+          href={href}
+          onClick={event => {
+            if (anchorProps.onClick) anchorProps.onClick(event);
+            if (shouldNavigate(event)) {
+              event.preventDefault();
+              navigate(href, { state, replace });
+            }
+          }}
+        />
+      );
+    }
+  )
+);
+
+////////////////////////////////////////////////////////////////////////
+// helpers
+let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
+
+let createRoute = basepath => element => {
+  let path =
+    element.props.path === "/"
+      ? basepath
+      : `${basepath}/${stripSlashes(element.props.path)}`;
+
+  return {
+    value: element,
+    default: element.props.default,
+    path: element.props.children ? `${path}/*` : path
+  };
+};
+
+const shouldNavigate = event =>
+  !event.defaultPrevented &&
+  event.button === 0 &&
+  !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+
+////////////////////////////////////////////////////////////////////////
+// exports
 export {
-  Router,
-  Link,
-  Redirect,
-  Match,
-  History,
-  LocationProvider,
   createHistory,
-  navigate
+  createMemorySource,
+  navigate,
+  LocationProvider,
+  Router,
+  Link
 };
