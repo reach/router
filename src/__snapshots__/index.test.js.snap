@@ -15,6 +15,10 @@ exports[`MatchPath matches a path 1`] = `
 </pre>
 `;
 
+exports[`ServerRenderContext works 1`] = `"<div data-reactroot=\\"\\">Home</div>"`;
+
+exports[`ServerRenderContext works 2`] = `"<div data-reactroot=\\"\\">Group: <!-- -->123</div>"`;
+
 exports[`disrespect has complete disrespect for leading and trailing slashes 1`] = `
 <div>
   Dash 

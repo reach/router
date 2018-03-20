@@ -1,5 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
+import { renderToString } from "react-dom/server";
 
 import {
   createHistory,
@@ -7,7 +8,10 @@ import {
   Router,
   LocationProvider,
   Link,
-  MatchPath
+  MatchPath,
+  Redirect,
+  isRedirect,
+  ServerRenderContext
 } from "./index";
 
 let snapshot = ({ pathname, element }) => {
@@ -485,5 +489,49 @@ describe("MatchPath", () => {
         </MatchPath>
       )
     });
+  });
+});
+
+describe("ServerRenderContext", () => {
+  let App = () => (
+    <Router>
+      <Home path="/" />
+      <Group path="/groups/:groupId" />
+      <Redirect from="/g/:groupId" to="/groups/:groupId" />
+    </Router>
+  );
+
+  it("works", () => {
+    expect(
+      renderToString(
+        <ServerRenderContext url="/">
+          <App />
+        </ServerRenderContext>
+      )
+    ).toMatchSnapshot();
+
+    expect(
+      renderToString(
+        <ServerRenderContext url="/groups/123">
+          <App />
+        </ServerRenderContext>
+      )
+    ).toMatchSnapshot();
+  });
+
+  test("redirects", () => {
+    let redirectedPath = "/g/123";
+    let markup;
+    try {
+      markup = renderToString(
+        <ServerRenderContext url={redirectedPath}>
+          <App />
+        </ServerRenderContext>
+      );
+    } catch (error) {
+      expect(markup).not.toBeDefined();
+      expect(isRedirect(error)).toBe(true);
+      expect(error.uri).toBe("/groups/123");
+    }
   });
 });

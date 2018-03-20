@@ -1,5 +1,4 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
-/*global __DEV__*/
 import React, { Children, cloneElement } from "react";
 import warning from "warning";
 import invariant from "invariant";
@@ -73,9 +72,9 @@ class LocationProvider extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    if (error.redirect) {
+    if (isRedirect(error)) {
       let { props: { history: { navigate } } } = this;
-      navigate(error.redirect, { replace: true });
+      navigate(error.uri, { replace: true });
     } else {
       throw error;
     }
@@ -108,6 +107,19 @@ class LocationProvider extends React.Component {
     );
   }
 }
+////////////////////////////////////////////////////////////////////////////////
+let ServerRenderContext = ({ url, children }) => (
+  <LocationContext.Provider
+    value={{
+      location: { pathname: url },
+      navigate: () => {
+        throw new Error("You can't call navigate on the server.");
+      }
+    }}
+  >
+    {children}
+  </LocationContext.Provider>
+);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
@@ -211,9 +223,14 @@ let Link = ({
 Link = withBase(withLocation(Link));
 
 ////////////////////////////////////////////////////////////////////////////////
+function RedirectRequest(uri) {
+  this.uri = uri;
+}
+
+let isRedirect = o => o instanceof RedirectRequest;
+
 let redirect = to => {
-  let obj = { redirect: to };
-  throw obj;
+  throw new RedirectRequest(to);
 };
 
 class Redirect extends React.Component {
@@ -313,8 +330,10 @@ export {
   Link,
   Redirect,
   redirect,
+  isRedirect,
   MatchPath,
   LocationProvider,
+  ServerRenderContext,
   createHistory,
   createMemorySource,
   navigate
