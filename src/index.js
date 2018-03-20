@@ -292,11 +292,11 @@ let shouldNavigate = event =>
 
 ////////////////////////////////////////////////////////////////////////
 export {
-  LocationProvider,
   Router,
   Link,
   Redirect,
   MatchPath,
+  LocationProvider,
   createHistory,
   createMemorySource,
   navigate

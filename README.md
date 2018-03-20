@@ -5,50 +5,39 @@ Next generation routing for React.
 ## Installation
 
 ```bash
-npm install @reactions/router
-# or
 yarn add @reactions/router
 ```
 
 And then import it:
 
 ```js
-// using es modules
-import { Router, Link } from "@reactions/router";
-
-// common.js
-const { Router, Link } = require("@reactions/router");
-
-// AMD
-// I've forgotten but it should work.
+import { Router, Link, Redirect } from "@reactions/router";
 ```
 
 Or use script tags and globals.
 
 ```html
 <script src="https://unpkg.com/@reactions/router"></script>
-```
-
-And then grab it off the global like so:
-
-```js
+<script>
 ReactionsRouter.Router;
 ReactionsRouter.Link;
+ReactionsRouter.Redirect;
+</script>
 ```
 
 ## How To
 
 ### Rendering
 
-Routers select a child to render based on the child's path. The children are just other components that could be rendered on their own.
+Routers select a child to render based on the child's path. The children are just other components that could be rendered on their own outside of a Router.
 
 ```js
 import { React } from "react";
 import { render } from "react-dom";
 import { Router, Link } from "@reactions/router";
 
-const Home = () => <div>Home</div>;
-const Dash = () => <div>Dash</div>;
+let Home = () => <div>Home</div>;
+let Dash = () => <div>Dash</div>;
 
 render(
   <Router>
@@ -60,19 +49,25 @@ render(
 
 ### Navigate With Link
 
-To navigate around the app, render a `Link` somewhere. It doesn’t have to be a child of Router, it can be anywhere.
+To navigate around the app, render a `Link` somewhere.
 
 ```jsx
-render(
+let Home = () => (
   <div>
+    <h1>Home</h1>
     <nav>
-      <Link to="/">Home</Link> | <Link to="/dashboard">Dashboard</Link>
+      <Link to="/">Home</Link> | <Link to="dashboard">Dashboard</Link>
     </nav>
-    <Router>
-      <Home path="/" />
-      <Dash path="dashboard" />
-    </Router>
   </div>
+);
+
+let Dash = () => <div>Dash</div>;
+
+render(
+  <Router>
+    <Home path="/" />
+    <Dash path="dashboard" />
+  </Router>
 );
 ```
 
@@ -121,7 +116,7 @@ The URL "/invoices" will render `<Invoices/>` and "/123" will render `<Invoice i
 
 ### Nested Component Paths
 
-You can nest components inside of a Router, and the paths will nest too. The matched child component will come in as the `children` prop, the same as if you'd rendered it directly. (Internally `Router` just renders another `Router` with a `basepath`, but I digress...)
+You can nest components inside of a Router, and the paths will nest too. The matched child component will come in as the `children` prop, the same as if you'd rendered it directly. (Internally `Router` just renders another `Router`, but I digress...)
 
 ```jsx
 const Dash = ({ children }) => (
@@ -145,9 +140,38 @@ render(
 
 If the URL is "/dashboard/invoices" then the Router will render `<Dash><Invoices/></Dash>`. If it's just "/dashboard", `children` will be `null` and we’ll only see `<Dash/>`.
 
+Most apps probably have some sort of global chrome/navigation, that works out just fine:
+
+```jsx
+const Main = ({ children }) => (
+  <div>
+    <h1>Welcome to the App!</h1>
+    <ul>
+      <li>
+        <Link to="dashboard">Dashboard</Link>
+      </li>
+      <li>
+        <Link to="invoices">Invoices</Link>
+      </li>
+    </ul>
+    <hr />
+    {children}
+  </div>
+);
+
+render(
+  <Router>
+    <Main path="/">
+      <Invoices path="invoices" />
+      <Dash path="dashboard" />
+    </Main>
+  </Router>
+);
+```
+
 ### Relative Links
 
-You can link to relative paths. The relativity comes from the path of the component that rendered the Link. These two links will link to "/dashboard/invoices" and "/dashboard/team" because they're rendered inside of `<Dash/>`. This is really nice when you change a parent's URL, or move the components around, there’s no need to change the links.
+You can link to relative paths. The relativity comes from the path of the component that rendered the Link. These two links will link to "/dashboard/invoices" and "/dashboard/team" because they're rendered inside of `<Dash/>`. This is really nice when you change a parent's URL, or move the components around.
 
 ```jsx
 render(
@@ -172,7 +196,7 @@ const Dash = ({ children }) => (
 );
 ```
 
-This also makes it trivial to render any section of your app as its own application.
+This also makes it trivial to render any section of your app as its own application with its own router. If all your links are relative, it can be embedded inside any other router and just work.
 
 ### "Index" Paths
 
@@ -246,10 +270,7 @@ render(
 
 ### Nested Routers
 
-You can render a router anywhere you want in your app, even deep inside another Router.
-
-1.  Use a wildcard path on the parent component so nested paths match it.
-2.  Set the basename in the child router to the `url` of the parent.
+You can render a router anywhere you want in your app, even deep inside another Router, just makes sure to use a splat (`*`) on the parent component so nested paths match it.
 
 ```jsx
 render(
@@ -259,10 +280,10 @@ render(
   </Router>
 );
 
-const Dash = ({ url }) => (
+const Dash = () => (
   <div>
     <p>A nested router</p>
-    <Router basename={url}>
+    <Router>
       <DashboardGraphs path="/" />
       <InvoiceList path="invoices" />
     </Router>
@@ -284,14 +305,34 @@ const Invoices = () => (
     <NewInvoiceForm
       onSubmit={async event => {
         const newInvoice = await createInvoice(event.target);
-        navigate(`/invoice/${newInvoice.id}`);
+        navigate(`/invoices/${newInvoice.id}`);
       }}
     />
   </div>
 );
 ```
 
-Navigate returns a promise so you can await it. It resolves after React is completely finished rendering the next screen.
+Or better, yet, use `props.navigate` passed to your route components and then you can navigate to relative paths:
+
+```jsx
+const Invoices = ({ navigate }) => (
+  <div>
+    <NewInvoiceForm
+      onSubmit={async event => {
+        const newInvoice = await createInvoice(event.target);
+        // can navigate to relative paths
+        navigate(newInvoice.id);
+      }}
+    />
+  </div>
+);
+<Router>
+  <Invoices path="invoices" />
+  <Invoice path="invoices/:id" />
+</Router>;
+```
+
+Navigate returns a promise so you can await it. It resolves after React is completely finished rendering the next screen, even with React Suspense.
 
 ```jsx
 class Invoices extends React.Component {
@@ -318,7 +359,7 @@ class Invoices extends React.Component {
 }
 ```
 
-## React Suspense and Time Slicing Ready
+## React Suspense Ready (as it can be, ofc)
 
 ### History Stack Handling
 
@@ -340,24 +381,20 @@ Now when the user clicks back, they don’t end up on a page they never even saw
 
 ### Low Priority Updates
 
-Router takes advantage of "Time Slicing" in React . It's very common to hook a user input up to a query string in the URL. Every time the user types, the url updates, and then React rerenders. Router state is given "low priority" so these inputs will not bind the CPU like they would have otherwise.
+Router's state changes are marked as "low priority". It's very common to hook a user input up to a query string in the URL. Every time the user types, the url updates, and then React rerenders. Router state is given low priority so these inputs will not bind the CPU like they would have otherwise.
 
 ## API
 
 ```jsx
-import {
-  Router,
-  Link,
-  Match,
-  Redirect,
-  Location,
-  navigate
-} from "@reactions/router";
+import { Router, Link, Redirect, MatchPath, navigate } from "@reactions/router";
 ```
 
 ```jsx
-<Router basepath={string}>
+<Router>
   <AnyComponent path={string} />
+  <AnyComponent path={string}>
+    <AnyComponent path={relativeString} />
+  </AnyComponent>
   <AnyComponent default />
   <Redirect from={string} to={string} />
 </Router>
@@ -369,26 +406,16 @@ import {
 
 ```jsx
 navigate(to);
-navigate({ to, replace, state });
+navigate(to, { replace, state });
 
 await navigate(...)
 navigate.then(...)
 ```
 
 ```jsx
-<Match path={string}>
+<MatchPath path={string}>
   {({ match, location, navigate }) => (...)}
-</Match>
-```
-
-```jsx
-<Redirect to={string} />
-```
-
-```jsx
-<Location>
-  {({ location, navigate }) => (...)}
-</Location>
+</MatchPath>
 ```
 
 ## Legal
