@@ -98,8 +98,7 @@ class LocationProvider extends React.Component {
   }
 
   render() {
-    let { state: { context, redirecting }, props: { children } } = this;
-    if (redirecting) return null;
+    let { state: { context }, props: { children } } = this;
     return (
       <LocationContext.Provider value={context}>
         {typeof children === "function" ? children(context) : children || null}
@@ -149,7 +148,7 @@ let Router = ({ location, navigate, basepath, baseuri, children }) => {
   if (match) {
     let { params, uri, route, route: { value: element } } = match;
 
-    // remove the /* from the end for child routes relatieve paths
+    // remove the /* from the end for child routes relative paths
     basepath = route.default ? basepath : route.path.replace(/\/\*$/, "");
 
     let props = {
@@ -234,19 +233,19 @@ let redirect = to => {
 };
 
 class Redirect extends React.Component {
-  // TODO: server rendering
-
   // Support React < 16 with this hook
   componentDidMount() {
     const {
-      props: { navigate, to, from, replace = true, state, ...props }
+      props: { navigate, to, from, replace = true, state, noThrow, ...props }
     } = this;
     navigate(insertParams(to, props), { replace, state });
   }
 
   render() {
-    const { props: { navigate, to, from, replace, state, ...props } } = this;
-    redirect(insertParams(to, props));
+    const {
+      props: { navigate, to, from, replace, state, noThrow, ...props }
+    } = this;
+    if (!noThrow && React.version > 15) redirect(insertParams(to, props));
     return null;
   }
 }
