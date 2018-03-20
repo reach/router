@@ -4,11 +4,7 @@
   "description": "Next generation Routing for React.",
   "main": "index.js",
   "module": "es/index.js",
-  "files": [
-    "es",
-    "index.js",
-    "umd"
-  ],
+  "files": ["es", "index.js", "umd"],
   "scripts": {
     "build": "node build/build.js",
     "watch": "watch -p src/index.js -c \"yarn build\"",
@@ -59,12 +55,9 @@
     "type": "git",
     "url": "git+https://github.com/reactions/router.git"
   },
-  "keywords": [
-    "react",
-    "react router"
-  ],
+  "keywords": ["react", "react router"],
   "prettier": {
-    "printWidth": 72
+    "printWidth": 80
   },
   "eslintConfig": {
     "extends": "react-app"

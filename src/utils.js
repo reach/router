@@ -1,5 +1,4 @@
 import invariant from "invariant";
-export { pick, match, resolve };
 
 ////////////////////////////////////////////////////////////////////////////////
 // pick(routes, uri)
@@ -29,23 +28,28 @@ let pick = (routes, uri) => {
   let [uriPathname] = uri.split("?");
   let uriSegments = segmentize(uriPathname);
   let ranked = rankRoutes(routes);
-  let matchedSegmentCount = 0;
 
   for (let i = 0, l = ranked.length; i < l; i++) {
+    let missed = false;
     let route = ranked[i].route;
 
     if (route.default) {
-      default_ = route;
+      default_ = {
+        route,
+        params: {},
+        uri
+      };
       continue;
     }
 
     let routeSegments = segmentize(route.path);
     let params = {};
     let max = Math.max(uriSegments.length, routeSegments.length);
+    let index = 0;
 
-    for (let i = 0; i < max; i++) {
-      let routeSegment = routeSegments[i];
-      let uriSegment = uriSegments[i];
+    for (; index < max; index++) {
+      let routeSegment = routeSegments[index];
+      let uriSegment = uriSegments[index];
 
       let isSplat = routeSegment === "*";
       if (isSplat) {
@@ -53,10 +57,9 @@ let pick = (routes, uri) => {
         // uri:   /files/documents/work
         // route: /files/*
         params["*"] = uriSegments
-          .slice(i)
+          .slice(index)
           .map(decodeURIComponent)
           .join("/");
-        matchedSegmentCount = i || 1; // || 1 allows root '*'
         break;
       }
 
@@ -64,16 +67,13 @@ let pick = (routes, uri) => {
         // URI is shorter than the route, no match
         // uri:   /users
         // route: /users/:userId
-        matchedSegmentCount = 0;
+        missed = true;
         break;
       }
 
       let dynamicMatch = paramRe.exec(routeSegment);
 
       if (dynamicMatch) {
-        // Found a dynamic segment, parse it out
-        // uri:   /users/123
-        // route: /users/:userId
         invariant(
           !reservedNames.includes(dynamicMatch[1]),
           `<Router> dynamic segment "${
@@ -88,34 +88,22 @@ let pick = (routes, uri) => {
         // Current segments don't match, not dynamic, not splat, so no match
         // uri:   /users/123/settings
         // route: /users/:id/profile
-        matchedSegmentCount = 0;
+        missed = true;
         break;
       }
-
-      matchedSegmentCount++;
     }
 
-    if (matchedSegmentCount) {
-      match = { route, params };
+    if (!missed) {
+      match = {
+        route,
+        params,
+        uri: "/" + uriSegments.slice(0, index).join("/")
+      };
       break;
     }
   }
 
-  if (match) {
-    return Object.assign({}, match, {
-      uri: "/" + uriSegments.slice(0, matchedSegmentCount).join("/")
-    });
-  }
-
-  if (default_) {
-    return {
-      route: default_,
-      params: {},
-      uri
-    };
-  }
-
-  return null;
+  return match || default_ || null;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +136,7 @@ let match = (path, uri) => pick([{ path }], uri);
 //
 // By treating every path as a directory, linking to relative paths should
 // require less contextual information and (fingers crossed) be more intuitive.
-function resolve(to, base) {
+let resolve = (to, base) => {
   // /foo/bar, /baz/qux => /foo/bar
   if (to.startsWith("/")) {
     return to;
@@ -167,8 +155,8 @@ function resolve(to, base) {
 
   // profile, /users/789 => /users/789/profile
   if (!toSegments[0].startsWith(".")) {
-    let pathname = "/" + baseSegments.concat(toSegments).join("/");
-    return addQuery(pathname, toQuery);
+    let pathname = baseSegments.concat(toSegments).join("/");
+    return addQuery((basePathname === "/" ? "" : "/") + pathname, toQuery);
   }
 
   // ./         /users/123  =>  /users/123
@@ -185,7 +173,13 @@ function resolve(to, base) {
   }
 
   return addQuery("/" + segments.join("/"), toQuery);
-}
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// insertParams(path, params)
+// let insertParams = (path, params) => {
+
+// }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Junk
@@ -208,8 +202,7 @@ let rankRoute = (route, index) => {
         score += SEGMENT_POINTS;
         if (isRootSegment(segment)) score += ROOT_POINTS;
         else if (isDynamic(segment)) score += DYNAMIC_POINTS;
-        else if (isSplat(segment))
-          score -= SEGMENT_POINTS + SPLAT_PENALTY;
+        else if (isSplat(segment)) score -= SEGMENT_POINTS + SPLAT_PENALTY;
         else score += STATIC_POINTS;
         return score;
       }, 0);
@@ -221,9 +214,7 @@ let rankRoutes = routes =>
     .map(rankRoute)
     .sort(
       (a, b) =>
-        a.score < b.score
-          ? 1
-          : a.score > b.score ? -1 : a.index - b.index
+        a.score < b.score ? 1 : a.score > b.score ? -1 : a.index - b.index
     );
 
 let segmentize = uri =>
@@ -232,7 +223,9 @@ let segmentize = uri =>
     .replace(/(^\/+|\/+$)/g, "")
     .split("/");
 
-let addQuery = (pathname, query) =>
-  pathname + (query ? `?${query}` : "");
+let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
 
 let reservedNames = ["uri", "path"];
+
+////////////////////////////////////////////////////////////////////////////////
+export { pick, match, resolve };

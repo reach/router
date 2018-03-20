@@ -3,7 +3,7 @@
 // show loading quickly on initial load, don't show top level placeholder on navigation
 import React from "react";
 import Edit from "react-icons/lib/ti/edit";
-import { Router, Link } from "./Router";
+import { Router, Link } from "@reactions/router";
 import {
   login,
   getContacts,
@@ -56,9 +56,7 @@ class Contacts extends React.Component {
               <ul>
                 {contacts.map(contact => (
                   <li key={contact.id}>
-                    <Link to={`contact/${contact.id}`}>
-                      {contact.first}
-                    </Link>
+                    <Link to={`contact/${contact.id}`}>{contact.first}</Link>
                   </li>
                 ))}
               </ul>
@@ -137,7 +135,7 @@ const Card = withInvalidateContacts(
                   defaultValue={contact.last}
                 />{" "}
                 <button type="submit">Save</button>{" "}
-                <Link to="./" replace>
+                <Link to="../" replace>
                   Cancel
                 </Link>
               </form>
@@ -160,7 +158,7 @@ const Card = withInvalidateContacts(
   }
 );
 
-const About = () => <div>This is a new router demo!</div>;
+const About = () => <h1>Reactions Router Demo!</h1>;
 
 const MONKEY = "https://contacts.now.sh/images/monkey.jpg";
 const Field = ({ title }) => (
@@ -210,7 +208,8 @@ const Create = withInvalidateContacts(
       const res = await createContact(contact);
       if (res.contact) {
         this.props.invalidateContacts();
-        this.props.navigate(res.contact.id);
+        this.props.navigate(`../${res.contact.id}`);
+        // this.props.navigate(res.contact.id);
       } else {
         const text = await res.text();
         this.setState({
@@ -249,12 +248,10 @@ const Create = withInvalidateContacts(
             Create Contact
           </button>
           <ul style={{ fontSize: "85%", padding: "10px" }}>
+            <li>To cause an error, try using the first name "Millenial"</li>
             <li>
-              To cause an error, try using the first name "Millenial"
-            </li>
-            <li>
-              For randomly slow responses use the browser debugger to
-              throttle your network.
+              For randomly slow responses use the browser debugger to throttle
+              your network.
             </li>
           </ul>
           {state === CreateStates.ERROR && (

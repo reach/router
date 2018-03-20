@@ -1,6 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`dynamic segments + splat return value 1`] = `
+exports[`match works 1`] = `
+Object {
+  "params": Object {
+    "bar": "hello",
+  },
+  "route": Object {
+    "path": "/foo/:bar",
+  },
+  "uri": "/foo/hello",
+}
+`;
+
+exports[`pick dynamic segments + splat return value 1`] = `
 Object {
   "params": Object {
     "*": "some/deep/path",
@@ -13,19 +25,19 @@ Object {
 }
 `;
 
-exports[`match 1`] = `
+exports[`pick pick /* 1`] = `
 Object {
   "params": Object {
-    "bar": "hello",
+    "*": "whatever/else",
   },
   "route": Object {
-    "path": "/foo/:bar",
+    "path": "/*",
   },
-  "uri": "/foo/hello",
+  "uri": "/",
 }
 `;
 
-exports[`pick return value 1`] = `
+exports[`pick pick return value 1`] = `
 Object {
   "params": Object {
     "five": "five",
@@ -42,7 +54,7 @@ Object {
 }
 `;
 
-exports[`query strings 1`] = `
+exports[`pick query strings 1`] = `
 Object {
   "params": Object {
     "userId": "ryan",
@@ -54,7 +66,7 @@ Object {
 }
 `;
 
-exports[`splat return value 1`] = `
+exports[`pick splat return value 1`] = `
 Object {
   "params": Object {
     "*": "some/deep/path",

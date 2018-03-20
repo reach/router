@@ -34,11 +34,6 @@ exports[`links renders links with relative hrefs 1`] = `
   </h1>
   <a
     href="/dash/reports"
-    location={
-      Object {
-        "pathname": "/dash/reports",
-      }
-    }
     onClick={[Function]}
   >
     /dash/reports
@@ -49,15 +44,55 @@ exports[`links renders links with relative hrefs 1`] = `
     </h2>
     <a
       href="/dash"
-      location={
-        Object {
-          "pathname": "/dash/reports",
-        }
-      }
       onClick={[Function]}
     >
       /dash
     </a>
+  </div>
+</div>
+`;
+
+exports[`links uses the right href in multiple root paths 1`] = `
+<div>
+  <div>
+    Parent URI: 
+    /
+  </div>
+  <div>
+    <div>
+      Parent URI: 
+      /
+    </div>
+    <div>
+      <div>
+        Parent URI: 
+        /one
+      </div>
+      <div>
+        <div>
+          Child URI: 
+          /one/two
+        </div>
+        <a
+          href="/one/two/three"
+          onClick={[Function]}
+        >
+          /one/two/three
+        </a>
+        <a
+          href="/one"
+          onClick={[Function]}
+        >
+          /one
+        </a>
+        <a
+          href="/"
+          onClick={[Function]}
+        >
+          /
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -170,6 +205,23 @@ exports[`passed props shadows params in nested paths 1`] = `
   <div>
     Group: 
     milkshake
+  </div>
+</div>
+`;
+
+exports[`relative navigate prop navigates relative 1`] = `
+<div>
+  User:
+  123
+</div>
+`;
+
+exports[`relative navigate prop navigates relative 2`] = `
+<div>
+  User:
+  123
+  <div>
+    Settings
   </div>
 </div>
 `;

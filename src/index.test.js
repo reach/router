@@ -352,6 +352,39 @@ describe("links", () => {
       )
     });
   });
+
+  it("uses the right href in multiple root paths", () => {
+    const Parent = ({ uri, children }) => (
+      <div>
+        <div>Parent URI: {uri}</div>
+        {children}
+      </div>
+    );
+
+    const Child = ({ uri }) => (
+      <div>
+        <div>Child URI: {uri}</div>
+        <Link to="three">/one/two/three</Link>
+        <Link to="..">/one</Link>
+        <Link to="../..">/</Link>
+      </div>
+    );
+
+    snapshot({
+      pathname: "/one/two",
+      element: (
+        <Router>
+          <Parent path="/">
+            <Parent path="/">
+              <Parent path="one">
+                <Child path="two" />
+              </Parent>
+            </Parent>
+          </Parent>
+        </Router>
+      )
+    });
+  });
 });
 
 describe("transitions", () => {
@@ -368,11 +401,7 @@ describe("transitions", () => {
   });
 
   it("keeps the stack right on interrupted transitions", async () => {
-    const {
-      snapshot,
-      history,
-      history: { navigate }
-    } = runWithNavigation(
+    const { snapshot, history, history: { navigate } } = runWithNavigation(
       <Router>
         <Home path="/" />
         <Reports path="reports" />
@@ -384,6 +413,38 @@ describe("transitions", () => {
     snapshot();
     expect(history.index === 1);
   });
+});
+
+describe("relative navigate prop", () => {
+  it("navigates relative", async () => {
+    let relativeNavigate;
+
+    const User = ({ children, navigate, userId }) => {
+      relativeNavigate = navigate;
+      return (
+        <div>
+          User:{userId}
+          {children}
+        </div>
+      );
+    };
+
+    const Settings = () => <div>Settings</div>;
+
+    const { snapshot } = runWithNavigation(
+      <Router>
+        <User path="user/:userId">
+          <Settings path="settings" />
+        </User>
+      </Router>,
+      "/user/123"
+    );
+    snapshot();
+    await relativeNavigate("settings");
+    snapshot();
+  });
+
+  it("navigates relative", () => {});
 });
 
 describe("nested routers", () => {

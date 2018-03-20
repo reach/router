@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/ryanflorence/.nvm/versions/node/v6.11.5/bin/node /Users/ryanflorence/.yarn/bin/yarn.js remove @reactions/component resolve-url
+  /Users/ryanflorence/.nvm/versions/node/v6.11.5/bin/node /Users/ryanflorence/.yarn/bin/yarn.js test
 
 PATH: 
   /usr/local/heroku/bin:/Users/ryanflorence/.nvm/versions/node/v6.11.5/bin:/Users/ryanflorence/.yarn/bin:/usr/local/git/bin:/usr/local/bin:node_modules/.bin:bin::devbin:/Users/ryanflorence/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/ryanflorence/Library/Android/sdk/tools:/Users/ryanflorence/Library/Android/sdk/platform-tools
@@ -73,7 +73,7 @@ npm manifest:
     },
     "keywords": ["react", "react router"],
     "prettier": {
-      "printWidth": 72
+      "printWidth": 80
     },
     "eslintConfig": {
       "extends": "react-app"
@@ -110,10 +110,6 @@ Lockfile:
       chalk "^2.0.0"
       esutils "^2.0.2"
       js-tokens "^3.0.0"
-  
-  "@reactions/component@^2.0.2":
-    version "2.0.2"
-    resolved "https://registry.yarnpkg.com/@reactions/component/-/component-2.0.2.tgz#40f8c1c2c37baabe57a0c944edb9310dc1ec6642"
   
   "@types/node@*":
     version "9.4.7"
@@ -3986,10 +3982,6 @@ Lockfile:
     version "3.0.0"
     resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-3.0.0.tgz#b22c7af7d9d6881bc8b6e653335eebcb0a188748"
   
-  resolve-url@0.2.1:
-    version "0.2.1"
-    resolved "https://registry.yarnpkg.com/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
-  
   resolve@1.1.7:
     version "1.1.7"
     resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
@@ -4738,10 +4730,18 @@ Lockfile:
       window-size "0.1.0"
 
 Trace: 
-  Error: This module isn't specified in a manifest.
-      at MessageError.Error (native)
-      at new MessageError (/Users/ryanflorence/.yarn/lib/cli.js:186:110)
-      at Object.<anonymous> (/Users/ryanflorence/.yarn/lib/cli.js:60445:15)
-      at next (native)
-      at step (/Users/ryanflorence/.yarn/lib/cli.js:98:30)
-      at /Users/ryanflorence/.yarn/lib/cli.js:109:13
+  Error: Command failed.
+  Exit code: 1
+  Command: sh
+  Arguments: -c jest **/*.test.js
+  Directory: /Users/ryanflorence/Code/reactions/router
+  Output:
+  
+      at ProcessTermError.Error (native)
+      at ProcessTermError.MessageError (/Users/ryanflorence/.yarn/lib/cli.js:186:110)
+      at new ProcessTermError (/Users/ryanflorence/.yarn/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/Users/ryanflorence/.yarn/lib/cli.js:30281:17)
+      at emitTwo (events.js:106:13)
+      at ChildProcess.emit (events.js:191:7)
+      at maybeClose (internal/child_process.js:920:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:230:5)

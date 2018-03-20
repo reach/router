@@ -5,6 +5,12 @@ import invariant from "invariant";
 import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
 import { pick, resolve, match } from "./utils";
+import {
+  globalHistory,
+  navigate,
+  createHistory,
+  createMemorySource
+} from "./history";
 
 ////////////////////////////////////////////////////////////////////////////////
 // React polyfills
@@ -19,131 +25,30 @@ if (unstable_deferredUpdates === undefined) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// createHistory(source) - wraps a history source
-let createHistory = source => {
-  let listeners = [];
-  let location = { ...source.location };
-  let transitioning = false;
-  let resolveTransition = null;
-
-  return {
-    get location() {
-      return location;
-    },
-
-    get transitioning() {
-      return transitioning;
-    },
-
-    _onTransitionComplete() {
-      transitioning = false;
-      resolveTransition();
-    },
-
-    listen(listener) {
-      listeners.push(listener);
-
-      const popstateListener = () => {
-        location = { ...source.location };
-        listener();
-      };
-
-      source.addEventListener("popstate", popstateListener);
-
-      return () => {
-        source.removeEventListener("popstate", popstateListener);
-        listeners = listeners.filter(fn => fn !== listener);
-      };
-    },
-
-    navigate(to, { state = null, replace = false } = {}) {
-      if (transitioning || replace) {
-        source.history.replaceState(state, null, to);
-      } else {
-        source.history.pushState(state, null, to);
-      }
-
-      location = { ...source.location };
-      transitioning = true;
-      const transition = new Promise(res => {
-        resolveTransition = res;
-      });
-      listeners.forEach(fn => fn());
-      return transition;
-    }
-  };
-};
-
-////////////////////////////////////////////////////////////////////////////////
-// Stores history entries in memory for testing or other platforms like Native
-let createMemorySource = (initialPathname = "/") => {
-  let index = 0;
-  let stack = [{ pathname: initialPathname }];
-  let states = [];
-
-  return {
-    get location() {
-      return stack[index];
-    },
-    addEventListener(name, fn) {},
-    removeEventListener(name, fn) {},
-    history: {
-      get entries() {
-        return stack;
-      },
-      get index() {
-        return index;
-      },
-      get state() {
-        return states[index];
-      },
-      pushState(state, _, pathname) {
-        index++;
-        stack.push({ pathname });
-        states.push(state);
-      },
-      replaceState(state, _, pathname) {
-        stack[index] = { pathname };
-        states[index] = state;
-      }
-    }
-  };
-};
-
-////////////////////////////////////////////////////////////////////////////////
-// global history - uses window.history as the source if available, otherwise a
-// memory history
-let getSource = () => {
-  let canUseDOM = !!(
-    typeof window !== "undefined" &&
-    window.document &&
-    window.document.createElement
-  );
-  return canUseDOM ? window : createMemorySource();
-};
-
-let globalHistory = createHistory(getSource());
-let { navigate } = globalHistory;
-
-////////////////////////////////////////////////////////////////////////////////
 // Location Context/Provider
 let LocationContext = createContext();
+LocationContext.Consumer.displayName = "Location.Consumer";
+LocationContext.Provider.displayName = "Location.Provider";
 
 // sets up a listener if there isn't one already so apps don't need to be
 // wrapped in some top level provider
-let withLocation = Comp => props => (
-  <LocationContext.Consumer>
-    {context =>
-      context ? (
-        <Comp {...context} {...props} />
-      ) : (
-        <LocationProvider>
-          {context => <Comp {...context} {...props} />}
-        </LocationProvider>
-      )
-    }
-  </LocationContext.Consumer>
-);
+let withLocation = Comp => {
+  const C = props => (
+    <LocationContext.Consumer>
+      {context =>
+        context ? (
+          <Comp {...context} {...props} />
+        ) : (
+          <LocationProvider>
+            {context => <Comp {...context} {...props} />}
+          </LocationProvider>
+        )
+      }
+    </LocationContext.Consumer>
+  );
+  C.displayName = `withLocation(${Comp.displayName || Comp.name})`;
+  return C;
+};
 
 class LocationProvider extends React.Component {
   static defaultProps = {
@@ -181,135 +86,162 @@ class LocationProvider extends React.Component {
     let { state: { context }, props: { children } } = this;
     return (
       <LocationContext.Provider value={context}>
-        {typeof children === "function"
-          ? children(context)
-          : children || null}
+        {typeof children === "function" ? children(context) : children || null}
       </LocationContext.Provider>
     );
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-let BaseUriContext = createContext();
-let withBaseUri = Comp => props => (
-  <BaseUriContext.Consumer>
-    {baseUri => <Comp {...props} baseUri={baseUri} />}
-  </BaseUriContext.Consumer>
-);
+// Sets baseuri and basepath for nested routers and links
+let BaseContext = createContext({ baseuri: "/", basepath: "/" });
+BaseContext.Consumer.displayName = "Base.Consumer";
+BaseContext.Provider.displayName = "Base.Provider";
+
+let withBase = Comp => {
+  let C = props => (
+    <BaseContext.Consumer>
+      {context => (
+        // props second so basepath can be passed in as a prop and win
+        <Comp {...context} {...props} />
+      )}
+    </BaseContext.Consumer>
+  );
+  C.displayName = `withBase(${Comp.displayName || Comp.name})`;
+  return C;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
-let Router = withBaseUri(
-  withLocation(
-    ({ location, navigate, basepath, baseUri, children }) => {
-      basepath = basepath || baseUri || "/"; // prop > context > default
-      let routes = Children.map(children, createRoute(basepath));
-      let match = pick(routes, location.pathname);
-      if (match) {
-        let { params, uri, route, route: { value: element } } = match;
-        let props = { ...params, uri, location };
-        let clone = cloneElement(
-          element,
-          props,
-          element.props.children ? (
-            <Router basepath={route.path.replace(/\/\*$/, "")}>
-              {element.props.children}
-            </Router>
-          ) : (
-            undefined
-          )
-        );
-        return (
-          <BaseUriContext.Provider value={uri}>
-            {clone}
-          </BaseUriContext.Provider>
-        );
-      } else {
-        warning(
-          true,
-          `<Router basepath="${basepath}">\n\nNothing matched:\n\t${
-            location.pathname
-          }\n\nPaths checked: \n\t${routes
-            .map(route => route.path)
-            .join(
-              "\n\t"
-            )}\n\nTo get rid of this warning, add a default NotFound component as child of Router:
+// The main event, welcome to the show everybody.
+let Router = ({ location, navigate, basepath, baseuri, children }) => {
+  let routes = Children.map(children, createRoute(basepath));
+  let match = pick(routes, location.pathname);
+
+  if (match) {
+    let { params, uri, route, route: { value: element } } = match;
+
+    // remove the /* from the end for child routes relatieve paths
+    basepath = route.default ? basepath : route.path.replace(/\/\*$/, "");
+
+    let props = {
+      ...params,
+      uri,
+      location,
+      navigate: (to, options) => navigate(resolve(to, uri), options)
+    };
+
+    let clone = cloneElement(
+      element,
+      props,
+      element.props.children ? (
+        <Router>{element.props.children}</Router>
+      ) : (
+        undefined
+      )
+    );
+
+    return (
+      <BaseContext.Provider value={{ baseuri: uri, basepath }}>
+        {clone}
+      </BaseContext.Provider>
+    );
+  } else {
+    warning(
+      true,
+      `<Router basepath="${basepath}">\n\nNothing matched:\n\t${
+        location.pathname
+      }\n\nPaths checked: \n\t${routes
+        .map(route => route.path)
+        .join(
+          "\n\t"
+        )}\n\nTo get rid of this warning, add a default NotFound component as child of Router:
         \n\tconst NotFound = () => <div>Not Found!</div>
         \n\t<Router>\n\t  <NotFound default/>\n\t  {/* ... */}\n\t</Router>`
-        );
-        return null;
-      }
-    }
-  )
-);
-
-////////////////////////////////////////////////////////////////////////////////
-let Link = withBaseUri(
-  withLocation(
-    ({ baseUri, navigate, to, state, replace, ...anchorProps }) => {
-      const href = resolve(to, baseUri);
-      return (
-        <a
-          {...anchorProps}
-          href={href}
-          onClick={event => {
-            if (anchorProps.onClick) anchorProps.onClick(event);
-            if (shouldNavigate(event)) {
-              event.preventDefault();
-              navigate(href, { state, replace });
-            }
-          }}
-        />
-      );
-    }
-  )
-);
-
-////////////////////////////////////////////////////////////////////////////////
-let Redirect = withLocation(
-  class Redirect extends React.Component {
-    componentDidMount() {
-      const { props: { navigate, to, replace = true, state } } = this;
-      navigate(to, { replace, state });
-    }
-    render() {
-      // TODO: throw a redirect with Suspense to prevent ever even rendering
-      // down this far
-      return null;
-    }
+    );
+    return null;
   }
-);
+};
+
+Router = withBase(withLocation(Router));
 
 ////////////////////////////////////////////////////////////////////////////////
-let MatchPath = withLocation(
-  ({ path, location, navigate, children }) => {
-    let result = match(path, location.pathname);
-    return children({
-      navigate,
-      location,
-      match: result
-        ? {
-            ...result.params,
-            uri: result.uri,
-            path
-          }
-        : null
-    });
+let Link = ({
+  basepath,
+  baseuri,
+  navigate,
+  location,
+  to,
+  state,
+  replace,
+  ...anchorProps
+}) => {
+  const href = resolve(to, baseuri);
+  return (
+    <a
+      {...anchorProps}
+      href={href}
+      onClick={event => {
+        if (anchorProps.onClick) anchorProps.onClick(event);
+        if (shouldNavigate(event)) {
+          event.preventDefault();
+          navigate(href, { state, replace });
+        }
+      }}
+    />
+  );
+};
+
+Link = withBase(withLocation(Link));
+
+////////////////////////////////////////////////////////////////////////////////
+class Redirect extends React.Component {
+  // TODO: server rendering
+  componentDidMount() {
+    const { props: { navigate, to, replace = true, state } } = this;
+    navigate(to, { replace, state });
   }
-);
+  render() {
+    // TODO: throw a redirect with Suspense to prevent ever even rendering
+    // down this far
+    return null;
+  }
+}
+
+Redirect = withLocation(Redirect);
 
 ////////////////////////////////////////////////////////////////////////////////
-// helpers
+let MatchPath = ({ path, location, navigate, children }) => {
+  let result = match(path, location.pathname);
+  return children({
+    navigate,
+    location,
+    match: result
+      ? {
+          ...result.params,
+          uri: result.uri,
+          path
+        }
+      : null
+  });
+};
+
+MatchPath = withLocation(MatchPath);
+
+////////////////////////////////////////////////////////////////////////////////
+// Junk
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
 
 let createRoute = basepath => element => {
   invariant(
-    element.props.path ||
-      element.props.default ||
-      element.type === Redirect,
+    element.props.path || element.props.default || element.type === Redirect,
     `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
       element.type
     }\``
   );
+
+  if (element.props.default) {
+    return { value: element, default: true };
+  }
 
   let elementPath =
     element.type === Redirect ? element.props.from : element.props.path;
@@ -317,28 +249,28 @@ let createRoute = basepath => element => {
   let path =
     elementPath === "/"
       ? basepath
-      : `${basepath}/${stripSlashes(elementPath)}`;
+      : `${stripSlashes(basepath)}/${stripSlashes(elementPath)}`;
 
   return {
     value: element,
     default: element.props.default,
-    path: element.props.children ? `${path}/*` : path
+    path: element.props.children ? `${stripSlashes(path)}/*` : path
   };
 };
 
-const shouldNavigate = event =>
+let shouldNavigate = event =>
   !event.defaultPrevented &&
   event.button === 0 &&
   !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
 
 ////////////////////////////////////////////////////////////////////////
 export {
-  createHistory,
-  createMemorySource,
-  navigate,
   LocationProvider,
   Router,
   Link,
   Redirect,
-  MatchPath
+  MatchPath,
+  createHistory,
+  createMemorySource,
+  navigate
 };
