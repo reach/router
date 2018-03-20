@@ -5,13 +5,19 @@ import warning from "warning";
 import invariant from "invariant";
 import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
-import { pick, resolve, match, insertParams, validateRedirect } from "./utils";
+import {
+  pick,
+  resolve,
+  match,
+  insertParams,
+  validateRedirect
+} from "./lib/utils";
 import {
   globalHistory,
   navigate,
   createHistory,
   createMemorySource
-} from "./history";
+} from "./lib/history";
 
 ////////////////////////////////////////////////////////////////////////////////
 // React polyfills

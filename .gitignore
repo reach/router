@@ -2,6 +2,6 @@
 /node_modules
 /umd
 /index.js
-/utils.js
+/lib
 npm-debug.log*
-yarn-debug.log*
+yarn-error.log*
