@@ -54,6 +54,13 @@ class Contacts extends React.Component {
                 <Link to="/">Home</Link>
               </p>
               <ul>
+                <li>
+                  <Link to="/contacts/ryan">Redirect Ryan</Link>
+                  <br />
+                  <small>
+                    You might need to close the create-react-app error overlay
+                  </small>
+                </li>
                 {contacts.map(contact => (
                   <li key={contact.id}>
                     <Link to={`contact/${contact.id}`}>{contact.first}</Link>

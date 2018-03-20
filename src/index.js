@@ -72,6 +72,15 @@ class LocationProvider extends React.Component {
     return { navigate, location: { ...location } };
   }
 
+  componentDidCatch(error, info) {
+    if (error.redirect) {
+      let { props: { history: { navigate } } } = this;
+      navigate(error.redirect, { replace: true });
+    } else {
+      throw error;
+    }
+  }
+
   componentDidMount() {
     let { state: { refs }, props: { history } } = this;
     refs.unlisten = history.listen(() => {
@@ -90,7 +99,8 @@ class LocationProvider extends React.Component {
   }
 
   render() {
-    let { state: { context }, props: { children } } = this;
+    let { state: { context, redirecting }, props: { children } } = this;
+    if (redirecting) return null;
     return (
       <LocationContext.Provider value={context}>
         {typeof children === "function" ? children(context) : children || null}
@@ -201,8 +211,15 @@ let Link = ({
 Link = withBase(withLocation(Link));
 
 ////////////////////////////////////////////////////////////////////////////////
+let redirect = to => {
+  let obj = { redirect: to };
+  throw obj;
+};
+
 class Redirect extends React.Component {
   // TODO: server rendering
+
+  // Support React < 16 with this hook
   componentDidMount() {
     const {
       props: { navigate, to, from, replace = true, state, ...props }
@@ -211,8 +228,8 @@ class Redirect extends React.Component {
   }
 
   render() {
-    // TODO: throw a redirect with Suspense to prevent ever even rendering
-    // down this far
+    const { props: { navigate, to, from, replace, state, ...props } } = this;
+    redirect(insertParams(to, props));
     return null;
   }
 }
@@ -295,6 +312,7 @@ export {
   Router,
   Link,
   Redirect,
+  redirect,
   MatchPath,
   LocationProvider,
   createHistory,
