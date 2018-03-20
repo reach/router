@@ -1,10 +1,11 @@
 /*eslint-disable jsx-a11y/anchor-has-content */
+/*global __DEV__*/
 import React, { Children, cloneElement } from "react";
 import warning from "warning";
 import invariant from "invariant";
 import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
-import { pick, resolve, match } from "./utils";
+import { pick, resolve, match, insertParams, validateRedirect } from "./utils";
 import {
   globalHistory,
   navigate,
@@ -197,9 +198,12 @@ Link = withBase(withLocation(Link));
 class Redirect extends React.Component {
   // TODO: server rendering
   componentDidMount() {
-    const { props: { navigate, to, replace = true, state } } = this;
-    navigate(to, { replace, state });
+    const {
+      props: { navigate, to, from, replace = true, state, ...props }
+    } = this;
+    navigate(insertParams(to, props), { replace, state });
   }
+
   render() {
     // TODO: throw a redirect with Suspense to prevent ever even rendering
     // down this far
@@ -209,6 +213,23 @@ class Redirect extends React.Component {
 
 Redirect = withLocation(Redirect);
 
+Redirect.propTypes = {
+  from: (props, name) => {
+    if (!props.to)
+      return new Error('<Redirect> requires both "from" and "to" props.');
+    if (!validateRedirect(props.from, props.to)) {
+      return new Error(
+        `<Redirect from="${props.from} to="${
+          props.to
+        }"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`
+      );
+    }
+  },
+  to: (props, name) => {
+    if (!props.from)
+      return new Error('<Redirect> requires both "from" and "to" props.');
+  }
+};
 ////////////////////////////////////////////////////////////////////////////////
 let MatchPath = ({ path, location, navigate, children }) => {
   let result = match(path, location.pathname);

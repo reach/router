@@ -1,4 +1,4 @@
-import { pick, match, resolve } from "./utils";
+import { pick, match, resolve, insertParams } from "./utils";
 
 describe("pick", () => {
   test("a bunch of scenarios", () => {
@@ -79,7 +79,18 @@ describe("resolve", () => {
   });
 });
 
-const routes = shuffle([
+describe("insertParams", () => {
+  it("works", () => {
+    expect(
+      insertParams("/users/:userId/groups/:groupId", {
+        userId: "2",
+        groupId: "4"
+      })
+    ).toEqual("/users/2/groups/4");
+  });
+});
+
+let routes = shuffle([
   {
     value: "MainGroupMe",
     path: "/groups/main/users/me"

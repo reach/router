@@ -4,7 +4,11 @@
   "description": "Next generation Routing for React.",
   "main": "index.js",
   "module": "es/index.js",
-  "files": ["es", "index.js", "umd"],
+  "files": [
+    "es",
+    "index.js",
+    "umd"
+  ],
   "scripts": {
     "build": "node build/build.js",
     "watch": "watch -p src/index.js -c \"yarn build\"",
@@ -18,7 +22,6 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6",
     "babel-eslint": "^7.2.3",
-    "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -55,7 +58,10 @@
     "type": "git",
     "url": "git+https://github.com/reactions/router.git"
   },
-  "keywords": ["react", "react router"],
+  "keywords": [
+    "react",
+    "react router"
+  ],
   "prettier": {
     "printWidth": 80
   },
@@ -63,6 +69,7 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "babel-plugin-dev-expression": "^0.2.1",
     "create-react-context": "^0.2.1",
     "invariant": "^2.2.3",
     "warning": "^3.0.0"

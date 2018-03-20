@@ -3,7 +3,7 @@
 // show loading quickly on initial load, don't show top level placeholder on navigation
 import React from "react";
 import Edit from "react-icons/lib/ti/edit";
-import { Router, Link } from "@reactions/router";
+import { Router, Link, Redirect } from "@reactions/router";
 import {
   login,
   getContacts,
@@ -298,6 +298,7 @@ class App extends React.Component {
           <Card path="contact/:id" />
           <Card path="contact/:id/edit" edit={true} />
           <Create path="contact/new" />
+          <Redirect from="contacts/:id" to="contact/:id" />
           <NotFound default />
         </Contacts>
       </Router>

@@ -177,9 +177,31 @@ let resolve = (to, base) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // insertParams(path, params)
-// let insertParams = (path, params) => {
+let insertParams = (path, params) => {
+  let segments = segmentize(path);
+  return (
+    "/" +
+    segments
+      .map(segment => {
+        let match = paramRe.exec(segment);
+        return match ? params[match[1]] : segment;
+      })
+      .join("/")
+  );
+};
 
-// }
+let validateRedirect = (from, to) => {
+  let filter = segment => isDynamic(segment);
+  let fromString = segmentize(from)
+    .filter(filter)
+    .sort()
+    .join("/");
+  let toString = segmentize(to)
+    .filter(filter)
+    .sort()
+    .join("/");
+  return fromString === toString;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Junk
@@ -228,4 +250,4 @@ let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
 let reservedNames = ["uri", "path"];
 
 ////////////////////////////////////////////////////////////////////////////////
-export { pick, match, resolve };
+export { pick, match, resolve, insertParams, validateRedirect };

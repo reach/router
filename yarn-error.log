@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/ryanflorence/.nvm/versions/node/v6.11.5/bin/node /Users/ryanflorence/.yarn/bin/yarn.js test
+  /Users/ryanflorence/.nvm/versions/node/v6.11.5/bin/node /Users/ryanflorence/.yarn/bin/yarn.js build
 
 PATH: 
   /usr/local/heroku/bin:/Users/ryanflorence/.nvm/versions/node/v6.11.5/bin:/Users/ryanflorence/.yarn/bin:/usr/local/git/bin:/usr/local/bin:node_modules/.bin:bin::devbin:/Users/ryanflorence/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/ryanflorence/Library/Android/sdk/tools:/Users/ryanflorence/Library/Android/sdk/platform-tools
@@ -20,7 +20,11 @@ npm manifest:
     "description": "Next generation Routing for React.",
     "main": "index.js",
     "module": "es/index.js",
-    "files": ["es", "index.js", "umd"],
+    "files": [
+      "es",
+      "index.js",
+      "umd"
+    ],
     "scripts": {
       "build": "node build/build.js",
       "watch": "watch -p src/index.js -c \"yarn build\"",
@@ -34,7 +38,6 @@ npm manifest:
       "babel-cli": "^6.26.0",
       "babel-core": "^6",
       "babel-eslint": "^7.2.3",
-      "babel-plugin-dev-expression": "^0.2.1",
       "babel-plugin-external-helpers": "^6.22.0",
       "babel-plugin-transform-class-properties": "^6.24.1",
       "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -71,7 +74,10 @@ npm manifest:
       "type": "git",
       "url": "git+https://github.com/reactions/router.git"
     },
-    "keywords": ["react", "react router"],
+    "keywords": [
+      "react",
+      "react router"
+    ],
     "prettier": {
       "printWidth": 80
     },
@@ -566,10 +572,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/babel-plugin-check-es2015-constants/-/babel-plugin-check-es2015-constants-6.22.0.tgz#35157b101426fd2ffd3da3f75c7d1e91835bbf8a"
     dependencies:
       babel-runtime "^6.22.0"
-  
-  babel-plugin-dev-expression@^0.2.1:
-    version "0.2.1"
-    resolved "https://registry.yarnpkg.com/babel-plugin-dev-expression/-/babel-plugin-dev-expression-0.2.1.tgz#d4a7beefefbb50e3f2734990a82a2486cf9eb9ee"
   
   babel-plugin-external-helpers@^6.22.0:
     version "6.22.0"
@@ -4733,7 +4735,7 @@ Trace:
   Error: Command failed.
   Exit code: 1
   Command: sh
-  Arguments: -c jest **/*.test.js
+  Arguments: -c node build/build.js
   Directory: /Users/ryanflorence/Code/reactions/router
   Output:
   
