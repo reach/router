@@ -2,7 +2,7 @@
 // createHistory(source) - wraps a history source
 let createHistory = (source, options) => {
   let listeners = [];
-  let location = { ...source.location };
+  let location = { ...source.location, state: source.history.state };
   let transitioning = false;
   let resolveTransition = null;
 
@@ -16,6 +16,7 @@ let createHistory = (source, options) => {
     },
 
     _onTransitionComplete() {
+      console.log("complete");
       transitioning = false;
       resolveTransition();
     },
@@ -24,7 +25,7 @@ let createHistory = (source, options) => {
       listeners.push(listener);
 
       const popstateListener = () => {
-        location = { ...source.location };
+        location = { ...source.location, state: source.history.state };
         listener();
       };
 
@@ -36,23 +37,24 @@ let createHistory = (source, options) => {
       };
     },
 
-    navigate(to, { state = null, replace = false } = {}) {
+    navigate(to, { state = undefined, replace = false } = {}) {
       // try...catch iOS Safari limits to 100 pushState calls
       try {
         if (transitioning || replace) {
+          console.log("replace?");
           source.history.replaceState(state, null, to);
         } else {
+          console.log("push");
           source.history.pushState(state, null, to);
         }
       } catch (e) {
-        window.location[replace ? "replace" : "assign"](to);
+        console.log("HERE?!");
+        source.location[replace ? "replace" : "assign"](to);
       }
 
-      location = { ...source.location };
+      location = { ...source.location, state: source.history.state };
       transitioning = true;
-      const transition = new Promise(res => {
-        resolveTransition = res;
-      });
+      const transition = new Promise(res => (resolveTransition = res));
       listeners.forEach(fn => fn());
       return transition;
     }

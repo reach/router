@@ -73,6 +73,7 @@
     "babel-plugin-dev-expression": "^0.2.1",
     "create-react-context": "^0.2.1",
     "invariant": "^2.2.3",
+    "query-string": "4.2.2",
     "warning": "^3.0.0"
   },
   "bugs": {

@@ -18,6 +18,10 @@ import {
   createMemorySource
 } from "./lib/history";
 
+import * as qs from "query-string";
+
+const __COMPAT__ = true;
+
 ////////////////////////////////////////////////////////////////////////////////
 // React polyfills
 let { createContext } = React;
@@ -67,8 +71,9 @@ class LocationProvider extends React.Component {
   };
 
   getContext() {
+    console.log("getContext");
     let { props: { history: { navigate, location } } } = this;
-    return { navigate, location: { ...location } };
+    return { navigate, location };
   }
 
   componentDidCatch(error, info) {
@@ -80,14 +85,17 @@ class LocationProvider extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.context.location !== this.state.context.location) {
+      this.props.history._onTransitionComplete();
+    }
+  }
+
   componentDidMount() {
     let { state: { refs }, props: { history } } = this;
     refs.unlisten = history.listen(() => {
       unstable_deferredUpdates(() => {
-        this.setState(
-          () => ({ context: this.getContext() }),
-          history._onTransitionComplete
-        );
+        this.setState(() => ({ context: this.getContext() }));
       });
     });
   }
@@ -158,6 +166,13 @@ let Router = ({ location, navigate, basepath, baseuri, children }) => {
       navigate: (to, options) => navigate(resolve(to, uri), options)
     };
 
+    if (__COMPAT__) {
+      if (element.type === Route) {
+        props.params = params;
+        props.key = element.props.path;
+      }
+    }
+
     let clone = cloneElement(
       element,
       props,
@@ -203,6 +218,10 @@ let Link = ({
   replace,
   ...anchorProps
 }) => {
+  if (__COMPAT__) {
+    let { activeClassName, activeStyle, ...rest } = anchorProps;
+    anchorProps = rest;
+  }
   const href = resolve(to, baseuri);
   return (
     <a
@@ -245,7 +264,7 @@ class Redirect extends React.Component {
     const {
       props: { navigate, to, from, replace, state, noThrow, ...props }
     } = this;
-    if (!noThrow && React.version > 15) redirect(insertParams(to, props));
+    if (!noThrow) redirect(insertParams(to, props));
     return null;
   }
 }
@@ -324,6 +343,125 @@ let shouldNavigate = event =>
   !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
 
 ////////////////////////////////////////////////////////////////////////
+// RR v3 Compatibility
+let Route;
+let IndexRoute;
+let browserHistory;
+
+if (__COMPAT__) {
+  Route = class Route extends React.Component {
+    state = {
+      onEnterReady: this.props.onEnter ? false : true
+    };
+
+    componentDidMount() {
+      this.runEnterHook();
+    }
+
+    componentWillUnmount() {
+      if (this.props.onLeave) {
+        const { location, params } = this.props;
+        this.props.onLeave({ location, params });
+      }
+    }
+
+    componentDidUpdate(prevProps) {
+      let { onChange } = this.props;
+      if (onChange) {
+        let { location, params, router } = getCompatProps(this.props);
+        let { location: pLocation, params: pParams } = getCompatProps(
+          prevProps
+        );
+        let prevState = { location: pLocation, params: pParams };
+        let nextState = { location, params };
+        let replaceArg;
+        let replace = arg => (replaceArg = arg);
+        let callback = () => {
+          Promise.resolve().then(() => {
+            if (replaceArg) {
+              router.replace(replaceArg);
+            } else {
+              this.setState({ onEnterReady: true });
+            }
+          });
+        };
+        onChange(prevState, nextState, replace, callback);
+        if (onChange.length < 3) callback();
+      }
+    }
+
+    runEnterHook() {
+      const { onEnter, navigate } = this.props;
+      if (onEnter) {
+        let { location, params, router } = getCompatProps(this.props);
+        let nextState = { location, params };
+        let replaceArg;
+        let replace = arg => (replaceArg = arg);
+        let callback = () => {
+          // next tick hack since this didMount runs before
+          // top level LocationProvider's subscription
+          Promise.resolve().then(() => {
+            if (replaceArg) {
+              router.replace(replaceArg);
+            } else {
+              this.setState({ onEnterReady: true });
+            }
+          });
+        };
+        onEnter(nextState, replace, callback);
+        if (onEnter.length < 3) callback();
+      }
+    }
+
+    render() {
+      let { onEnterReady } = this.state;
+
+      let { component: Component, ...props } = this.props;
+      let compatProps = getCompatProps(props);
+      return onEnterReady ? <Component {...compatProps} /> : null;
+    }
+  };
+
+  let getCompatProps = props => {
+    let { location, children, navigate, params } = props;
+
+    location = { ...location };
+    location.query = qs.parse(location.search.substring(1));
+
+    if (params && params["*"]) {
+      params.splat = params["*"];
+      delete params["*"];
+    }
+
+    let wrappedNavigate = (arg, replace = false) => {
+      if (typeof arg === "object") {
+        let { pathname, query, ...rest } = arg;
+        let to = query ? [pathname, qs.stringify(query)].join("?") : pathname;
+        navigate(to, { replace, ...rest });
+      } else {
+        navigate(arg, { replace });
+      }
+    };
+
+    let router = {
+      replace: arg => wrappedNavigate(arg, true),
+      push: arg => wrappedNavigate(arg, false),
+      location,
+      params
+    };
+
+    return { children, params, location, router };
+  };
+
+  browserHistory = {};
+
+  IndexRoute = class IndexRoute extends Route {
+    static defaultProps = { path: "/" };
+  };
+}
+
+////////////////////////////////////////////////////////////////////////
+
 export {
   Router,
   Link,
@@ -335,5 +473,9 @@ export {
   ServerRenderContext,
   createHistory,
   createMemorySource,
-  navigate
+  navigate,
+  // RRv3 Compat
+  Route,
+  IndexRoute,
+  browserHistory
 };

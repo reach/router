@@ -257,8 +257,8 @@ const Create = withInvalidateContacts(
           <ul style={{ fontSize: "85%", padding: "10px" }}>
             <li>To cause an error, try using the first name "Millenial"</li>
             <li>
-              For randomly slow responses use the browser debugger to throttle
-              your network.
+              For slow responses use the browser debugger to throttle your
+              network.
             </li>
           </ul>
           {state === CreateStates.ERROR && (

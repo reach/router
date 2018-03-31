@@ -3,12 +3,7 @@
 // show loading quickly on initial load, don't show top level placeholder on navigation
 import React, { Fragment, Loading, Timeout } from "react";
 import { Router, Link, navigate } from "./Router";
-import {
-  login,
-  readContacts,
-  readContact,
-  createContact
-} from "./utils";
+import { login, readContacts, readContact, createContact } from "./utils";
 import withCache from "./withCache";
 import Img, { preload as preloadImg } from "./Img";
 import Component from "@reactions/component";
@@ -24,15 +19,12 @@ const Contacts = withCache(({ cache, children }) => {
         <div>
           <h1>Contacts</h1>
           <p>
-            <Link to="contact/new">New Contact</Link> |{" "}
-            <Link to="/">Home</Link>
+            <Link to="contact/new">New Contact</Link> | <Link to="/">Home</Link>
           </p>
           <ul>
             {contacts.map(contact => (
               <li key={contact.id}>
-                <Link to={`contact/${contact.id}`}>
-                  {contact.first}
-                </Link>
+                <Link to={`contact/${contact.id}`}>{contact.first}</Link>
               </li>
             ))}
           </ul>
@@ -143,12 +135,10 @@ const Create = withCache(({ cache }) => (
           Create Contact
         </button>
         <ul style={{ fontSize: "85%", padding: "10px" }}>
+          <li>To cause an error, try using the first name "Millenial"</li>
           <li>
-            To cause an error, try using the first name "Millenial"
-          </li>
-          <li>
-            For randomly slow responses use the browser debugger to
-            throttle your network.
+            For randomly slow responses use the browser debugger to throttle
+            your network.
           </li>
         </ul>
         {state.error && (
@@ -188,8 +178,9 @@ const App = withCache(({ cache }) => {
   );
 });
 
-const LoadingBar = ({ animate }) =>
-  animate ? <div className="loading-bar" /> : null;
+const LoadingBar = ({ animate }) => (
+  <div className={animate ? "loading-bar" : ""} />
+);
 
 export default class Root extends React.Component {
   render() {
@@ -200,12 +191,15 @@ export default class Root extends React.Component {
             <LoadingBar animate={true} />
           ) : (
             <Loading>
-              {isLoading => (
-                <Fragment>
-                  <LoadingBar animate={isLoading} />
-                  <App />
-                </Fragment>
-              )}
+              {isLoading => {
+                return (
+                  <Fragment>
+                    <pre>{JSON.stringify({ isLoading }, null)}</pre>
+                    <LoadingBar animate={isLoading} />
+                    <App />
+                  </Fragment>
+                );
+              }}
             </Loading>
           )
         }

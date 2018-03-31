@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`React Router v3 Compatibility onEnter can redirect 1`] = `null`;
+
+exports[`React Router v3 Compatibility passes url params 1`] = `
+<div>
+  <ul>
+    <li>
+      <a
+        activeClassName="active"
+        href="/user/123"
+        onClick={[Function]}
+      >
+        Bob
+      </a>
+    </li>
+    <li>
+      <a
+        activeClassName="active"
+        href="/user/abc"
+        onClick={[Function]}
+      >
+        Sally
+      </a>
+    </li>
+  </ul>
+  <div
+    className="User"
+  >
+    <h1>
+      User id: 
+      bob
+    </h1>
+    <ul>
+      <li>
+        <a
+          activeClassName="active"
+          href="/user/bob/tasks/foo"
+          onClick={[Function]}
+        >
+          foo task
+        </a>
+      </li>
+      <li>
+        <a
+          activeClassName="active"
+          href="/user/bob/tasks/bar"
+          onClick={[Function]}
+        >
+          bar task
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`React Router v3 Compatibility renders deeply nested routes 1`] = `
+<div>
+  <ul>
+    <li>
+      <a
+        activeClassName="active"
+        href="/user/123"
+        onClick={[Function]}
+      >
+        Bob
+      </a>
+    </li>
+    <li>
+      <a
+        activeClassName="active"
+        href="/user/abc"
+        onClick={[Function]}
+      >
+        Sally
+      </a>
+    </li>
+  </ul>
+  <div
+    className="User"
+  >
+    <h1>
+      User id: 
+      bob
+    </h1>
+    <ul>
+      <li>
+        <a
+          activeClassName="active"
+          href="/user/bob/tasks/foo"
+          onClick={[Function]}
+        >
+          foo task
+        </a>
+      </li>
+      <li>
+        <a
+          activeClassName="active"
+          href="/user/bob/tasks/bar"
+          onClick={[Function]}
+        >
+          bar task
+        </a>
+      </li>
+    </ul>
+    <div
+      className="Task"
+    >
+      <h2>
+        User ID: 
+        bob
+      </h2>
+      <h3>
+        Task ID: 
+        123
+      </h3>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`React Router v3 Compatibility renders generally 1`] = `
+<div>
+  <ul>
+    <li>
+      <a
+        activeClassName="active"
+        href="/user/123"
+        onClick={[Function]}
+      >
+        Bob
+      </a>
+    </li>
+    <li>
+      <a
+        activeClassName="active"
+        href="/user/abc"
+        onClick={[Function]}
+      >
+        Sally
+      </a>
+    </li>
+  </ul>
+  <h2>
+    Index
+  </h2>
+</div>
+`;
