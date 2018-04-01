@@ -10,23 +10,40 @@ exports[`React Router v3 Compatibility lets you pass props with cloneElement 1`]
 
 exports[`React Router v3 Compatibility onEnter can redirect 1`] = `null`;
 
+exports[`React Router v3 Compatibility onEnter passes props to onEnter 1`] = `
+Object {
+  "location": Object {
+    "key": "initial",
+    "pathname": "/foo/test",
+    "query": Object {},
+    "search": "",
+    "state": undefined,
+  },
+  "params": Object {
+    "bar": "test",
+  },
+}
+`;
+
 exports[`React Router v3 Compatibility passes url params 1`] = `
 <div>
   <ul>
     <li>
       <a
-        activeClassName="active"
+        className="active"
         href="/user/123"
         onClick={[Function]}
+        style={undefined}
       >
         Bob
       </a>
     </li>
     <li>
       <a
-        activeClassName="active"
+        className="active"
         href="/user/abc"
         onClick={[Function]}
+        style={undefined}
       >
         Sally
       </a>
@@ -42,18 +59,20 @@ exports[`React Router v3 Compatibility passes url params 1`] = `
     <ul>
       <li>
         <a
-          activeClassName="active"
+          className="active"
           href="/user/bob/tasks/foo"
           onClick={[Function]}
+          style={undefined}
         >
           foo task
         </a>
       </li>
       <li>
         <a
-          activeClassName="active"
+          className="active"
           href="/user/bob/tasks/bar"
           onClick={[Function]}
+          style={undefined}
         >
           bar task
         </a>
@@ -68,18 +87,20 @@ exports[`React Router v3 Compatibility renders deeply nested routes 1`] = `
   <ul>
     <li>
       <a
-        activeClassName="active"
+        className="active"
         href="/user/123"
         onClick={[Function]}
+        style={undefined}
       >
         Bob
       </a>
     </li>
     <li>
       <a
-        activeClassName="active"
+        className="active"
         href="/user/abc"
         onClick={[Function]}
+        style={undefined}
       >
         Sally
       </a>
@@ -95,18 +116,20 @@ exports[`React Router v3 Compatibility renders deeply nested routes 1`] = `
     <ul>
       <li>
         <a
-          activeClassName="active"
+          className="active"
           href="/user/bob/tasks/foo"
           onClick={[Function]}
+          style={undefined}
         >
           foo task
         </a>
       </li>
       <li>
         <a
-          activeClassName="active"
+          className="active"
           href="/user/bob/tasks/bar"
           onClick={[Function]}
+          style={undefined}
         >
           bar task
         </a>
@@ -133,18 +156,20 @@ exports[`React Router v3 Compatibility renders generally 1`] = `
   <ul>
     <li>
       <a
-        activeClassName="active"
+        className="active"
         href="/user/123"
         onClick={[Function]}
+        style={undefined}
       >
         Bob
       </a>
     </li>
     <li>
       <a
-        activeClassName="active"
+        className="active"
         href="/user/abc"
         onClick={[Function]}
+        style={undefined}
       >
         Sally
       </a>

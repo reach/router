@@ -1,14 +1,14 @@
 const BABEL_ENV = process.env.BABEL_ENV;
 const building = BABEL_ENV != undefined && BABEL_ENV !== "cjs";
 
-const plugins = ["transform-class-properties", "transform-object-rest-spread"];
+const plugins = [
+  "transform-class-properties",
+  "transform-object-rest-spread",
+  "dev-expression"
+];
 
 if (BABEL_ENV === "umd") {
   plugins.push("external-helpers");
-}
-
-if (process.env.NODE_ENV === "production") {
-  plugins.push("dev-expression");
 }
 
 module.exports = {

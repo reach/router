@@ -4,7 +4,9 @@ exports[`MatchPath matches a path 1`] = `
 <pre>
   {
   "location": {
-    "pathname": "/groups/123"
+    "pathname": "/groups/123",
+    "search": "",
+    "key": "initial"
   },
   "match": {
     "groupId": "123",
@@ -196,7 +198,9 @@ exports[`passed props passes the matched URI to the component 1`] = `
   "userId": "456",
   "uri": "/groups/123/users/456",
   "location": {
-    "pathname": "/groups/123/users/456"
+    "pathname": "/groups/123/users/456",
+    "search": "",
+    "key": "initial"
   }
 }
 </pre>

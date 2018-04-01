@@ -1,4 +1,4 @@
-/*eslint-disable jsx-a11y/anchor-has-content */
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React, { Children, cloneElement } from "react";
 import warning from "warning";
 import invariant from "invariant";
@@ -32,6 +32,39 @@ let { unstable_deferredUpdates } = ReactDOM;
 if (unstable_deferredUpdates === undefined) {
   unstable_deferredUpdates = fn => fn();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+let label = "[@reactions/router]";
+const deprecate = {
+  object: (o, getMessage) => {
+    let object = {};
+    for (let key in o) {
+      if (o.hasOwnProperty(key)) {
+        let message = getMessage(key);
+        if (!message) continue;
+        if (typeof o[key] === "function") {
+          let old = o[key];
+          object[key] = (...args) => {
+            console.warn(label, message);
+            return old.apply(object, args);
+          };
+        } else {
+          Object.defineProperty(object, key, {
+            enumerable: true,
+            get() {
+              console.warn(label, message);
+              return o[key];
+            }
+          });
+        }
+      }
+    }
+    return object;
+  },
+  message: (...args) => {
+    console.warn(label, ...args);
+  }
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Location Context/Provider
@@ -252,7 +285,6 @@ let Link = props => {
     <a
       {...anchorProps}
       href={href}
-      className
       onClick={event => {
         if (anchorProps.onClick) anchorProps.onClick(event);
         if (shouldNavigate(event)) {
@@ -444,7 +476,7 @@ if (__COMPAT__) {
     return C;
   };
 
-  let wrappedNavigate = (arg, replace = false) => {
+  let wrappedNavigate = (navigate, arg, replace = false) => {
     if (typeof arg === "object") {
       let { pathname, query, ...rest } = arg;
       let to = query ? [pathname, qs.stringify(query)].join("?") : pathname;
@@ -455,21 +487,57 @@ if (__COMPAT__) {
   };
 
   browserHistory = {
-    replace: arg => wrappedNavigate(arg, true),
-    push: arg => wrappedNavigate(arg, false),
+    replace: arg => wrappedNavigate(navigate, arg, true),
+    push: arg => wrappedNavigate(navigate, arg, false),
     listen: globalHistory.listen
   };
+
+  if (__DEV__) {
+    browserHistory = deprecate.object(browserHistory, key => {
+      if (key === "push") {
+        return `\`browserHistory.${key}(...)\` is deprecated. Use \`navigate(to)\``;
+      } else if (key === "replace") {
+        return `\`browserHistory.${key}(...)\` is deprecated. Use \`navigate(to, { replace: true })\``;
+      } else {
+        return `\`browserHistory.${key}(...)\` is deprecated. For more info: https://bit.ly/history-listen`;
+      }
+    });
+  }
 
   Route = class Route extends React.Component {
     static __compatRoute = true;
 
-    state = {
-      onEnterReady: this.props.onEnter ? false : true,
-      getComponentReady: this.props.getComponent ? false : true,
-      getChildRoutesReady: this.props.getChildRoutes ? false : true,
-      StateComp: undefined,
-      childRoutes: undefined
-    };
+    constructor(props) {
+      super(props);
+
+      if (__DEV__) {
+        let compName =
+          this.props.component.displayName || this.props.component.name;
+        let path = this.props.path;
+        let isIndex = this instanceof IndexRoute;
+        if (isIndex) {
+          deprecate.message(
+            `<IndexRoute component={${compName}}> is deprecated. Use \`<${compName} path="/">\` For more help, see http://bit.ly/deprecation-route`
+          );
+        } else if (path === "*") {
+          deprecate.message(
+            `<Route path="*" component={${compName}}> is deprecated. Use \`<${compName} default>\` For more help, see http://bit.ly/deprecation-route`
+          );
+        } else {
+          deprecate.message(
+            `<Route path="${path}" component={${compName}}> is deprecated. Use \`<${compName} path="${path}">\` For more help, see http://bit.ly/deprecation-route`
+          );
+        }
+      }
+
+      this.state = {
+        onEnterReady: this.props.onEnter ? false : true,
+        getComponentReady: this.props.getComponent ? false : true,
+        getChildRoutesReady: this.props.getChildRoutes ? false : true,
+        StateComp: undefined,
+        childRoutes: undefined
+      };
+    }
 
     componentDidMount() {
       this.runEnterHook();
@@ -480,6 +548,11 @@ if (__COMPAT__) {
     getChildRoutes() {
       let { getChildRoutes, location, params } = this.props;
       if (getChildRoutes) {
+        if (__DEV__) {
+          deprecate.message(
+            "<Route getChildRoutes> is deprecated. Use code-splitting features of your bundler. For help, see http://bit.ly/get-child-routes"
+          );
+        }
         getChildRoutes({ location, params }, (err, childRoutes) => {
           this.setState({ childRoutes, getChildRoutesReady: true });
         });
@@ -489,6 +562,11 @@ if (__COMPAT__) {
     getComponent() {
       const { getComponent, location, params } = this.props;
       if (getComponent) {
+        if (__DEV__) {
+          deprecate.message(
+            "<Route getComponent> is deprecated. Use code-splitting features of your bundler. For help, see http://bit.ly/get-component"
+          );
+        }
         getComponent({ location, params }, (err, StateComp) => {
           this.setState({ StateComp, getComponentReady: true });
         });
@@ -505,6 +583,11 @@ if (__COMPAT__) {
     componentDidUpdate(prevProps) {
       let { onChange } = this.props;
       if (onChange) {
+        if (__DEV__) {
+          deprecate.message(
+            "<Route onChange> is deprecated. Use move logic to `componentDidUpdate`."
+          );
+        }
         let { location, params, router } = getCompatProps(this.props);
         let { location: pLocation, params: pParams } = getCompatProps(
           prevProps
@@ -530,6 +613,11 @@ if (__COMPAT__) {
     runEnterHook() {
       let { onEnter, navigate } = this.props;
       if (onEnter) {
+        if (__DEV__) {
+          deprecate.message(
+            "<Route onEnter> is deprecated. Move the logic to componentDidMount. For more help, see http://bit.ly/route-on-enter"
+          );
+        }
         let { location, params, router } = getCompatProps(this.props);
         let nextState = { location, params };
         let replaceArg;
@@ -593,7 +681,7 @@ if (__COMPAT__) {
   };
 
   let getCompatProps = props => {
-    let { location, children, params } = props;
+    let { location, children, params, navigate } = props;
     location.query = qs.parse(location.search.substring(1));
 
     if (params && params["*"]) {
@@ -602,11 +690,31 @@ if (__COMPAT__) {
     }
 
     let router = {
-      replace: arg => wrappedNavigate(arg, true),
-      push: arg => wrappedNavigate(arg, false),
+      replace: arg => wrappedNavigate(navigate, arg, true),
+      push: arg => wrappedNavigate(navigate, arg, false),
       location,
       params
     };
+
+    if (__DEV__) {
+      params = deprecate.object(
+        params,
+        key =>
+          `Accessing \`props.params.${key}\` is deprecated. Use \`props.${key}\`.`
+      );
+
+      router = deprecate.object(router, key => {
+        if (key === "push") {
+          return `\`props.router.push(...)\` is deprecated. Use \`props.navigate(to)\`.`;
+        } else if (key === "replace") {
+          return `\`props.router.replace(...)\` is deprecated. Use \`props.navigate(to, { replace: true })\`.`;
+        } else if (key === "location") {
+          return `\`props.router.location\` is deprecated. Use \`props.location\`.`;
+        } else {
+          return false;
+        }
+      });
+    }
 
     return { children, params, location, router };
   };
@@ -704,7 +812,7 @@ if (__COMPAT__) {
               style={linkIsActive ? { ...style, ...activeStyle } : style}
               className={
                 isLinkActive
-                  ? [className, activeClassName].join(" ")
+                  ? [className, activeClassName].join(" ").trim()
                   : className
               }
             />
@@ -714,7 +822,46 @@ if (__COMPAT__) {
     );
   };
 
+  CompatLink.propTypes = {
+    activeStyle: props => {
+      if (props.activeStyle) {
+        deprecate.message(
+          `\`<Link to="${
+            props.to
+          }" activeStyle>\` is deprecated. Please wrap your Link in MatchPath. For help see: http://bit.ly/link-props`
+        );
+      }
+    },
+    activeClassName: props => {
+      if (props.activeClassName) {
+        deprecate.message(
+          `\`<Link to="${
+            props.to
+          }" activeClassName>\` is deprecated. Please wrap your Link in MatchPath. For help see: http://bit.ly/link-props`
+        );
+      }
+    },
+    onlyActiveOnIndex: props => {
+      if (props.activeClassName) {
+        deprecate.message(
+          `\`<Link to="${
+            props.to
+          }" onlyActiveOnIndex>\` is deprecated. Please wrap your Link in MatchPath. For help see: http://bit.ly/link-props`
+        );
+      }
+    }
+  };
+
   IndexLink = props => <CompatLink {...props} onlyActiveOnIndex={true} />;
+  IndexLink.propTypes = {
+    to: props => {
+      deprecate.message(
+        `\`<IndexLink to="${
+          props.to
+        }">\` is deprecated. Please use \`<Link>\` and wrap it in MatchPath. For help see: http://bit.ly/link-props`
+      );
+    }
+  };
 
   withRouter = C => C;
 }
@@ -733,6 +880,7 @@ export {
   navigate,
   redirect,
   // RRv3
+  Route,
   IndexRoute,
   IndexLink,
   browserHistory,

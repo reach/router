@@ -1,6 +1,8 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
+console.warn = () => {};
+
 import {
   createHistory,
   createMemorySource,
@@ -16,7 +18,7 @@ import {
   Route,
   IndexRoute,
   browserHistory
-} from "./compat";
+} from "./index";
 
 let snapshot = ({ pathname, element }) => {
   let testHistory = createHistory(createMemorySource(pathname));
@@ -118,7 +120,7 @@ describe("React Router v3 Compatibility", () => {
     });
   });
 
-  it.only("lets you pass props with cloneElement", () => {
+  it("lets you pass props with cloneElement", () => {
     const App = ({ children }) => (
       <div>{React.cloneElement(children, { yo: "yo" })}</div>
     );
@@ -139,11 +141,7 @@ describe("React Router v3 Compatibility", () => {
   describe("onEnter", () => {
     it("passes props to onEnter", done => {
       const assertOnEnter = (nextState, replace) => {
-        expect(nextState).toEqual({
-          location: { pathname: "/foo/test" },
-          params: { bar: "test" }
-          // routes key not supported :\
-        });
+        expect(nextState).toMatchSnapshot();
         done();
       };
 
@@ -180,7 +178,7 @@ describe("React Router v3 Compatibility", () => {
             <Route
               component={Foo}
               path="/foo/bar"
-              onEnter={(_, replace) => {
+              onEnter={({ location }, replace) => {
                 replace("/wiz/bang");
               }}
             />

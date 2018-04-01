@@ -90,13 +90,13 @@ let createMemorySource = (initialPathname = "/") => {
         return states[index];
       },
       pushState(state, _, uri) {
-        let [pathname, search] = uri.split("?");
+        let [pathname, search = ""] = uri.split("?");
         index++;
         stack.push({ pathname, search });
         states.push(state);
       },
       replaceState(state, _, uri) {
-        let [pathname, search] = uri.split("?");
+        let [pathname, search = ""] = uri.split("?");
         stack[index] = { pathname, search };
         states[index] = state;
       }
