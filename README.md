@@ -456,7 +456,7 @@ Then do a find/replace across your app:
 import { Router, Link, Route } from 'react-router'
 
 // to
-import { Router, Link, Route } from '@reactions/router'
+import { Router, Link, Route } from '@reactions/router/compat'
 ```
 
 Next, cross your fingers and hope everything still works.
@@ -495,7 +495,7 @@ Here's what's not supported (and probably never will be), check if your app is u
 
 ### Migrating Slowly
 
-Once your app is running on Reactions Router, you can start to migrate one route at a time to the official API.
+Once your app is running on Reactions Router, you'll have a console-full of warnings to help guide the migratin. You can start to migrate one route at a time to the official API.
 
 ```jsx
 // pick a route and switch it to the official API,
@@ -516,8 +516,13 @@ Once your app is running on Reactions Router, you can start to migrate one route
 </Router>
 
 // Then change the Users component to read from `this.props.userId`
-// instead of `this.props.params.userId`, once that's done,
-// update the route config:
+// instead of `this.props.params.userId`
+
+const User = ({ params }) => <div>{params.userId}</div>
+
+const User = ({ userId }) => <div>{userId}</div>
+
+// now go update the route config:
 <Router>
   <Route path="/" component={App}>
     <Index path="/"/>
@@ -525,16 +530,22 @@ Once your app is running on Reactions Router, you can start to migrate one route
   </Route>
 </Router>
 
-// Then update the App route
+// And finally update the App route
 <Router>
   <App path="/">
     <Index path="/"/>
     <User path="users/:userId"/>
   </App>
 </Router>
+
+// When all of your routes run without warnings, you can update the import
+
+import ... from '@reactions/router/compat'
+// becomes
+import ... from '@reactions/router'
 ```
 
-Congratulations, you're not gonna get left behind anymore. I hope to add lots of deprecation warnings to guide you in migrating a component off of `<Route/>`. Once the warnings are all clear for a route, you're ready to update it in your route config.
+Congratulations, you're not gonna get left behind anymore!
 
 ## Legal
 
