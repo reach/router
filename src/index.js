@@ -443,8 +443,6 @@ let shouldNavigate = event =>
 
 ////////////////////////////////////////////////////////////////////////
 // COMPAT!
-// let unsupportedRouteProps = ["components"];
-
 let CompatLink;
 let IndexLink;
 let IndexRoute;

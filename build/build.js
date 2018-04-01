@@ -68,7 +68,7 @@ exec("rollup -c -f umd -o umd/reactions-router-compat.js", {
 
 console.log("\nBuilding UMD min.js ...");
 
-exec("rollup -c -f umd -o umd/reactions-router-compate.min.js", {
+exec("rollup -c -f umd -o umd/reactions-router-compat.min.js", {
   BABEL_ENV: "umd",
   NODE_ENV: "production",
   COMPAT: "1"
