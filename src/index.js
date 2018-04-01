@@ -19,7 +19,7 @@ import {
   createMemorySource
 } from "./lib/history";
 
-const __COMPAT__ = true;
+const __COMPAT__ = process.env.COMPAT === "1";
 
 ////////////////////////////////////////////////////////////////////////////////
 // React polyfills

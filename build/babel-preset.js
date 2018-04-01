@@ -4,7 +4,13 @@ const building = BABEL_ENV != undefined && BABEL_ENV !== "cjs";
 const plugins = [
   "transform-class-properties",
   "transform-object-rest-spread",
-  "dev-expression"
+  "dev-expression",
+  [
+    "transform-inline-environment-variables",
+    {
+      include: ["COMPAT"]
+    }
+  ]
 ];
 
 if (BABEL_ENV === "umd") {
