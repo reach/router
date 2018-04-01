@@ -2,7 +2,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import { render } from "react-dom";
-import { browserHistory, Router, Route, Link } from "@reactions/router";
+import { browserHistory, Router, Route, Link } from "@reactions/router/compat";
 
 import auth from "./auth";
 

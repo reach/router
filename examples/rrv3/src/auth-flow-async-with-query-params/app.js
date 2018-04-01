@@ -8,7 +8,7 @@ import {
   IndexRoute,
   browserHistory,
   Link
-} from "@reactions/router";
+} from "@reactions/router/compat";
 
 function App(props) {
   return <div>{props.children}</div>;

@@ -7,7 +7,7 @@ import {
   Route,
   Link,
   Redirect
-} from "@reactions/router";
+} from "@reactions/router/compat";
 
 const App = ({ children }) => (
   <div>

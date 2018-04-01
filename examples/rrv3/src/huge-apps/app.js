@@ -1,7 +1,7 @@
 // WORKS! (!?!?)
 import React from "react";
 import { render } from "react-dom";
-import { Router, browserHistory } from "@reactions/router";
+import { Router, browserHistory } from "@reactions/router/compat";
 
 import "./stubs/COURSES";
 

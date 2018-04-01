@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "@reactions/router";
+import { Link } from "@reactions/router/compat";
 
 const styles = {};
 

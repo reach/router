@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, IndexLink } from "@reactions/router";
+import { Link, IndexLink } from "@reactions/router/compat";
 
 const dark = "hsl(200, 20%, 20%)";
 const light = "#fff";

@@ -1,6 +1,6 @@
 /*globals COURSES:true */
 import React, { Component } from "react";
-import { Link } from "@reactions/router";
+import { Link } from "@reactions/router/compat";
 
 class Dashboard extends Component {
   render() {
