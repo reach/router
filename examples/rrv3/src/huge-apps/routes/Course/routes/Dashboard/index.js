@@ -1,9 +1,8 @@
 module.exports = {
-  path: "assignments",
-
+  path: "/",
   getComponent(nextState, cb) {
     require.ensure([], require => {
-      cb(null, require("./components/Assignments").default);
+      cb(null, require("./components/Dashboard").default);
     });
   }
 };

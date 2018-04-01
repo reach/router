@@ -1,71 +1,78 @@
-import React from 'react'
-import createReactClass from 'create-react-class'
-import { render } from 'react-dom'
-import { browserHistory, Router, Route, IndexRoute, Link } from 'react-router'
-
-import withExampleBasename from '../withExampleBasename'
+// WORKS!
+// - had to clone previous children and pass down location since
+//   context uses subscriptions now
+import React from "react";
+import createReactClass from "create-react-class";
+import { render } from "react-dom";
+import {
+  browserHistory,
+  Router,
+  Route,
+  IndexRoute,
+  Link
+} from "@reactions/router/compat";
 
 const PICTURES = [
-  { id: 0, src: 'http://placekitten.com/601/601' },
-  { id: 1, src: 'http://placekitten.com/610/610' },
-  { id: 2, src: 'http://placekitten.com/620/620' }
-]
+  { id: 0, src: "http://placekitten.com/601/601" },
+  { id: 1, src: "http://placekitten.com/610/610" },
+  { id: 2, src: "http://placekitten.com/620/620" }
+];
 
 const Modal = createReactClass({
   styles: {
-    position: 'fixed',
-    top: '20%',
-    right: '20%',
-    bottom: '20%',
-    left: '20%',
+    position: "fixed",
+    top: "20%",
+    right: "20%",
+    bottom: "20%",
+    left: "20%",
     padding: 20,
-    boxShadow: '0px 0px 150px 130px rgba(0, 0, 0, 0.5)',
-    overflow: 'auto',
-    background: '#fff'
+    boxShadow: "0px 0px 150px 130px rgba(0, 0, 0, 0.5)",
+    overflow: "auto",
+    background: "#fff"
   },
 
   render() {
     return (
       <div style={this.styles}>
-        <p><Link to={this.props.returnTo}>Back</Link></p>
+        <p>
+          <Link to={this.props.returnTo}>Back</Link>
+        </p>
         {this.props.children}
       </div>
-    )
+    );
   }
-})
+});
 
 const App = createReactClass({
-
   componentWillReceiveProps(nextProps) {
     // if we changed routes...
-    if ((
+    if (
       nextProps.location.key !== this.props.location.key &&
       nextProps.location.state &&
       nextProps.location.state.modal
-    )) {
+    ) {
       // save the old children (just like animation)
-      this.previousChildren = this.props.children
+      this.previousChildren = this.props.children;
+      this.previousLocation = this.props.location;
     }
   },
 
   render() {
-    let { location } = this.props
+    let { location } = this.props;
 
-    let isModal = (
-      location.state &&
-      location.state.modal &&
-      this.previousChildren
-    )
+    let isModal =
+      location.state && location.state.modal && this.previousChildren;
 
     return (
       <div>
         <h1>Pinterest Style Routes</h1>
 
         <div>
-          {isModal ?
-            this.previousChildren :
-            this.props.children
-          }
+          {isModal
+            ? React.cloneElement(this.previousChildren, {
+                location: this.previousLocation
+              })
+            : this.props.children}
 
           {isModal && (
             <Modal isOpen={true} returnTo={location.state.returnTo}>
@@ -74,17 +81,18 @@ const App = createReactClass({
           )}
         </div>
       </div>
-    )
+    );
   }
-})
+});
 
 const Index = createReactClass({
   render() {
     return (
       <div>
         <p>
-          The url `/pictures/:id` can be rendered anywhere in the app as a modal.
-          Simply put `modal: true` in the location descriptor of the `to` prop.
+          The url `/pictures/:id` can be rendered anywhere in the app as a
+          modal. Simply put `modal: true` in the location descriptor of the `to`
+          prop.
         </p>
 
         <p>
@@ -108,51 +116,59 @@ const Index = createReactClass({
           ))}
         </div>
 
-        <p><Link to="/some/123/deep/456/route">Go to some deep route</Link></p>
-
+        <p>
+          <Link to="/some/123/deep/456/route">Go to some deep route</Link>
+        </p>
       </div>
-    )
+    );
   }
-})
+});
 
 const Deep = createReactClass({
   render() {
     return (
       <div>
         <p>You can link from anywhere really deep too</p>
-        <p>Params stick around: {this.props.params.one} {this.props.params.two}</p>
         <p>
-          <Link to={{
-            pathname: '/pictures/0',
-            state: { modal: true, returnTo: this.props.location.pathname }
-          }}>
+          Params stick around: {this.props.params.one} {this.props.params.two}
+        </p>
+        <p>
+          <Link
+            to={{
+              pathname: "/pictures/0",
+              state: { modal: true, returnTo: this.props.location.pathname }
+            }}
+          >
             Link to picture with Modal
-          </Link><br/>
-          <Link to="/pictures/0">
-            Without modal
           </Link>
+          <br />
+          <Link to="/pictures/0">Without modal</Link>
         </p>
       </div>
-    )
+    );
   }
-})
+});
 
 const Picture = createReactClass({
   render() {
     return (
       <div>
-        <img src={PICTURES[this.props.params.id].src} style={{ height: '80%' }} />
+        <img
+          src={PICTURES[this.props.params.id].src}
+          style={{ height: "80%" }}
+        />
       </div>
-    )
+    );
   }
-})
+});
 
-render((
-  <Router history={withExampleBasename(browserHistory, __dirname)}>
+render(
+  <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <IndexRoute component={Index}/>
-      <Route path="/pictures/:id" component={Picture}/>
-      <Route path="/some/:one/deep/:two/route" component={Deep}/>
+      <IndexRoute component={Index} />
+      <Route path="/pictures/:id" component={Picture} />
+      <Route path="/some/:one/deep/:two/route" component={Deep} />
     </Route>
-  </Router>
-), document.getElementById('example'))
+  </Router>,
+  document.getElementById("root")
+);

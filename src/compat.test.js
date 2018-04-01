@@ -1,6 +1,5 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import { renderToString } from "react-dom/server";
 
 import {
   createHistory,
@@ -17,7 +16,7 @@ import {
   Route,
   IndexRoute,
   browserHistory
-} from "./index";
+} from "./compat";
 
 let snapshot = ({ pathname, element }) => {
   let testHistory = createHistory(createMemorySource(pathname));
@@ -119,6 +118,24 @@ describe("React Router v3 Compatibility", () => {
     });
   });
 
+  it.only("lets you pass props with cloneElement", () => {
+    const App = ({ children }) => (
+      <div>{React.cloneElement(children, { yo: "yo" })}</div>
+    );
+    const Child = ({ yo }) => <div>{yo}</div>;
+    const router = (
+      <Router>
+        <Route path="/" component={App}>
+          <Route path="/child" component={Child} />
+        </Route>
+      </Router>
+    );
+    snapshot({
+      pathname: "/child",
+      element: router
+    });
+  });
+
   describe("onEnter", () => {
     it("passes props to onEnter", done => {
       const assertOnEnter = (nextState, replace) => {
@@ -141,7 +158,7 @@ describe("React Router v3 Compatibility", () => {
       );
     });
 
-    it.only("can redirect", done => {
+    it("can redirect", done => {
       class Whiz extends React.Component {
         componentDidMount() {
           expect(wrapper).toMatchSnapshot();

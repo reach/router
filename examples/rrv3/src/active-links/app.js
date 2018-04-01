@@ -8,7 +8,7 @@ import {
   Link,
   IndexLink,
   browserHistory
-} from "../Compat";
+} from "@reactions/router/compat";
 
 const ACTIVE = { color: "red" };
 

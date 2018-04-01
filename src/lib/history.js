@@ -1,10 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 // createHistory(source) - wraps a history source
+let getLocation = source => {
+  return {
+    ...source.location,
+    state: source.history.state,
+    key: (source.history.state && source.history.state.key) || "initial"
+  };
+};
+
 let createHistory = (source, options) => {
   let listeners = [];
-  let location = { ...source.location, state: source.history.state };
+  let location = getLocation(source);
   let transitioning = false;
-  let resolveTransition = null;
+  let resolveTransition = () => {};
 
   return {
     get location() {
@@ -16,7 +24,6 @@ let createHistory = (source, options) => {
     },
 
     _onTransitionComplete() {
-      console.log("complete");
       transitioning = false;
       resolveTransition();
     },
@@ -25,7 +32,7 @@ let createHistory = (source, options) => {
       listeners.push(listener);
 
       const popstateListener = () => {
-        location = { ...source.location, state: source.history.state };
+        location = getLocation(source);
         listener();
       };
 
@@ -37,22 +44,20 @@ let createHistory = (source, options) => {
       };
     },
 
-    navigate(to, { state = undefined, replace = false } = {}) {
+    navigate(to, { state, replace = false } = {}) {
+      state = { ...state, key: Date.now() + "" };
       // try...catch iOS Safari limits to 100 pushState calls
       try {
         if (transitioning || replace) {
-          console.log("replace?");
           source.history.replaceState(state, null, to);
         } else {
-          console.log("push");
           source.history.pushState(state, null, to);
         }
       } catch (e) {
-        console.log("HERE?!");
         source.location[replace ? "replace" : "assign"](to);
       }
 
-      location = { ...source.location, state: source.history.state };
+      location = getLocation(source);
       transitioning = true;
       const transition = new Promise(res => (resolveTransition = res));
       listeners.forEach(fn => fn());
@@ -65,7 +70,7 @@ let createHistory = (source, options) => {
 // Stores history entries in memory for testing or other platforms like Native
 let createMemorySource = (initialPathname = "/") => {
   let index = 0;
-  let stack = [{ pathname: initialPathname }];
+  let stack = [{ pathname: initialPathname, search: "" }];
   let states = [];
 
   return {
@@ -84,13 +89,15 @@ let createMemorySource = (initialPathname = "/") => {
       get state() {
         return states[index];
       },
-      pushState(state, _, pathname) {
+      pushState(state, _, uri) {
+        let [pathname, search] = uri.split("?");
         index++;
-        stack.push({ pathname });
+        stack.push({ pathname, search });
         states.push(state);
       },
-      replaceState(state, _, pathname) {
-        stack[index] = { pathname };
+      replaceState(state, _, uri) {
+        let [pathname, search] = uri.split("?");
+        stack[index] = { pathname, search };
         states[index] = state;
       }
     }

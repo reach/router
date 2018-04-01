@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "node build/build.js",
-    "watch": "watch -p src/index.js -c \"yarn build\"",
+    "watch": "watch -p \"src/**/*.js\" -c \"yarn build\"",
     "test": "jest **/*.test.js",
     "clean": "rm -rf lib es umd index.js"
   },
@@ -25,6 +25,7 @@
     "babel-eslint": "^7.2.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-inline-environment-variables": "^0.3.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",

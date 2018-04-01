@@ -418,6 +418,103 @@ navigate.then(...)
 </MatchPath>
 ```
 
+## React Router v3 Backward Compatibility
+
+Because Reactions Router brings back nested route configuration, it was plausible to add in a lot of backward compatibility for React Router v3 (😍). While not everything is supported, some React Router v3 apps will be able to drop in Reactions Router without any code changes (almost all of the RR v3 demos worked w/o modification). Other apps will need to make a few tweaks and you're on your way.
+
+First, install Reactions Router
+
+```
+yarn add @reactions/router
+```
+
+Then do a find/replace across your app:
+
+```
+// from
+import { Router, Link, Route } from 'react-router'
+
+// to
+import { Router, Link, Route } from '@reactions/router'
+```
+
+Next, cross your fingers and hope everything still works.
+
+FYI, I'd love to help out with this for a few people, DM me on twitter and we'll do some pairing.
+
+### Unsupported RRv3 API
+
+Here's what's not supported (and probably never will be), check if your app is using these APIs:
+
+* Custom histories - whatever you were doing there, you can do in a top-level component somewhere.
+* `hashHistory` - Sorry, won't be supporting these.
+* `browserHistory` is partially supported, here are the supported methods
+  * `listen` - supported
+  * `push` - supported
+  * `replace` - supported
+* `<Router>` is supported but these props are not:
+  * `<Router createElement>` - Move to actual route component render method.
+  * `<Router onError>` - use `componentDidCatch` in a component above your `Router`.
+  * `<Router onUpdate/>` - Make a component that checks if `prevProps.location !== this.props.location` in `componentDidUpdate`.
+  * `<Router render/>` - Move to actual route component render method
+* `<Route>` is supported, but these props are not:
+  * `<Route getIndexRoute>` - Use `getChildRoutes` and give the index route a `/` path.
+  * `<Route components>` - Render two Routers in the parent that rendered the different "components".
+  * `<Route getComponents>` - Render two Routers in the parent that rendered the different "components".
+* `<IndexRedirect>` - Use `<Redirect from="/" to="/some/where"/>` because "/" is the same as an `IndexRoute`
+* Route Component props
+  * `route` - can use your component props
+  * `routes` - matching works too differently to support this
+  * `routeParams` - you still have normal params
+* `match` Not sure what to do here, only a problem for server rendered apps ... only suggestion is stop server rendering and rely on service workers? When React Suspense ships we won't need this for server rendering anymore anyway.
+* `<RouterContext>` - probably only used for server rendering
+* `createRoutes`
+* `PropTypes`
+* Any React Router Redux integrations. I'd recommend not reading from redux and just reading from your route component props, this uses the new context API so you'll get updates w/o needing to synchronize routing state to redux. You can also use the `navigate` singleton export to navigate in action creators. Delete all that stuff!
+
+### Migrating Slowly
+
+Once your app is running on Reactions Router, you can start to migrate one route at a time to the official API.
+
+```jsx
+// pick a route and switch it to the official API,
+// let's do the index route first
+<Router>
+  <Route path="/" component={App}>
+    <IndexRoute component={Index}/>
+    <Route path="users/:userId" component={User}/>
+  </Route>
+</Router>
+
+// becomes
+<Router>
+  <Route path="/" component={App}>
+    <Index path="/"/>
+    <Route path="users/:userId" component={User}/>
+  </Route>
+</Router>
+
+// Then change the Users component to read from `this.props.userId`
+// instead of `this.props.params.userId`, once that's done,
+// update the route config:
+<Router>
+  <Route path="/" component={App}>
+    <Index path="/"/>
+    <User path="users/:userId"/>
+  </Route>
+</Router>
+
+// Then update the App route
+<Router>
+  <App path="/">
+    <Index path="/"/>
+    <User path="users/:userId"/>
+  </App>
+</Router>
+```
+
+Congratulations, you're not gonna get left behind anymore. I hope to add lots of deprecation warnings to guide you in migrating a component off of `<Route/>`. Once the warnings are all clear for a route, you're ready to update it in your route config.
+
 ## Legal
 
 MIT License

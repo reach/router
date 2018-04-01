@@ -4,6 +4,7 @@ import warning from "warning";
 import invariant from "invariant";
 import createContextPolyfill from "create-react-context";
 import ReactDOM from "react-dom";
+import * as qs from "query-string";
 import {
   pick,
   resolve,
@@ -17,8 +18,6 @@ import {
   createHistory,
   createMemorySource
 } from "./lib/history";
-
-import * as qs from "query-string";
 
 const __COMPAT__ = true;
 
@@ -71,7 +70,6 @@ class LocationProvider extends React.Component {
   };
 
   getContext() {
-    console.log("getContext");
     let { props: { history: { navigate, location } } } = this;
     return { navigate, location };
   }
@@ -149,8 +147,25 @@ let withBase = Comp => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // The main event, welcome to the show everybody.
-let Router = ({ location, navigate, basepath, baseuri, children }) => {
+let Router = ({
+  location,
+  navigate,
+  basepath,
+  baseuri,
+  children,
+
+  // compat
+  routes: __compatRoutes,
+  ...__compatPassedProps
+}) => {
   let routes = Children.map(children, createRoute(basepath));
+
+  if (__COMPAT__) {
+    if (__compatRoutes) {
+      routes = createCompatRoutes(__compatRoutes, basepath);
+    }
+  }
+
   let match = pick(routes, location.pathname);
 
   if (match) {
@@ -166,18 +181,23 @@ let Router = ({ location, navigate, basepath, baseuri, children }) => {
       navigate: (to, options) => navigate(resolve(to, uri), options)
     };
 
+    let childRouterProps;
     if (__COMPAT__) {
-      if (element.type === Route) {
+      if (match.route.childRoutes) {
+        childRouterProps = { routes: match.route.childRoutes };
+      }
+      if (element.type.__compatRoute) {
         props.params = params;
         props.key = element.props.path;
+        props.__compatPassedProps = __compatPassedProps;
       }
     }
 
     let clone = cloneElement(
       element,
       props,
-      element.props.children ? (
-        <Router>{element.props.children}</Router>
+      element.props.children || childRouterProps ? (
+        <Router {...childRouterProps}>{element.props.children}</Router>
       ) : (
         undefined
       )
@@ -208,25 +228,31 @@ let Router = ({ location, navigate, basepath, baseuri, children }) => {
 Router = withBase(withLocation(Router));
 
 ////////////////////////////////////////////////////////////////////////////////
-let Link = ({
-  basepath,
-  baseuri,
-  navigate,
-  location,
-  to,
-  state,
-  replace,
-  ...anchorProps
-}) => {
+let Link = props => {
   if (__COMPAT__) {
-    let { activeClassName, activeStyle, ...rest } = anchorProps;
-    anchorProps = rest;
+    if (shouldUseCompatLink(props)) {
+      return <CompatLink {...props} />;
+    }
   }
+
+  let {
+    basepath,
+    baseuri,
+    navigate,
+    location,
+    to,
+    state,
+    replace,
+    ...anchorProps
+  } = props;
+
   const href = resolve(to, baseuri);
+
   return (
     <a
       {...anchorProps}
       href={href}
+      className
       onClick={event => {
         if (anchorProps.onClick) anchorProps.onClick(event);
         if (shouldNavigate(event)) {
@@ -318,6 +344,12 @@ let createRoute = basepath => element => {
     }\``
   );
 
+  if (__COMPAT__) {
+    if (element.type.__compatRoute && element.props.path === "*") {
+      return { value: element, default: true };
+    }
+  }
+
   if (element.props.default) {
     return { value: element, default: true };
   }
@@ -337,30 +369,135 @@ let createRoute = basepath => element => {
   };
 };
 
+let createCompatRoutes = () => {};
+if (__COMPAT__) {
+  createCompatRoutes = (items, basepath) => {
+    let routes = [];
+    items.forEach(item => {
+      let { childRoutes, getChildRoutes, indexRoute, ...props } = item;
+
+      if (item.path === "*") {
+        return { value: item, default: true };
+      }
+
+      let path =
+        item.path === "/"
+          ? basepath
+          : `${stripSlashes(basepath)}/${stripSlashes(item.path)}`;
+
+      if (indexRoute) {
+        let route = { ...indexRoute, path: "/" };
+        if (childRoutes) {
+          childRoutes.push(route);
+        } else {
+          childRoutes = [route];
+        }
+      }
+
+      routes.push({
+        value: <Route {...item} />,
+        childRoutes: childRoutes,
+        path: childRoutes || getChildRoutes ? `${stripSlashes(path)}/*` : path
+      });
+    });
+    return routes;
+  };
+}
+
 let shouldNavigate = event =>
   !event.defaultPrevented &&
   event.button === 0 &&
   !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
 
 ////////////////////////////////////////////////////////////////////////
-// RR v3 Compatibility
-let Route;
+// COMPAT!
+// let unsupportedRouteProps = ["components"];
+
+let CompatLink;
+let IndexLink;
 let IndexRoute;
+let Route;
 let browserHistory;
+let shouldUseCompatLink = () => false;
+let RouteContext;
+let withRouter;
 
 if (__COMPAT__) {
+  shouldUseCompatLink = props => {
+    return (
+      typeof props.to === "object" ||
+      props.activeStyle != null ||
+      props.activeClassName != null ||
+      props.onlyActiveOnIndex != null
+    );
+  };
+
+  RouteContext = createContext();
+
+  withRouter = Comp => {
+    let C = props => (
+      <RouteContext.Consumer>
+        {context => <Comp {...context} {...props} />}
+      </RouteContext.Consumer>
+    );
+    C.displayName = `withRouter(${C.displayName || C.name})`;
+    return C;
+  };
+
+  let wrappedNavigate = (arg, replace = false) => {
+    if (typeof arg === "object") {
+      let { pathname, query, ...rest } = arg;
+      let to = query ? [pathname, qs.stringify(query)].join("?") : pathname;
+      navigate(to, { replace, ...rest });
+    } else {
+      navigate(arg, { replace });
+    }
+  };
+
+  browserHistory = {
+    replace: arg => wrappedNavigate(arg, true),
+    push: arg => wrappedNavigate(arg, false),
+    listen: globalHistory.listen
+  };
+
   Route = class Route extends React.Component {
+    static __compatRoute = true;
+
     state = {
-      onEnterReady: this.props.onEnter ? false : true
+      onEnterReady: this.props.onEnter ? false : true,
+      getComponentReady: this.props.getComponent ? false : true,
+      getChildRoutesReady: this.props.getChildRoutes ? false : true,
+      StateComp: undefined,
+      childRoutes: undefined
     };
 
     componentDidMount() {
       this.runEnterHook();
+      this.getComponent();
+      this.getChildRoutes();
+    }
+
+    getChildRoutes() {
+      let { getChildRoutes, location, params } = this.props;
+      if (getChildRoutes) {
+        getChildRoutes({ location, params }, (err, childRoutes) => {
+          this.setState({ childRoutes, getChildRoutesReady: true });
+        });
+      }
+    }
+
+    getComponent() {
+      const { getComponent, location, params } = this.props;
+      if (getComponent) {
+        getComponent({ location, params }, (err, StateComp) => {
+          this.setState({ StateComp, getComponentReady: true });
+        });
+      }
     }
 
     componentWillUnmount() {
       if (this.props.onLeave) {
-        const { location, params } = this.props;
+        let { location, params } = this.props;
         this.props.onLeave({ location, params });
       }
     }
@@ -391,7 +528,7 @@ if (__COMPAT__) {
     }
 
     runEnterHook() {
-      const { onEnter, navigate } = this.props;
+      let { onEnter, navigate } = this.props;
       if (onEnter) {
         let { location, params, router } = getCompatProps(this.props);
         let nextState = { location, params };
@@ -414,34 +551,55 @@ if (__COMPAT__) {
     }
 
     render() {
-      let { onEnterReady } = this.state;
+      let {
+        onEnterReady,
+        getComponentReady,
+        getChildRoutesReady,
+        StateComp,
+        childRoutes
+      } = this.state;
 
-      let { component: Component, ...props } = this.props;
+      if (!onEnterReady || !getComponentReady || !getChildRoutesReady) {
+        return null;
+      }
+
+      let {
+        component: PropComp,
+        components,
+        __compatPassedProps,
+        ...props
+      } = this.props;
+
       let compatProps = getCompatProps(props);
-      return onEnterReady ? <Component {...compatProps} /> : null;
+      let Comp = StateComp || PropComp;
+
+      let children = props.children;
+
+      if (childRoutes) {
+        children = <Router routes={childRoutes} />;
+      }
+
+      return (
+        <RouteContext.Provider value={compatProps}>
+          <Comp
+            {...props}
+            {...compatProps}
+            {...__compatPassedProps}
+            children={children}
+          />
+        </RouteContext.Provider>
+      );
     }
   };
 
   let getCompatProps = props => {
-    let { location, children, navigate, params } = props;
-
-    location = { ...location };
+    let { location, children, params } = props;
     location.query = qs.parse(location.search.substring(1));
 
     if (params && params["*"]) {
       params.splat = params["*"];
       delete params["*"];
     }
-
-    let wrappedNavigate = (arg, replace = false) => {
-      if (typeof arg === "object") {
-        let { pathname, query, ...rest } = arg;
-        let to = query ? [pathname, qs.stringify(query)].join("?") : pathname;
-        navigate(to, { replace, ...rest });
-      } else {
-        navigate(arg, { replace });
-      }
-    };
 
     let router = {
       replace: arg => wrappedNavigate(arg, true),
@@ -453,29 +611,130 @@ if (__COMPAT__) {
     return { children, params, location, router };
   };
 
-  browserHistory = {};
-
   IndexRoute = class IndexRoute extends Route {
     static defaultProps = { path: "/" };
   };
+
+  let isQueryIsActive = (query, activeQuery) => {
+    if (activeQuery == null) return query == null;
+
+    if (query == null) return true;
+
+    return deepEqual(query, activeQuery);
+  };
+
+  let deepEqual = (a, b) => {
+    if (a === b) return true;
+
+    if (a == null || b == null) return false;
+
+    if (Array.isArray(a)) {
+      return (
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((item, index) => deepEqual(item, b[index]))
+      );
+    }
+
+    if (typeof a === "object") {
+      for (let p in a) {
+        if (!Object.prototype.hasOwnProperty.call(a, p)) {
+          continue;
+        }
+
+        if (a[p] === undefined) {
+          if (b[p] !== undefined) {
+            return false;
+          }
+        } else if (!Object.prototype.hasOwnProperty.call(b, p)) {
+          return false;
+        } else if (!deepEqual(a[p], b[p])) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    return String(a) === String(b);
+  };
+
+  let isLinkActive = (match, to, query, location, onlyActiveOnIndex) => {
+    if (!match) return false;
+    let queryIsActive = isQueryIsActive(query, location.query);
+    if (onlyActiveOnIndex) {
+      return queryIsActive && to === location.pathname;
+    } else {
+      return queryIsActive;
+    }
+  };
+
+  CompatLink = ({
+    to,
+    style,
+    activeStyle,
+    className = "",
+    activeClassName = "",
+    onlyActiveOnIndex = false,
+    ...props
+  }) => {
+    let query;
+    let state;
+    if (typeof to === "object") {
+      query = to.query;
+      state = to.state;
+      to = to.pathname;
+    }
+    return (
+      <MatchPath path={`${to}/*`}>
+        {({ match, location }) => {
+          let href = query ? [to, qs.stringify(query)].join("?") : to;
+          let linkIsActive = isLinkActive(
+            match,
+            to,
+            query,
+            location,
+            onlyActiveOnIndex
+          );
+          return (
+            <Link
+              to={href}
+              state={state}
+              {...props}
+              style={linkIsActive ? { ...style, ...activeStyle } : style}
+              className={
+                isLinkActive
+                  ? [className, activeClassName].join(" ")
+                  : className
+              }
+            />
+          );
+        }}
+      </MatchPath>
+    );
+  };
+
+  IndexLink = props => <CompatLink {...props} onlyActiveOnIndex={true} />;
+
+  withRouter = C => C;
 }
 
 ////////////////////////////////////////////////////////////////////////
-
 export {
-  Router,
   Link,
-  Redirect,
-  redirect,
-  isRedirect,
-  MatchPath,
   LocationProvider,
+  MatchPath,
+  Redirect,
+  Router,
   ServerRenderContext,
   createHistory,
   createMemorySource,
+  isRedirect,
   navigate,
-  // RRv3 Compat
-  Route,
+  redirect,
+  // RRv3
   IndexRoute,
-  browserHistory
+  IndexLink,
+  browserHistory,
+  withRouter
 };

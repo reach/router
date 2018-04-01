@@ -9,8 +9,6 @@ import {
   Redirect
 } from "@reactions/router";
 
-console.log(React.version);
-
 const App = ({ children }) => (
   <div>
     <ul>

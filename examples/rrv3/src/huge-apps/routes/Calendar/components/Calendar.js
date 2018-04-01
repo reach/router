@@ -1,22 +1,15 @@
-import React, { Component } from 'react'
+import React from "react";
 
-class Calendar extends Component {
+class Calendar extends React.Component {
   render() {
-    const events = [
-      { id: 0, title: 'essay due' }
-    ]
-
+    const events = [{ id: 0, title: "essay due" }];
     return (
       <div>
         <h2>Calendar</h2>
-        <ul>
-          {events.map(event => (
-            <li key={event.id}>{event.title}</li>
-          ))}
-        </ul>
+        <ul>{events.map(event => <li key={event.id}>{event.title}</li>)}</ul>
       </div>
-    )
+    );
   }
 }
 
-module.exports = Calendar
+export default Calendar;

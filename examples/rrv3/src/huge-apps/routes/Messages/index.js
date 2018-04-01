@@ -1,8 +1,8 @@
 module.exports = {
-  path: 'messages',
+  path: "messages",
   getComponent(nextState, cb) {
-    require.ensure([], (require) => {
-      cb(null, require('./components/Messages'))
-    })
+    require.ensure([], require => {
+      cb(null, require("./components/Messages").default);
+    });
   }
-}
+};

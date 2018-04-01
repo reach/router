@@ -1,8 +1,8 @@
 module.exports = {
-  path: 'profile',
+  path: "profile",
   getComponent(nextState, cb) {
-    require.ensure([], (require) => {
-      cb(null, require('./components/Profile'))
-    })
+    require.ensure([], require => {
+      cb(null, require("./components/Profile").default);
+    });
   }
-}
+};

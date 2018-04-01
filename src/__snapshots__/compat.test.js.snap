@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`React Router v3 Compatibility lets you pass props with cloneElement 1`] = `
+<div>
+  <div>
+    yo
+  </div>
+</div>
+`;
+
 exports[`React Router v3 Compatibility onEnter can redirect 1`] = `null`;
 
 exports[`React Router v3 Compatibility passes url params 1`] = `

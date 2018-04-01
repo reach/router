@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
 class Profile extends Component {
   render() {
@@ -6,8 +6,8 @@ class Profile extends Component {
       <div>
         <h2>Profile</h2>
       </div>
-    )
+    );
   }
 }
 
-module.exports = Profile
+export default Profile;

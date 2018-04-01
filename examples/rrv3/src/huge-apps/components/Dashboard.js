@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router'
+/*globals COURSES:true */
+import React, { Component } from "react";
+import { Link } from "@reactions/router";
 
 class Dashboard extends Component {
   render() {
-    const { courses } = this.props
-
     return (
       <div>
         <h2>Super Scalable Apps</h2>
@@ -15,17 +14,17 @@ class Dashboard extends Component {
           This way, a new route added deep in your app will not affect the
           initial bundle of your application.
         </p>
-        <h2>Courses</h2>{' '}
+        <h2>Courses</h2>{" "}
         <ul>
-          {courses.map(course => (
+          {COURSES.map(course => (
             <li key={course.id}>
               <Link to={`/course/${course.id}`}>{course.name}</Link>
             </li>
           ))}
         </ul>
       </div>
-    )
+    );
   }
 }
 
-export default Dashboard
+export default Dashboard;

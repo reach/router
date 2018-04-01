@@ -1,8 +1,14 @@
-// Works!
+// WORKS!
 import React from "react";
 import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import { render } from "react-dom";
-import { browserHistory, Router, Route, IndexRoute, Link } from "../Compat";
+import {
+  browserHistory,
+  Router,
+  Route,
+  IndexRoute,
+  Link
+} from "@reactions/router/compat";
 
 import "./app.css";
 

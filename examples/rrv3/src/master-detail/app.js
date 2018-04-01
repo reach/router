@@ -1,3 +1,4 @@
+// WORKS!
 import React from "react";
 import createReactClass from "create-react-class";
 import { render, findDOMNode } from "react-dom";
@@ -7,7 +8,7 @@ import {
   Route,
   IndexRoute,
   Link
-} from "@reactions/router";
+} from "@reactions/router/compat";
 
 import ContactStore from "./ContactStore";
 

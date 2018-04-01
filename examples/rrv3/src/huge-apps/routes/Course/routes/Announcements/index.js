@@ -1,20 +1,9 @@
 module.exports = {
-  path: 'announcements',
+  path: "announcements",
 
-  getChildRoutes(partialNextState, cb) {
-    require.ensure([], (require) => {
-      cb(null, [
-        require('./routes/Announcement')
-      ])
-    })
-  },
-
-  getComponents(nextState, cb) {
-    require.ensure([], (require) => {
-      cb(null, {
-        sidebar: require('./components/Sidebar'),
-        main: require('./components/Announcements')
-      })
-    })
+  getComponent(nextState, cb) {
+    require.ensure([], require => {
+      cb(null, require("./components/Announcements").default);
+    });
   }
-}
+};
