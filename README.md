@@ -25,6 +25,14 @@ ReactionsRouter.Redirect;
 </script>
 ```
 
+## Why?
+
+* I needed a router to play with React Suspsense, this showed up in my editor and I loved it.
+* It appears from npm stats that about 1/2 of React Router downloads haven't upgraded to v4. Why? I think two things:
+  * Backwards compatibility. This router brings a commitement to backwards compatibility and smooth upgrade paths like React itself, starting with pretty good backwards compatibility with React Router v3. It's here to help you keep up with the great new stuff React is offering.
+  * Nested route configuration was awesome. This brings that back without losing any of what made React Router v4 innovative (actually rendering components).
+* Also, don't you think it's about time we had relative links?
+
 ## How To
 
 ### Rendering
@@ -417,6 +425,19 @@ navigate.then(...)
   {({ match, location, navigate }) => (...)}
 </MatchPath>
 ```
+
+## React Router v4 Compatibility
+
+* Remove `<BrowserRouter>`, don't need it.
+* Swap out `<Switch>` for `<Router>`
+  * Swap out `<Route>` inside a `<Switch>` for just your component:
+    * this: `<Route path="/users" component={Users} />`
+    * becomes `<Users path="/users" />`
+  * remove exact props, it'll know what you meant
+* Swap out `<Route>` outside of `<Switch>` for `<MatchPath>`
+  * Remove `exact` props
+    * exact match `<MatchPath path="/foo" />`
+    * partial match `<MatchPath path="/foo/*" />`
 
 ## React Router v3 Backward Compatibility
 
