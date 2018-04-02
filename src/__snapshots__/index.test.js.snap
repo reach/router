@@ -163,6 +163,18 @@ exports[`nested rendering yo dawg 1`] = `
 </div>
 `;
 
+exports[`nested rendering yo dawg again 1`] = `
+<div>
+  Dash 
+  <div>
+    Dash 
+    <div>
+      Dash 
+    </div>
+  </div>
+</div>
+`;
+
 exports[`nested routers allows arbitrary Router nesting through context 1`] = `
 <div>
   Home

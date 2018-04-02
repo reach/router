@@ -294,6 +294,22 @@ describe("nested rendering", () => {
     });
   });
 
+  it("yo dawg again", () => {
+    snapshot({
+      pathname: "/",
+      element: (
+        <Router>
+          <Dash path="/">
+            <Dash path="/">
+              <Dash path="/" />
+              <Reports path="reports/:reportId" />
+            </Dash>
+          </Dash>
+        </Router>
+      )
+    });
+  });
+
   it("matches multiple nested / down to a child with a path", () => {
     snapshot({
       pathname: "/yo",
