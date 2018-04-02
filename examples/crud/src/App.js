@@ -283,7 +283,6 @@ const Create = withInvalidateContacts(
 
 const NotFound = () => <div>Sorry, nothing here.</div>;
 const Error = () => <div>Sorry, something's wrong on the server.</div>;
-// const Whatever = props => <pre>{JSON.stringify(props, null, 2)}</pre>;
 
 class App extends React.Component {
   state = {
