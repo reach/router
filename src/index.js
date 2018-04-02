@@ -130,7 +130,7 @@ class LocationProvider extends React.Component {
         unstable_deferredUpdates(() => {
           this.setState(() => ({ context: this.getContext() }));
         });
-      })
+      });
     });
   }
 
@@ -208,7 +208,7 @@ let Router = ({
     let { params, uri, route, route: { value: element } } = match;
 
     // remove the /* from the end for child routes relative paths
-    basepath = route.default ? basepath : route.path.replace(/\/\*$/, "");
+    basepath = route.default ? basepath : route.path.replace(/\*$/, "");
 
     let props = {
       ...params,

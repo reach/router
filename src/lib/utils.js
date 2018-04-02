@@ -27,6 +27,7 @@ let pick = (routes, uri) => {
 
   let [uriPathname] = uri.split("?");
   let uriSegments = segmentize(uriPathname);
+  let isRootUri = uriSegments[0] === "";
   let ranked = rankRoutes(routes);
 
   for (let i = 0, l = ranked.length; i < l; i++) {
@@ -43,6 +44,7 @@ let pick = (routes, uri) => {
     }
 
     let routeSegments = segmentize(route.path);
+    let isRootRoute = routeSegments[0] === "";
     let params = {};
     let max = Math.max(uriSegments.length, routeSegments.length);
     let index = 0;
@@ -73,7 +75,7 @@ let pick = (routes, uri) => {
 
       let dynamicMatch = paramRe.exec(routeSegment);
 
-      if (dynamicMatch) {
+      if (dynamicMatch && !isRootUri) {
         invariant(
           !reservedNames.includes(dynamicMatch[1]),
           `<Router> dynamic segment "${

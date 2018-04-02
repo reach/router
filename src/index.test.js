@@ -286,6 +286,7 @@ describe("nested rendering", () => {
           <Dash path="/">
             <Dash path="/">
               <Dash path="/" />
+              <Reports path=":reportId" />
             </Dash>
           </Dash>
         </Router>
