@@ -25,6 +25,7 @@ const __COMPAT__ = process.env.COMPAT === "1";
 // React polyfills
 let { createContext } = React;
 if (createContext === undefined) {
+  console.log("polyfilling!");
   createContext = createContextPolyfill;
 }
 
@@ -125,9 +126,11 @@ class LocationProvider extends React.Component {
   componentDidMount() {
     let { state: { refs }, props: { history } } = this;
     refs.unlisten = history.listen(() => {
-      unstable_deferredUpdates(() => {
-        this.setState(() => ({ context: this.getContext() }));
-      });
+      Promise.resolve().then(() => {
+        unstable_deferredUpdates(() => {
+          this.setState(() => ({ context: this.getContext() }));
+        });
+      })
     });
   }
 
