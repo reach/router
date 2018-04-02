@@ -31,7 +31,7 @@ let createHistory = (source, options) => {
     listen(listener) {
       listeners.push(listener);
 
-      const popstateListener = () => {
+      let popstateListener = () => {
         location = getLocation(source);
         listener();
       };
@@ -59,7 +59,7 @@ let createHistory = (source, options) => {
 
       location = getLocation(source);
       transitioning = true;
-      const transition = new Promise(res => (resolveTransition = res));
+      let transition = new Promise(res => (resolveTransition = res));
       listeners.forEach(fn => fn());
       return transition;
     }

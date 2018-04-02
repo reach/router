@@ -25,7 +25,6 @@ const __COMPAT__ = process.env.COMPAT === "1";
 // React polyfills
 let { createContext } = React;
 if (createContext === undefined) {
-  console.log("polyfilling!");
   createContext = createContextPolyfill;
 }
 
@@ -36,7 +35,7 @@ if (unstable_deferredUpdates === undefined) {
 
 ////////////////////////////////////////////////////////////////////////////////
 let label = "[@reactions/router]";
-const deprecate = {
+let deprecate = {
   object: (o, getMessage) => {
     let object = {};
     for (let key in o) {
@@ -76,7 +75,7 @@ LocationContext.Provider.displayName = "Location.Provider";
 // sets up a listener if there isn't one already so apps don't need to be
 // wrapped in some top level provider
 let withLocation = Comp => {
-  const C = props => (
+  let C = props => (
     <LocationContext.Consumer>
       {context =>
         context ? (
@@ -254,7 +253,7 @@ let Router = ({
         .join(
           "\n\t"
         )}\n\nTo get rid of this warning, add a default NotFound component as child of Router:
-        \n\tconst NotFound = () => <div>Not Found!</div>
+        \n\tlet NotFound = () => <div>Not Found!</div>
         \n\t<Router>\n\t  <NotFound default/>\n\t  {/* ... */}\n\t</Router>`
     );
     return null;
@@ -282,7 +281,7 @@ let Link = props => {
     ...anchorProps
   } = props;
 
-  const href = resolve(to, baseuri);
+  let href = resolve(to, baseuri);
 
   return (
     <a
@@ -315,14 +314,14 @@ let redirect = to => {
 class Redirect extends React.Component {
   // Support React < 16 with this hook
   componentDidMount() {
-    const {
+    let {
       props: { navigate, to, from, replace = true, state, noThrow, ...props }
     } = this;
     navigate(insertParams(to, props), { replace, state });
   }
 
   render() {
-    const {
+    let {
       props: { navigate, to, from, replace, state, noThrow, ...props }
     } = this;
     if (!noThrow) redirect(insertParams(to, props));
@@ -561,7 +560,7 @@ if (__COMPAT__) {
     }
 
     getComponent() {
-      const { getComponent, location, params } = this.props;
+      let { getComponent, location, params } = this.props;
       if (getComponent) {
         if (__DEV__) {
           deprecate.message(
