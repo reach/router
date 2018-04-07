@@ -1,6 +1,14 @@
 import { pick, match, resolve, insertParams } from "./utils";
 
 describe("pick", () => {
+  test("pick root or dynamic", () => {
+    let routes = [
+      { value: "root", path: "/" },
+      { value: "dynamic", path: ":foo" }
+    ];
+    expect(pick(routes, "/").route.value).toBe("root");
+  });
+
   test("a bunch of scenarios", () => {
     expect(pick(routes, "/").route.value).toBe("Root");
     expect(pick(routes, "/groups/main/users/me").route.value).toBe(
