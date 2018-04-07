@@ -1,9 +1,9 @@
 import "./global.css";
 
 // Take your pick
-import "./active-links/app";
+// import "./active-links/app";
 // import "./animations/app";
-// import "./auth-flow-with-query-params/app";
+import "./auth-flow-async-with-query-params/app";
 // import "./auth-flow/app";
 // import "./dynamic-segments/app";
 // import "./huge-apps/app";

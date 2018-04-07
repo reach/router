@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import ReactDOM from "react-dom";
 import Spinner from "./Spinner";
 import { fetchMovieListJSON } from "../api";
 import { createFetcher } from "../future";
@@ -36,6 +37,21 @@ export default function MovieListPage(props) {
   );
 }
 
+class DelayedSpinner extends React.Component {
+  state = { spin: false };
+  componentDidMount() {
+    this.timeout = setTimeout(() => {
+      ReactDOM.flushSync(() => this.setState({ spin: true }));
+    }, 400);
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+  render() {
+    return this.state.spin ? <Spinner size={this.props.size} /> : null;
+  }
+}
+
 function MovieListItem(props) {
   const opacity = props.isLoading === false ? 0.5 : 1;
   return (
@@ -52,7 +68,7 @@ function MovieListItem(props) {
       </span>
       <div className="MovieListItem-action">
         {props.isLoading ? (
-          <Spinner size="small" />
+          <DelayedSpinner size="small" />
         ) : (
           <span className="MovieListItem-more">{"👉"}</span>
         )}
