@@ -1,10 +1,15 @@
 {
   "name": "@reactions/router",
-  "version": "0.0.0-alpha.8",
+  "version": "0.0.0-alpha.9",
   "description": "Next generation Routing for React.",
   "main": "index.js",
   "module": "es/index.js",
-  "files": ["es", "index.js", "umd", "lib"],
+  "files": [
+    "es",
+    "index.js",
+    "umd",
+    "lib"
+  ],
   "scripts": {
     "build": "node build/build.js",
     "watch": "watch -p \"src/**/*.js\" -c \"yarn build\"",
@@ -54,7 +59,10 @@
     "type": "git",
     "url": "git+https://github.com/reactions/router.git"
   },
-  "keywords": ["react", "react router"],
+  "keywords": [
+    "react",
+    "react router"
+  ],
   "prettier": {
     "printWidth": 80
   },
