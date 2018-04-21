@@ -8,10 +8,10 @@ import {
   Router,
   LocationProvider,
   Link,
-  MatchPath,
+  Match,
   Redirect,
   isRedirect,
-  ServerRenderContext
+  ServerLocation
 } from "./index";
 
 let snapshot = ({ pathname, element }) => {
@@ -496,20 +496,20 @@ describe("nested routers", () => {
   });
 });
 
-describe("MatchPath", () => {
+describe("Match", () => {
   it("matches a path", () => {
     snapshot({
       pathname: `/groups/123`,
       element: (
-        <MatchPath path="/groups/:groupId">
+        <Match path="/groups/:groupId">
           {props => <PropsPrinter {...props} />}
-        </MatchPath>
+        </Match>
       )
     });
   });
 });
 
-describe("ServerRenderContext", () => {
+describe("ServerLocation", () => {
   let App = () => (
     <Router>
       <Home path="/" />
@@ -521,17 +521,17 @@ describe("ServerRenderContext", () => {
   it("works", () => {
     expect(
       renderToString(
-        <ServerRenderContext url="/">
+        <ServerLocation url="/">
           <App />
-        </ServerRenderContext>
+        </ServerLocation>
       )
     ).toMatchSnapshot();
 
     expect(
       renderToString(
-        <ServerRenderContext url="/groups/123">
+        <ServerLocation url="/groups/123">
           <App />
-        </ServerRenderContext>
+        </ServerLocation>
       )
     ).toMatchSnapshot();
   });
@@ -541,9 +541,9 @@ describe("ServerRenderContext", () => {
     let markup;
     try {
       markup = renderToString(
-        <ServerRenderContext url={redirectedPath}>
+        <ServerLocation url={redirectedPath}>
           <App />
-        </ServerRenderContext>
+        </ServerLocation>
       );
     } catch (error) {
       expect(markup).not.toBeDefined();
