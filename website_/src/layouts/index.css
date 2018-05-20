@@ -1,5 +1,6 @@
 html {
-  font-family: sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
@@ -183,7 +184,7 @@ textarea {
   font: inherit;
 }
 html {
-  font: 112.5%/1.45em georgia, serif;
+  font: 112.5%/1.45em;
   box-sizing: border-box;
   overflow-y: scroll;
 }
@@ -197,8 +198,6 @@ html {
   box-sizing: inherit;
 }
 body {
-  color: hsla(0, 0%, 0%, 0.8);
-  font-family: georgia, serif;
   font-weight: normal;
   word-wrap: break-word;
   font-kerning: normal;

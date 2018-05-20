@@ -1,0 +1,15 @@
+{
+  "plugins": [
+    "react-hot-loader/babel",
+    ["transform-react-jsx", { "pragma": "Glamor.createElement" }]
+  ],
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "browsers": [">0.25%", "not ie 11", "not op_mini all"]
+      }
+    ]
+  ]
+}
