@@ -9,34 +9,27 @@ const exec = (command, extraEnv) =>
     env: Object.assign({}, process.env, extraEnv)
   });
 
-////////////////////////////////////////////////////////////////////////////////
-// No compat
-console.log("Building CommonJS modules ...");
-
-exec("babel src -d . --ignore *.test.js", {
-  BABEL_ENV: "cjs"
-});
-
 console.log("\nBuilding ES modules ...");
-
 exec("babel src -d es --ignore *.test.js", {
   BABEL_ENV: "es"
 });
 
-console.log("\nBuilding UMD ...");
+console.log("Building CommonJS modules ...");
+exec("babel src -d . --ignore *.test.js", {
+  BABEL_ENV: "cjs"
+});
 
+console.log("\nBuilding UMD ...");
 exec("rollup -c -f umd -o umd/reactions-router.js", {
   BABEL_ENV: "umd",
   NODE_ENV: "development"
 });
 
 console.log("\nBuilding UMD min.js ...");
-
 exec("rollup -c -f umd -o umd/reactions-router.min.js", {
   BABEL_ENV: "umd",
   NODE_ENV: "production"
 });
 
 const size = gzipSize.sync(fs.readFileSync("umd/reactions-router.min.js"));
-
 console.log("\ngzipped, the UMD build is %s", prettyBytes(size));

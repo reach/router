@@ -17,86 +17,181 @@ exports[`Match matches a path 1`] = `
 </pre>
 `;
 
-exports[`ServerLocation works 1`] = `"<div data-reactroot=\\"\\">Home</div>"`;
+exports[`ServerLocation works 1`] = `"<div style=\\"outline:none\\" tabindex=\\"-1\\" role=\\"group\\" data-reactroot=\\"\\"><div>Home</div></div>"`;
 
-exports[`ServerLocation works 2`] = `"<div data-reactroot=\\"\\">Group: <!-- -->123</div>"`;
+exports[`ServerLocation works 2`] = `"<div style=\\"outline:none\\" tabindex=\\"-1\\" role=\\"group\\" data-reactroot=\\"\\"><div>Group: <!-- -->123</div></div>"`;
 
 exports[`disrespect has complete disrespect for leading and trailing slashes 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
-    Reports 
-    <div>
-      Annual Report
+    Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Reports 
+        <div
+          role="group"
+          style={
+            Object {
+              "outline": "none",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div>
+            Annual Report
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 `;
 
 exports[`links renders links with relative hrefs 1`] = `
-<div>
-  <h1>
-    Parent
-  </h1>
-  <a
-    href="/dash/reports"
-    onClick={[Function]}
-  >
-    /dash/reports
-  </a>
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
-    <h2>
-      Child
-    </h2>
+    <h1>
+      Parent
+    </h1>
     <a
-      href="/dash"
+      aria-current="page"
+      href="/dash/reports"
       onClick={[Function]}
     >
-      /dash
+      /dash/reports
     </a>
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        <h2>
+          Child
+        </h2>
+        <a
+          aria-current={undefined}
+          href="/dash"
+          onClick={[Function]}
+        >
+          /dash
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 `;
 
 exports[`links uses the right href in multiple root paths 1`] = `
-<div>
-  <div>
-    Parent URI: 
-    /
-  </div>
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
     <div>
       Parent URI: 
       /
     </div>
-    <div>
-      <div>
-        Parent URI: 
-        /one
-      </div>
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
       <div>
         <div>
-          Child URI: 
-          /one/two
-        </div>
-        <a
-          href="/one/two/three"
-          onClick={[Function]}
-        >
-          /one/two/three
-        </a>
-        <a
-          href="/one"
-          onClick={[Function]}
-        >
-          /one
-        </a>
-        <a
-          href="/"
-          onClick={[Function]}
-        >
+          Parent URI: 
           /
-        </a>
+        </div>
+        <div
+          role="group"
+          style={
+            Object {
+              "outline": "none",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div>
+            <div>
+              Parent URI: 
+              /one
+            </div>
+            <div
+              role="group"
+              style={
+                Object {
+                  "outline": "none",
+                }
+              }
+              tabIndex="-1"
+            >
+              <div>
+                <div>
+                  Child URI: 
+                  /one/two
+                </div>
+                <a
+                  aria-current={undefined}
+                  href="/one/two/three"
+                  onClick={[Function]}
+                >
+                  /one/two/three
+                </a>
+                <a
+                  aria-current={undefined}
+                  href="/one"
+                  onClick={[Function]}
+                >
+                  /one
+                </a>
+                <a
+                  aria-current={undefined}
+                  href="/"
+                  onClick={[Function]}
+                >
+                  /
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -104,107 +199,336 @@ exports[`links uses the right href in multiple root paths 1`] = `
 `;
 
 exports[`nested rendering matches multiple nested / down to a child with a path 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
     Dash 
-    <div>
-      Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Dash 
+        <div
+          role="group"
+          style={
+            Object {
+              "outline": "none",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div>
+            Dash 
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 `;
 
 exports[`nested rendering renders a child 'index' nested path 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
-    Reports 
+    Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Reports 
+      </div>
+    </div>
   </div>
 </div>
 `;
 
 exports[`nested rendering renders a nested path 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
-    Reports 
+    Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Reports 
+      </div>
+    </div>
   </div>
 </div>
 `;
 
 exports[`nested rendering renders a really nested path 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
-    Reports 
-    <div>
-      Annual Report
+    Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Reports 
+        <div
+          role="group"
+          style={
+            Object {
+              "outline": "none",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div>
+            Annual Report
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 `;
 
 exports[`nested rendering renders at a path with nested paths 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Dash 
+  </div>
 </div>
 `;
 
 exports[`nested rendering yo dawg 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
     Dash 
-    <div>
-      Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Dash 
+        <div
+          role="group"
+          style={
+            Object {
+              "outline": "none",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div>
+            Dash 
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 `;
 
 exports[`nested rendering yo dawg again 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
     Dash 
-    <div>
-      Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Dash 
+        <div
+          role="group"
+          style={
+            Object {
+              "outline": "none",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div>
+            Dash 
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 `;
 
 exports[`nested routers allows arbitrary Router nesting through context 1`] = `
-<div>
-  Home
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
-    Chat Home
+    Home
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Chat Home
+      </div>
+    </div>
   </div>
 </div>
 `;
 
 exports[`passed props parses dynamic segments and passes to components 1`] = `
-<div>
-  Group: 
-  123
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Group: 
+    123
+  </div>
 </div>
 `;
 
 exports[`passed props parses multiple params when nested 1`] = `
-<div>
-  123
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
     123
-     - 
-    456
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        123
+         - 
+        456
+      </div>
+    </div>
   </div>
 </div>
 `;
 
 exports[`passed props passes the matched URI to the component 1`] = `
-<pre>
-  {
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <pre>
+    {
   "path": "/groups/:groupId/users/:userId",
   "groupId": "123",
   "userId": "456",
@@ -215,142 +539,353 @@ exports[`passed props passes the matched URI to the component 1`] = `
     "key": "initial"
   }
 }
-</pre>
+  </pre>
+</div>
 `;
 
 exports[`passed props shadows params in nested paths 1`] = `
-<div>
-  Group: 
-  burger
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
     Group: 
-    milkshake
+    burger
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Group: 
+        milkshake
+      </div>
+    </div>
   </div>
 </div>
 `;
 
 exports[`relative navigate prop navigates relative 1`] = `
-<div>
-  User:
-  123
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    User:
+    123
+  </div>
 </div>
 `;
 
 exports[`relative navigate prop navigates relative 2`] = `
-<div>
-  User:
-  123
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
   <div>
-    Settings
+    User:
+    123
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Settings
+      </div>
+    </div>
   </div>
 </div>
 `;
 
 exports[`route ranking / 1`] = `
-<div>
-  Root
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Root
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups 1`] = `
-<div>
-  Groups
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Groups
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/123 1`] = `
-<div>
-  Group Id: 
-  123
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Group Id: 
+    123
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/123/users 1`] = `
-<div>
-  Users
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Users
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/123/users/456 1`] = `
-<div>
-  User id: 
-  456
-  , Group Id: 
-  123
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    User id: 
+    456
+    , Group Id: 
+    123
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/123/users/a/bunch/of/junk 1`] = `
-<div>
-  Users Splat: 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Users Splat: 
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/123/users/me 1`] = `
-<div>
-  Me!
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Me!
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/mine 1`] = `
-<div>
-  MyGroup
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    MyGroup
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/mine/users 1`] = `
-<div>
-  MyGroupUsers
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    MyGroupUsers
+  </div>
 </div>
 `;
 
 exports[`route ranking /groups/mine/users/me 1`] = `
-<div>
-  Mine and Me!
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Mine and Me!
+  </div>
 </div>
 `;
 
 exports[`route ranking /one/two/three/four/five 1`] = `
-<div>
-  Fiver 
-  one
-   
-  two
-   
-  three
-   
-  four
-   
-  five
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Fiver 
+    one
+     
+    two
+     
+    three
+     
+    four
+     
+    five
+  </div>
 </div>
 `;
 
 exports[`smoke tests renders at a path 1`] = `
-<div>
-  Dash 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Dash 
+  </div>
 </div>
 `;
 
 exports[`smoke tests renders the root component at "/" 1`] = `
-<div>
-  Home
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Home
+  </div>
 </div>
 `;
 
 exports[`transitions keeps the stack right on interrupted transitions 1`] = `
-<div>
-  Annual Report
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Annual Report
+  </div>
 </div>
 `;
 
 exports[`transitions transitions pages 1`] = `
-<div>
-  Home
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Home
+  </div>
 </div>
 `;
 
 exports[`transitions transitions pages 2`] = `
-<div>
-  Reports 
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Reports 
+  </div>
 </div>
 `;

@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React from "react";
+import React, { Fragment } from "react";
 import warning from "warning";
 import invariant from "invariant";
 import createContext from "create-react-context";
+import { polyfill } from "react-lifecycles-compat";
 import ReactDOM from "react-dom";
 import {
   pick,
@@ -134,12 +135,18 @@ let Router = props => (
     )}
   </BaseContext.Consumer>
 );
-class RouterImpl extends React.PureComponent {
-  render() {
-    let { location, navigate, basepath, children } = this.props;
-    let routes = React.Children.map(children, createRoute(basepath));
 
-    let match = pick(routes, location.pathname);
+class RouterImpl extends React.PureComponent {
+  static defaultProps = {
+    primary: true
+  };
+
+  render() {
+    let { location, navigate, basepath, primary, children } = this.props;
+    let routes = React.Children.map(children, createRoute(basepath));
+    let { pathname } = location;
+
+    let match = pick(routes, pathname);
 
     if (match) {
       let { params, uri, route, route: { value: element } } = match;
@@ -154,55 +161,162 @@ class RouterImpl extends React.PureComponent {
         navigate: (to, options) => navigate(resolve(to, uri), options)
       };
 
-      let childRouterProps;
-
       let clone = React.cloneElement(
         element,
         props,
-        element.props.children || childRouterProps ? (
-          <Router {...childRouterProps}>{element.props.children}</Router>
+        element.props.children ? (
+          <Router>{element.props.children}</Router>
         ) : (
           undefined
         )
       );
 
+      // using 'div' for < 16.3 support
+      let FocusWrapper = primary ? FocusHandler : Fragment || "div";
+      // don't pass any props to 'div'
+      let wrapperProps = primary ? { uri, location } : undefined;
+
       return (
-        <BaseContext.Provider value={{ baseuri: uri, basepath }}>
-          {clone}
-        </BaseContext.Provider>
+        <FocusWrapper {...wrapperProps}>
+          <BaseContext.Provider value={{ baseuri: uri, basepath }}>
+            {clone}
+          </BaseContext.Provider>
+        </FocusWrapper>
       );
     } else {
-      warning(
-        true,
-        `<Router basepath="${basepath}">\n\nNothing matched:\n\t${
-          location.pathname
-        }\n\nPaths checked: \n\t${routes
-          .map(route => route.path)
-          .join(
-            "\n\t"
-          )}\n\nTo get rid of this warning, add a default NotFound component as child of Router:
-        \n\tlet NotFound = () => <div>Not Found!</div>
-        \n\t<Router>\n\t  <NotFound default/>\n\t  {/* ... */}\n\t</Router>`
-      );
+      // Not sure if we want this, would require index routes at every level
+      // warning(
+      //   false,
+      //   `<Router basepath="${basepath}">\n\nNothing matched:\n\t${
+      //     location.pathname
+      //   }\n\nPaths checked: \n\t${routes
+      //     .map(route => route.path)
+      //     .join(
+      //       "\n\t"
+      //     )}\n\nTo get rid of this warning, add a default NotFound component as child of Router:
+      //   \n\tlet NotFound = () => <div>Not Found!</div>
+      //   \n\t<Router>\n\t  <NotFound default/>\n\t  {/* ... */}\n\t</Router>`
+      // );
       return null;
     }
   }
 }
+
+let FocusContext = createContext();
+FocusContext.Provider.displayName = "Focus.Provider";
+FocusContext.Consumer.displayName = "Focus.Consumer";
+
+let FocusHandler = ({ uri, location, children }) => (
+  <FocusContext.Consumer>
+    {requestFocus => (
+      <FocusHandlerImpl
+        requestFocus={requestFocus}
+        uri={uri}
+        location={location}
+        children={children}
+      />
+    )}
+  </FocusContext.Consumer>
+);
+
+// don't focus on initial render
+let initialRender = true;
+
+class FocusHandlerImpl extends React.Component {
+  state = {};
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let initial = prevState.uri == null;
+    if (initial) {
+      return {
+        shouldFocus: true,
+        ...nextProps
+      };
+    } else {
+      let myURIChanged = nextProps.uri !== prevState.uri;
+      let navigatedUpToMe =
+        prevState.location.pathname !== nextProps.location.pathname &&
+        nextProps.location.pathname === nextProps.uri;
+      return {
+        shouldFocus: myURIChanged || navigatedUpToMe,
+        ...nextProps
+      };
+    }
+  }
+
+  componentDidMount() {
+    this.focus();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location !== this.props.location && this.state.shouldFocus) {
+      this.focus();
+    }
+  }
+
+  focus() {
+    if (process.env.NODE_ENV === "test") {
+      // getting cannot read property focus of null in the tests
+      // and that bit of global `initialRender` state causes problems
+      // should probably figure it out!
+      return;
+    }
+
+    let { requestFocus } = this.props;
+
+    if (requestFocus) {
+      requestFocus(this.node);
+    } else {
+      if (initialRender) {
+        initialRender = false;
+      } else {
+        this.node.focus();
+      }
+    }
+  }
+
+  requestFocus = node => {
+    if (!this.state.shouldFocus) {
+      node.focus();
+    }
+  };
+
+  render() {
+    return (
+      <div
+        style={{ outline: "none" }}
+        tabIndex="-1"
+        role="group"
+        ref={n => (this.node = n)}
+      >
+        <FocusContext.Provider value={this.requestFocus}>
+          {this.props.children}
+        </FocusContext.Provider>
+      </div>
+    );
+  }
+}
+
+polyfill(FocusHandlerImpl);
+
+let k = () => {};
 
 ////////////////////////////////////////////////////////////////////////////////
 let Link = props => (
   <BaseContext.Consumer>
     {({ basepath, baseuri }) => (
       <Location>
-        {({ navigate }) => {
-          let { location, to, state, replace, ...anchorProps } = props;
-
+        {({ location, navigate }) => {
+          let { to, state, replace, activeProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
+          let current = location.pathname === href;
 
           return (
             <a
               {...anchorProps}
+              {...activeProps(current, location)}
               href={href}
+              aria-current={current ? "page" : undefined}
               onClick={event => {
                 if (anchorProps.onClick) anchorProps.onClick(event);
                 if (shouldNavigate(event)) {
