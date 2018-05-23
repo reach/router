@@ -248,6 +248,9 @@ const Create = withInvalidateContacts(
             Create Contact
           </button>
           <ul>
+            <li>
+              You can submit the form with empty values for some dummy data.
+            </li>
             <li>To cause an error, try using the first name "Millenial"</li>
           </ul>
           {state === CreateStates.ERROR && (
@@ -264,6 +267,7 @@ const Create = withInvalidateContacts(
 );
 
 const NotFound = () => <p>Sorry, nothing here.</p>;
+
 const Error = () => <p>Sorry, something's wrong on the server.</p>;
 
 class App extends React.Component {
