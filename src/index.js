@@ -307,16 +307,16 @@ let Link = props => (
     {({ basepath, baseuri }) => (
       <Location>
         {({ location, navigate }) => {
-          let { to, state, replace, activeProps = k, ...anchorProps } = props;
+          let { to, state, replace, getProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
-          let current = location.pathname === href;
+          let isCurrent = location.pathname === href;
 
           return (
             <a
               {...anchorProps}
-              {...activeProps(current, location)}
+              {...getProps(isCurrent, href, location)}
               href={href}
-              aria-current={current ? "page" : undefined}
+              aria-current={isCurrent ? "page" : undefined}
               onClick={event => {
                 if (anchorProps.onClick) anchorProps.onClick(event);
                 if (shouldNavigate(event)) {

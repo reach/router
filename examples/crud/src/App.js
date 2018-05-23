@@ -14,13 +14,22 @@ import {
 } from "./utils";
 import createContext from "create-react-context";
 
-console.log(React.version);
-
 const InvalidateContacts = createContext();
 const withInvalidateContacts = Comp => props => (
   <InvalidateContacts.Consumer>
     {invalidate => <Comp {...props} invalidateContacts={invalidate} />}
   </InvalidateContacts.Consumer>
+);
+
+const NavLink = props => (
+  <Link
+    getProps={(_, href, location) => ({
+      className: location.pathname.startsWith(href)
+        ? "nav-link active"
+        : "nav-link"
+    })}
+    {...props}
+  />
 );
 
 class Contacts extends React.Component {
@@ -45,31 +54,18 @@ class Contacts extends React.Component {
 
     return (
       <InvalidateContacts.Provider value={this.load}>
-        <div>
-          <div style={{ display: "flex" }}>
-            <div>
-              <h1>Contacts</h1>
-              <p>
-                <Link to="contact/new">New Contact</Link> |{" "}
-                <Link to="/">Home</Link>
-              </p>
-              <ul>
-                <li>
-                  <Link to="/contacts/ryan">Redirect Ryan</Link>
-                  <br />
-                  <small>
-                    You might need to close the create-react-app error overlay
-                  </small>
-                </li>
-                {contacts.map(contact => (
-                  <li key={contact.id}>
-                    <Link to={`contact/${contact.id}`}>{contact.first}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div style={{ marginLeft: "100px" }}>{children}</div>
-          </div>
+        <div className="App">
+          <nav className="primary-nav">
+            <NavLink to="contact/new">
+              <span aria-label="add">+ New Contact</span>
+            </NavLink>
+            {contacts.map(contact => (
+              <NavLink key={contact.id} to={`contact/${contact.id}`}>
+                {contact.first} {contact.last}
+              </NavLink>
+            ))}
+          </nav>
+          <main className="main-content">{children}</main>
         </div>
       </InvalidateContacts.Provider>
     );
@@ -85,11 +81,15 @@ const Card = withInvalidateContacts(
     }
 
     async load() {
+      this.setState({ result: null });
       const result = await getContact(this.props.id);
       this.setState({ result });
     }
 
-    async componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps) {
+      if (!prevProps.edit && this.props.edit) {
+        this.firstInput.focus();
+      }
       if (prevProps.id !== this.props.id) {
         this.load();
       }
@@ -127,63 +127,72 @@ const Card = withInvalidateContacts(
       return (
         <div>
           <h1>
-            {edit ? (
-              <form onSubmit={this.handleSubmit}>
-                <input
-                  style={{ font: "inherit" }}
-                  type="text"
-                  size="15"
-                  defaultValue={contact.first}
-                />{" "}
-                <input
-                  style={{ font: "inherit" }}
-                  type="text"
-                  size="15"
-                  defaultValue={contact.last}
-                />{" "}
+            {contact.first} {contact.last}
+          </h1>
+          <img alt="avatar" src={contact.avatar} height="200" />
+          {edit ? (
+            <form onSubmit={this.handleSubmit}>
+              <p>
+                <label>
+                  First Name:{" "}
+                  <input
+                    ref={n => (this.firstInput = n)}
+                    type="text"
+                    size="15"
+                    defaultValue={contact.first}
+                  />
+                </label>
+              </p>
+              <p>
+                <label>
+                  Last Name:{" "}
+                  <input type="text" size="15" defaultValue={contact.last} />
+                </label>
+              </p>
+              <p>
                 <button type="submit">Save</button>{" "}
                 <Link to="../" replace>
                   Cancel
                 </Link>
-              </form>
-            ) : (
-              <div>
-                {contact.first} {contact.last}{" "}
-                <Link to="edit" aria-label="edit">
-                  <Edit />
-                </Link>
-              </div>
-            )}
-          </h1>
-          <img alt="avatar" src={contact.avatar} height="200" />
-          <p>
-            <button onClick={this.handleDelete}>Delete</button>
-          </p>
+              </p>
+            </form>
+          ) : (
+            <p>
+              <Link className="edit" to="edit" aria-label="edit">
+                Edit
+              </Link>{" "}
+              <button className="text-button" onClick={this.handleDelete}>
+                Delete
+              </button>
+            </p>
+          )}{" "}
         </div>
       );
     }
   }
 );
 
-const About = () => <h1>Reactions Router Demo!</h1>;
+const About = () => (
+  <div>
+    <h1>Reach Router CRUD Demo</h1>
+    <p>
+      Go ahead, click on a few links, edit some records, add some new ones,
+      delete some old ones.
+    </p>
+    <p>
+      This is all wired up to a real API, you can watch the network requests in
+      the console.
+    </p>
+    <p>Enjoy.</p>
+  </div>
+);
 
 const MONKEY = "https://contacts.now.sh/images/monkey.jpg";
 const Field = ({ title }) => (
-  <label
-    style={{
-      display: "block",
-      margin: "20px 0"
-    }}
-  >
-    <b style={{ fontSize: "85%", color: "#888" }}>{title}</b>
+  <label className="Field">
+    {title}
     <br />
-    <input
-      type="text"
-      style={{
-        fontSize: "125%",
-        width: "100%"
-      }}
-    />
+    <input type="text" size="40" />
   </label>
 );
 
@@ -216,7 +225,6 @@ const Create = withInvalidateContacts(
       if (res.contact) {
         this.props.invalidateContacts();
         this.props.navigate(`../${res.contact.id}`);
-        // this.props.navigate(res.contact.id);
       } else {
         const text = await res.text();
         this.setState({
@@ -230,46 +238,20 @@ const Create = withInvalidateContacts(
       const { state, error } = this.state;
       return (
         <form onSubmit={this.handleSubmit}>
+          <h1>Create Contact</h1>
           <p>
             <Field title="First Name" />
             <Field title="Last Name" />
             <Field title="Avatar URL" />
           </p>
-          <button
-            disabled={state === CreateStates.SAVING}
-            type="submit"
-            style={{
-              opacity: state === CreateStates.SAVING ? "0.5" : "",
-              margin: "10px 0",
-              border: "none",
-              borderRadius: "100em",
-              font: "inherit",
-              fontWeight: "bold",
-              fontSize: "85%",
-              color: "white",
-              padding: "10px 20px",
-              background: "hsl(200, 50%, 50%)",
-              width: "100%"
-            }}
-          >
+          <button disabled={state === CreateStates.SAVING} type="submit">
             Create Contact
           </button>
-          <ul style={{ fontSize: "85%", padding: "10px" }}>
+          <ul>
             <li>To cause an error, try using the first name "Millenial"</li>
-            <li>
-              For slow responses use the browser debugger to throttle your
-              network.
-            </li>
           </ul>
           {state === CreateStates.ERROR && (
-            <p
-              style={{
-                background: `hsl(10, 50%, 90%)`,
-                border: `solid 1px hsl(10, 50%, 50%)`,
-                padding: "10px",
-                textAlign: "center"
-              }}
-            >
+            <p>
               There was an error:<br />
               <br />
               <b>{error}</b>
@@ -281,8 +263,8 @@ const Create = withInvalidateContacts(
   }
 );
 
-const NotFound = () => <div>Sorry, nothing here.</div>;
-const Error = () => <div>Sorry, something's wrong on the server.</div>;
+const NotFound = () => <p>Sorry, nothing here.</p>;
+const Error = () => <p>Sorry, something's wrong on the server.</p>;
 
 class App extends React.Component {
   state = {
