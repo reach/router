@@ -1,5 +1,6 @@
 const markdownIt = require("markdown-it");
 const Prism = require("prismjs");
+const cheerio = require("cheerio");
 
 let aliases = {
   js: "jsx",
@@ -28,15 +29,24 @@ let md = markdownIt({
   highlight
 });
 
-module.exports = markdown =>`
+let getTitle = html =>
+  cheerio
+    .load(html)("h1")
+    .text();
+
+module.exports = markdown => {
+  let html = md.render(markdown);
+  return `
 import React from 'react'
+export const title = ${JSON.stringify(getTitle(html))};
 export default function() {
   return React.createElement(
     'div',
     {
-      dangerouslySetInnerHTML: { __html: ${JSON.stringify(md.render(markdown))}}
+      className: 'markdown',
+      dangerouslySetInnerHTML: { __html: ${JSON.stringify(html)}}
     }
   )
 }
-`
-
+`;
+};

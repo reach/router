@@ -18,6 +18,7 @@ let Nav = () => (
       <Match path="*">
         {({ location }) => (
           <Component
+            initialState={{ sidebarOpen: false }}
             isSmall={isSmall}
             location={location}
             didUpdate={({ prevProps, state, setState }) => {
@@ -29,7 +30,6 @@ let Nav = () => (
                 setState({ sidebarOpen: false });
               }
             }}
-            initialState={{ sidebarOpen: false }}
           >
             {({ state, setState }) => (
               <div>
@@ -87,7 +87,7 @@ let Nav = () => (
 
                     <NavLink to="/">Features</NavLink>
                     <NavLink to="accessibility">Accessibility</NavLink>
-                    <NavLink to="origins">Credits and Trade-offs</NavLink>
+                    <NavLink to="credits">Credits and Trade-offs</NavLink>
 
                     <Header>Examples</Header>
                     <NavLink to="example/basic">Basic Usage</NavLink>
@@ -112,12 +112,23 @@ let Nav = () => (
                     <NavLink to="example/query-params">Query Params</NavLink>
 
                     <Header>Tutorial</Header>
-                    <NavLink to="tutorial/installation">Installation</NavLink>
-                    <NavLink to="tutorial/router-link">Router and Link</NavLink>
-                    <NavLink to="tutorial/index-routes">Index Routes</NavLink>
-                    <NavLink to="tutorial/url-params">URL Parameters</NavLink>
-                    <NavLink to="tutorial/nesting">Nesting</NavLink>
-                    <NavLink to="tutorial/navigate">
+                    <NavLink to="tutorial/01-intro">Introduction</NavLink>
+                    <NavLink to="tutorial/02-installation">
+                      Installation
+                    </NavLink>
+                    <NavLink to="tutorial/03-link">Link</NavLink>
+                    <NavLink to="tutorial/04-router">Router</NavLink>
+                    <NavLink to="tutorial/05-url-parameters">
+                      URL Parameters
+                    </NavLink>
+                    <NavLink to="tutorial/06-nesting">Nesting</NavLink>
+                    <NavLink to="tutorial/07-index-routes">
+                      Index Routes
+                    </NavLink>
+                    <NavLink to="tutorial/08-default-routes">
+                      Default Routes
+                    </NavLink>
+                    <NavLink to="tutorial/09-navigate">
                       Navigating Imperatively
                     </NavLink>
 
@@ -134,27 +145,35 @@ let Nav = () => (
                     <NavLink to="testing">Testing</NavLink>
                     <NavLink to="redux">Redux Integration</NavLink>
 
-                    <Header>API</Header>
+                    <Header>Primary API</Header>
                     <div
                       css={{
                         fontFamily: `'SFMono-Regular', Consolas, 'Roboto Mono', 'Droid Sans Mono', 'Liberation Mono', Menlo, Courier, monospace`
                       }}
                     >
+                      <NavLink to="api/Router">Router</NavLink>
+                      <NavLink to="api/RouteComponent">Route Component</NavLink>
+                      <NavLink to="api/Redirect">Redirect</NavLink>
                       <NavLink to="api/Link">Link</NavLink>
+                      <NavLink to="api/navigate">navigate</NavLink>
+                    </div>
+
+                    <Header>Additional API</Header>
+                    <div
+                      css={{
+                        fontFamily: `'SFMono-Regular', Consolas, 'Roboto Mono', 'Droid Sans Mono', 'Liberation Mono', Menlo, Courier, monospace`
+                      }}
+                    >
+                      <NavLink to="api/Match">Match</NavLink>
                       <NavLink to="api/LocationProvider">
                         LocationProvider
                       </NavLink>
-                      <NavLink to="api/Match">Match</NavLink>
-                      <NavLink to="api/Redirect">Redirect</NavLink>
-                      <NavLink to="api/RouteComponent">Route Component</NavLink>
-                      <NavLink to="api/Router">Router</NavLink>
                       <NavLink to="api/ServerLocation">ServerLocation</NavLink>
                       <NavLink to="api/createHistory">createHistory</NavLink>
                       <NavLink to="api/createMemorySource">
                         createMemorySource
                       </NavLink>
                       <NavLink to="api/isRedirect">isRedirect</NavLink>
-                      <NavLink to="api/navigate">navigate</NavLink>
                       <NavLink to="api/redirectTo">redirectTo</NavLink>
                     </div>
                   </div>

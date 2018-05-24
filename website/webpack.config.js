@@ -28,6 +28,7 @@ module.exports = {
   ],
   output: {
     filename: "[name].bundle.js",
+    chunkFilename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
     publicPath: "/"
   },
@@ -40,7 +41,7 @@ module.exports = {
       },
       {
         test: /\.md$/,
-        use: path.resolve('build/markdown-loader.js')
+        use: path.resolve("build/markdown-loader.js")
       }
     ]
   }

@@ -1,5 +1,7 @@
 {
   "plugins": [
+    "syntax-dynamic-import",
+    "transform-class-properties",
     "react-hot-loader/babel",
     ["transform-react-jsx", { "pragma": "Glamor.createElement" }]
   ],
