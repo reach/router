@@ -131,6 +131,7 @@ let Nav = () => (
                     <NavLink to="tutorial/09-navigate">
                       Navigating Imperatively
                     </NavLink>
+                    <NavLink to="tutorial/10-next-steps">Next Steps</NavLink>
 
                     <Header>Guides</Header>
                     <NavLink to="nesting">
@@ -152,9 +153,9 @@ let Nav = () => (
                       }}
                     >
                       <NavLink to="api/Router">Router</NavLink>
+                      <NavLink to="api/Link">Link</NavLink>
                       <NavLink to="api/RouteComponent">Route Component</NavLink>
                       <NavLink to="api/Redirect">Redirect</NavLink>
-                      <NavLink to="api/Link">Link</NavLink>
                       <NavLink to="api/navigate">navigate</NavLink>
                     </div>
 

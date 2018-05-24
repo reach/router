@@ -27,4 +27,4 @@ Next, add it as a child of `<Invoices>` with a path of `/`.
 </Router>
 ```
 
-Now when you visit "/invoices" you'll see the new component.
+Now click on the "invoices" link. When you visit "/invoices" you'll see the new component.

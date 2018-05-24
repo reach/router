@@ -52,5 +52,3 @@ navigate(`/invoices/${id}`)
 // becomes
 props.navigate(id)
 ```
-
-Congratulations! You know everything you need to know to start building URL driven apps with Reach Router.

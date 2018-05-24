@@ -47,7 +47,7 @@ Go click around. Note that when you're at `/invoices` we see just the links, but
 
 The child route components that match the URL will be passed to the parent component as `props.children`. This makes it really easy to add persistent navigation at any level of the hierarchy.
 
-We can take this nesting a step further to. Go to your links and remove the `/invoices/` part of the href. Everything will still work as before.
+We can take this nesting a step further. Go to your links and remove the `/invoices/` part of the href. Everything will still work as before.
 
 ```jsx
 <Link to="/invoices/abc">Invoice ABC</Link>
@@ -55,4 +55,4 @@ We can take this nesting a step further to. Go to your links and remove the `/in
 <Link to="abc">Invoice ABC</Link>
 ```
 
-Links are aware their position in the hierarchy so you can provide a relative path to them. There are a lot of great benefits to using relative links discussed in the [nesting guide](../nesting).
+Links are aware of their position in the hierarchy so you can provide a relative path to them. There are a lot of great benefits to using relative links discussed in the [nesting guide](../nesting).

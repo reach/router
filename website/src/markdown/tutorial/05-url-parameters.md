@@ -1,6 +1,6 @@
 # Tutorial - URL Parameters
 
-Let's create another screen called `Invoice`.
+Let's create another screen called `Invoice`. It expects a prop called `invoiceId`. You can imagine it being rendered like `<Invoice invoiceId="abc"/>`.
 
 ```jsx
 const Invoice = props => (
@@ -28,4 +28,4 @@ Finally, link to the new route somewhere.
 
 The name of the url parameter (`:invoiceId`) becomes a prop by the same name on your route component (`props.invoiceId`). It gets parsed from the URL and passed to you.
 
-You could use that prop in `componentDidMount` to go and fetch some data somewhere.
+Besides using it to render, it's common to use that prop in `componentDidMount` to fetch some data.
