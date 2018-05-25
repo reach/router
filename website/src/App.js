@@ -185,20 +185,7 @@ let Tutorial = ({ id, location }) => (
       height: "100vh"
     }}
   >
-    <iframe
-      title="example"
-      src={`https://codesandbox.io/embed/${
-        tutorialSandboxen[tutorialLinks.indexOf(id)]
-      }?fontsize=13`}
-      css={{
-        display: location.search === "?fullpage" ? "none" : "block",
-        width: "100%",
-        border: 0,
-        height: "60%"
-      }}
-      sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-    />
-    <div css={{ flex: 1, overflow: "auto" }}>
+    <div css={{ order: 1, flex: 1, overflow: "auto" }}>
       <div css={{ textAlign: "center", padding: 5 }}>
         <Link
           css={{
@@ -278,6 +265,19 @@ let Tutorial = ({ id, location }) => (
         <div css={{ height: 40 }} />
       </div>
     </div>
+    <iframe
+      title="Codesandbox"
+      src={`https://codesandbox.io/embed/${
+        tutorialSandboxen[tutorialLinks.indexOf(id)]
+      }?fontsize=13`}
+      css={{
+        display: location.search === "?fullpage" ? "none" : "block",
+        width: "100%",
+        border: 0,
+        height: "60%"
+      }}
+      sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+    />
   </div>
 );
 
@@ -308,7 +308,10 @@ let MarkdownRoute = ({ dir, filename }) => (
 let MarkdownPage = ({ dir, filename, css }) => (
   <AsyncModule
     key={dir + filename}
-    load={() => import(`./markdown/${dir}/${filename}.md`)}
+    load={() => {
+      console.log("nope");
+      // return import(`./markdown/${dir}/${filename}.md`);
+    }}
   >
     {mod =>
       mod ? (
