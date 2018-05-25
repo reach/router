@@ -4,11 +4,13 @@ Hey, it's Ryan Florence here.
 
 ## Why did you make this?
 
-I created Reach Router for two reasons: 1) I needed a router to play around with React Suspense and found a router I really wanted to use elsewhere, and 2) I want to help push the React community to be more accessible by default.
+I created Reach Router for two reasons: I needed a router to play around with React Suspense and slapped one together, then I really liked it so I kept going. (2) I want to help push the React community to be more accessible by default.
 
 ## Credits
 
-In May of 2014 I created the first version of React Router. I was involved with the project, particularly the API design, through version 4. Because of that, Reach Router is clearly influenced by React Router and all of the contributors behind it.
+In May of 2014 I created the first version of React Router and was involved with the project all the way to the end of 2017 at version 4. Because of that, Reach Router is clearly influenced by React Router and all of the ideas of the contributors who built it.
+
+To me, Reach Router is everything I missed about v3 and everything I love about v4, plus a couple things I've always wanted to add (focus management and relative links).
 
 ## Trade-offs (mostly compared to React Router)
 

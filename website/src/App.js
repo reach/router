@@ -309,8 +309,7 @@ let MarkdownPage = ({ dir, filename, css }) => (
   <AsyncModule
     key={dir + filename}
     load={() => {
-      console.log("nope");
-      // return import(`./markdown/${dir}/${filename}.md`);
+      return import(`./markdown/${dir}/${filename}.md`);
     }}
   >
     {mod =>
