@@ -221,6 +221,7 @@ let FocusHandler = ({ uri, location, children }) => (
 
 // don't focus on initial render
 let initialRender = true;
+let focusHandlerCount = 0;
 
 class FocusHandlerImpl extends React.Component {
   state = {};
@@ -245,14 +246,19 @@ class FocusHandlerImpl extends React.Component {
   }
 
   componentDidMount() {
+    focusHandlerCount++;
     this.focus();
   }
 
+  componentWillUnmount() {
+    focusHandlerCount--;
+    if (focusHandlerCount === 0) {
+      initialRender = true;
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.location.key !== this.props.location.key &&
-      this.state.shouldFocus
-    ) {
+    if (prevProps.location !== this.props.location && this.state.shouldFocus) {
       this.focus();
     }
   }
