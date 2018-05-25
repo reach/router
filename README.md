@@ -1,6 +1,18 @@
-# Reactions Router
+<p align="center">
+  <a href="https://reach.tech/router/">
+    <img alt="Reach Router" src="./logo-horizontal.png" width="400">
+  </a>
+</p>
 
-Next generation routing for React.
+<p align="center">
+  Next Generation Routing for <a href="https://facebook.github.io/react">React</a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@reach/router"><img src="https://img.shields.io/npm/v/@reach/router.svg?style=flat-square"></a>
+  <a href="https://www.npmjs.com/package/@reach/router"><img src="https://img.shields.io/npm/dm/@reach/router.svg?style=flat-square"></a>
+  <a href="https://travis-ci.org/reach/router"><img src="https://img.shields.io/travis/reach/router/master.svg?style=flat-square"></a>
+</p>
 
 ## Installation
 
