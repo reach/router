@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "now-start": "serve dist --single"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.46",
@@ -28,19 +29,22 @@
   "dependencies": {
     "@babel/preset-react": "^7.0.0-beta.46",
     "@mdx-js/mdx": "^0.8.1",
-    "@reactions/component": "^2.0.2",
     "@reach/router": "^0.0.0-alpha.9",
+    "@reactions/component": "^2.0.2",
     "glamor": "^2.20.40",
     "html-webpack-plugin": "^3.2.0",
     "markdown-it": "^8.4.1",
     "prismjs": "^1.14.0",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
+    "prop-types": "15",
+    "react": "16.4",
+    "react-dom": "16.4",
     "react-media": "^1.8.0",
     "rehype-parse": "^4.1.0",
     "rehype-stringify": "^3.0.0",
     "remark-highlight.js": "^5.0.0",
     "scroll-into-view-if-needed": "^2.1.5",
+    "serve": "^6.5.8",
+    "uglifyjs-webpack-plugin": "^1.2.5",
     "unified": "^6.2.0",
     "unist-util-visit": "^1.3.1"
   },

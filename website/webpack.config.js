@@ -1,18 +1,27 @@
 const webpack = require("webpack");
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+
+const PROD = process.env.NODE_ENV === "production";
 
 module.exports = {
   entry: {
     app: "./src/index.js"
   },
-  mode: "development",
-  devtool: "inline-source-map",
+  mode: PROD ? "production" : "development",
+  devtool: PROD ? "source-map" : "inline-source-map",
   devServer: {
     contentBase: "./dist",
     hot: true,
     historyApiFallback: true
+  },
+  output: {
+    filename: "static/js/[name].[hash:8].js",
+    chunkFilename: "static/js/[name].[chunkhash:8].chunk.js",
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "/"
   },
   plugins: [
     new CleanWebpackPlugin(["dist"]),
@@ -21,17 +30,12 @@ module.exports = {
       template: "src/index.html"
     }),
     new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.ProvidePlugin({
       Glamor: "glamor/react"
     })
-  ],
-  output: {
-    filename: "[name].bundle.js",
-    chunkFilename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist"),
-    publicPath: "/"
-  },
+  ].concat(
+    PROD ? [new UglifyJSPlugin()] : [new webpack.HotModuleReplacementPlugin()]
+  ),
   module: {
     rules: [
       {
