@@ -249,7 +249,10 @@ class FocusHandlerImpl extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.location !== this.props.location && this.state.shouldFocus) {
+    if (
+      prevProps.location.key !== this.props.location.key &&
+      this.state.shouldFocus
+    ) {
       this.focus();
     }
   }
