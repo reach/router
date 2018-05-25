@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import Spinner from "./Spinner";
 import { fetchMovieListJSON } from "../api";
 import { createFetcher } from "../future";
-import { Link } from "@reactions/router";
+import { Link } from "@reach/router";
 
 const movieListFetcher = createFetcher(fetchMovieListJSON);
 

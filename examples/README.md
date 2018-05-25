@@ -1,10 +1,10 @@
 # Running Examples
 
-Each example uses create-react-app. To develop against the examples you just need to link @reactions/router.
+Each example uses create-react-app. To develop against the examples you just need to link @reach/router.
 
 ```
 # from the root of the repository
-yarn link @reactions/router
+yarn link @reach/router
 cd examples/contacts
 yarn && yarn start
 ```

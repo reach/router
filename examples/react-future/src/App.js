@@ -6,7 +6,7 @@ import { Router, Link, navigate } from "./Router";
 import { login, readContacts, readContact, createContact } from "./utils";
 import withCache from "./withCache";
 import Img, { preload as preloadImg } from "./Img";
-import Component from "@reactions/component";
+import Component from "@reach/component";
 
 console.log(React.version);
 

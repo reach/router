@@ -3,6 +3,6 @@
 ```sh
 yarn link
 cd example
-yarn link "@reactions/router"
+yarn link "@reach/router"
 yarn start
 ```

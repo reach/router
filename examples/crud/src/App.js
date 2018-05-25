@@ -2,8 +2,7 @@
 // slow initial load
 // show loading quickly on initial load, don't show top level placeholder on navigation
 import React from "react";
-import Edit from "react-icons/lib/ti/edit";
-import { Router, Link, Redirect } from "@reactions/router";
+import { Router, Link, Redirect } from "@reach/router";
 import {
   login,
   getContacts,

@@ -6,7 +6,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import _ from "lodash";
 import Charts from "./Charts";
-import { Router } from "@reactions/router";
+import { Router } from "@reach/router";
 import "./index.css";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,13 +30,15 @@ class App extends React.PureComponent {
   };
 
   render() {
-    const data = getStreamData(this.props.location.search)
+    const data = getStreamData(this.props.location.search);
     return (
       <div className="container">
         <input
           className={"input"}
           placeholder="longer input → more components and DOM nodes"
-          defaultValue={decodeURIComponent(this.props.location.search.substr(1))}
+          defaultValue={decodeURIComponent(
+            this.props.location.search.substr(1)
+          )}
           onChange={this.handleChange}
         />
         <div className="demo">
@@ -70,7 +72,7 @@ let getStreamData = input => {
   );
   cachedData.set(input, data);
   return data;
-}
+};
 
 ReactDOM.render(
   <Wrapper>
@@ -80,4 +82,3 @@ ReactDOM.render(
   </Wrapper>,
   document.getElementById("root")
 );
-

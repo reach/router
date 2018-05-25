@@ -52,7 +52,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reactions/router.git"
+    "url": "git+https://github.com/reach/router.git"
   },
   "keywords": ["react", "react router"],
   "prettier": {
@@ -73,7 +73,7 @@
     "warning": "^3.0.0"
   },
   "bugs": {
-    "url": "https://github.com/reactions/router/issues"
+    "url": "https://github.com/reach/router/issues"
   },
-  "homepage": "https://github.com/reactions/router#readme"
+  "homepage": "https://github.com/reach/router#readme"
 }

@@ -5,19 +5,19 @@ Next generation routing for React.
 ## Installation
 
 ```bash
-yarn add @reactions/router
+yarn add @reach/router
 ```
 
 And then import it:
 
 ```js
-import { Router, Link, Redirect } from "@reactions/router";
+import { Router, Link, Redirect } from "@reach/router";
 ```
 
 Or use script tags and globals.
 
 ```html
-<script src="https://unpkg.com/@reactions/router"></script>
+<script src="https://unpkg.com/@reach/router"></script>
 <script>
 ReactionsRouter.Router;
 ReactionsRouter.Link;
@@ -42,7 +42,7 @@ Routers select a child to render based on the child's path. The children are jus
 ```js
 import { React } from "react";
 import { render } from "react-dom";
-import { Router, Link } from "@reactions/router";
+import { Router, Link } from "@reach/router";
 
 let Home = () => <div>Home</div>;
 let Dash = () => <div>Dash</div>;
@@ -306,7 +306,7 @@ This allows you to have all of your routes configured at the top of the app, or 
 If you need to navigate programmatically (like after a form submits), import `navigate`.
 
 ```jsx
-import { navigate } from "@reactions/router";
+import { navigate } from "@reach/router";
 
 const Invoices = () => (
   <div>
@@ -394,7 +394,7 @@ Router's state changes are marked as "low priority". It's very common to hook a 
 ## API
 
 ```jsx
-import { Router, Link, Redirect, MatchPath, navigate } from "@reactions/router";
+import { Router, Link, Redirect, MatchPath, navigate } from "@reach/router";
 ```
 
 ```jsx
@@ -446,7 +446,7 @@ Because Reactions Router brings back nested route configuration, it was plausibl
 First, install Reactions Router
 
 ```
-yarn add @reactions/router
+yarn add @reach/router
 ```
 
 Then do a find/replace across your app:
@@ -456,7 +456,7 @@ Then do a find/replace across your app:
 import { Router, Link, Route } from 'react-router'
 
 // to
-import { Router, Link, Route } from '@reactions/router/compat'
+import { Router, Link, Route } from '@reach/router/compat'
 ```
 
 Next, cross your fingers and hope everything still works.
@@ -540,9 +540,9 @@ const User = ({ userId }) => <div>{userId}</div>
 
 // When all of your routes run without warnings, you can update the import
 
-import ... from '@reactions/router/compat'
+import ... from '@reach/router/compat'
 // becomes
-import ... from '@reactions/router'
+import ... from '@reach/router'
 ```
 
 Congratulations, you're not gonna get left behind anymore!

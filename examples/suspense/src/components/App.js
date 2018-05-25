@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import Spinner from "./Spinner";
 import MovieListPage from "./MovieListPage";
 import { Placeholder, Loading, createFetcher } from "../future";
-import { Router, Link } from "@reactions/router";
+import { Router, Link } from "@reach/router";
 
 const moviePageFetcher = createFetcher(() => import("./MoviePage"));
 

@@ -20,16 +20,16 @@ exec("babel src -d . --ignore *.test.js", {
 });
 
 console.log("\nBuilding UMD ...");
-exec("rollup -c -f umd -o umd/reactions-router.js", {
+exec("rollup -c -f umd -o umd/reach-router.js", {
   BABEL_ENV: "umd",
   NODE_ENV: "development"
 });
 
 console.log("\nBuilding UMD min.js ...");
-exec("rollup -c -f umd -o umd/reactions-router.min.js", {
+exec("rollup -c -f umd -o umd/reach-router.min.js", {
   BABEL_ENV: "umd",
   NODE_ENV: "production"
 });
 
-const size = gzipSize.sync(fs.readFileSync("umd/reactions-router.min.js"));
+const size = gzipSize.sync(fs.readFileSync("umd/reach-router.min.js"));
 console.log("\ngzipped, the UMD build is %s", prettyBytes(size));
