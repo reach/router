@@ -296,7 +296,7 @@ class AsyncModule extends React.Component {
 }
 
 let MarkdownRoute = ({ dir, filename }) => (
-  <div css={{ padding: 40, maxWidth: 800 }}>
+  <div css={{ padding: 40, maxWidth: 800, lineHeight: 1.3 }}>
     <MarkdownPage
       dir={dir}
       filename={filename}

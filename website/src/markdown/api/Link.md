@@ -1,4 +1,4 @@
-# &lt;Link>
+# Link
 
 Provides accessible navigation.
 
@@ -19,72 +19,81 @@ The string URI to link to. Supports relative and absolute URIs.
 <Link to="../back-up">Back up</Link>
 ```
 
-Relative paths in the browser are a little different than on the file system and Reach Router has made an opinionated choice here. For many of us, the command line provides our intuition about relative paths, imagine we're navigating up a directory.
-
-```
-$ cd /some/where
-$ cd ../
-$ pwd
-/some
-```
-
-It works the same way with Reach Router:
-
-```js
-
-// if you're at /some/where
-<Link to="../">Up</Link>
-// this links to "/some"
-```
-
-If you are familiar with how path resolution works in the browser, you'll know that the trailing slash matters:
-
-```js
-// if we are at "/some/where/"
-window.pushState("..")
-
-// puts us at "/some/where" 
-// but a lot of people would expect to be at "/some"!
-
-// now that we're at "/some/where"
-window.pushState("..")
-
-// puts us at "/some"
-```
-
-The difference from the command line here is that you can't be "at a file" in the command line. So any time you `cd` you're working relative to directories only. On the web you can be "at a file", so the trailing slash indicates if you're "at a file" or "in a directory".
-
-Reach Router made a choice to ignore trailing slashes completely, therefore eliminating any difference when navigating up the path. Therefore:
-
-```js
-// if we're at "/some/where" or "/some/where/"
-<Link to="../">Up</Link>
-// this links to "/some" in both cases
-```
-
-To sum it up, just imagine every url is a "directory" and your 
+Please see the [Nesting](../nesting) guide to know how to appropriately use relative links.
 
 ## replace: bool
 
-If `true`, the latest entry on the history stack will be replaced with a new one.
+If `true`, the latest entry on the history stack will be replaced with a new one. Use this when you don't want the previous page to show up when the user clicks the back button.
 
 ```jsx
 <Link to="?query=some+new+query" replace />
 ```
 
-## innerRef: function
+## getProps: func
 
-Allows access to the underlying `ref` of the component
+Calls up to you to get props for the underlying anchor element. Useful for styling the anchor as active.
+
+Arguments:
+
+* `isCurrent` - true if the `location.pathname` is exactly the same as the anchor's href.
+* `href` - the fully resolved href of the link.
+* `location` - the app's location.
 
 ```jsx
-const refCallback = node => {
-  // `node` refers to the mounted DOM element or null when unmounted
+// this is only active when the location pathname is exactly
+// the same as the href.
+const isActive = (isCurrent, href, location) => {
+  return isCurrent ? { className: "active" } : null
 }
 
-<Link to="/" innerRef={refCallback} />
+const ExactNavLink = props => (
+  <Link getProps={isActive} {...props} />
+)
+
+// this link will be active when itself or deeper routes
+// are current
+const isPartiallyActive = (_, href, location) => {
+  return location.pathname.startsWith(href)
+    ? { className: "active" }
+    : null
+}
+
+const PartialNavLink = props => (
+  <Link getProps={isPartiallyActive} {...props} />
+)
+```
+
+## state: object
+
+An object to put on location state.
+
+```jsx
+const NewsFeed = () => (
+  <div>
+    <Link
+      to="photos/123"
+      state={{ fromNewsFeed: true }}
+    />
+  </div>
+)
+
+const Photo = ({ location, photoId }) => {
+  if (location.state.fromFeed) {
+    return <FromFeedPhoto id={photoId} />
+  } else {
+    return <Photo id={photoId} />
+  }
+}
 ```
 
 ## others
 
 You can also pass props you'd like to be on the `<a>` such as a `title`, `id`, `className`, etc.
 
+```jsx
+<Link
+  to="somewhere"
+  className="whatev"
+  onClick={youBet}
+/>
+```

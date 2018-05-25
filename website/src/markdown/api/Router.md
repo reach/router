@@ -1,88 +1,94 @@
-# &lt;Router>
+# Router
 
-Provides accessible navigation.
+Matches children [Route Components](../RouteComponent) to the location and renders the matching child.
 
-```jsx
-import { Link } from '@reach/router'
+## children: elements
 
-<Link to="somewhere">Anywhere</Link>
-```
+Router will match the location to the path of each of the children. The best match will be rendered.
 
-## to: string
+Route Components can be nested and their paths will inherit their parent's path.
 
-The string URI to link to. Supports relative and absolute URIs.
+Route Components must have a `path` prop, a `default` prop, or be a `Redirect`. When no other child matches, the child with a `default` prop will be rendered.
 
-```jsx
-<Link to="relative">Relative</Link>
-<Link to="/absolute">Asolute</Link>
-<Link to="?relative=query&sure=why+not">Relative query</Link>
-<Link to="../back-up">Back up</Link>
-```
-
-Relative paths in the browser are a little different than on the file system and Reach Router has made an opinionated choice here. For many of us, the command line provides our intuition about relative paths, imagine we're navigating up a directory.
-
-```
-$ cd /some/where
-$ cd ../
-$ pwd
-/some
-```
-
-It works the same way with Reach Router:
-
-```js
-// if you're at /some/where
-<Link to="../">Up</Link>
-// this links to "/some"
-```
-
-If you are familiar with how path resolution works in the browser, you'll know that the trailing slash matters:
-
-```js
-// if we are at "/some/where/"
-window.pushState("..");
-
-// puts us at "/some/where"
-// but a lot of people would expect to be at "/some"!
-
-// now that we're at "/some/where"
-window.pushState("..");
-
-// puts us at "/some"
-```
-
-The difference from the command line here is that you can't be "at a file" in the command line. So any time you `cd` you're working relative to directories only. On the web you can be "at a file", so the trailing slash indicates if you're "at a file" or "in a directory".
-
-Reach Router made a choice to ignore trailing slashes completely, therefore eliminating any difference when navigating up the path. Therefore:
-
-```js
-// if we're at "/some/where" or "/some/where/"
-<Link to="../">Up</Link>
-// this links to "/some" in both cases
-```
-
-To sum it up, just imagine every url is a "directory" and your
-
-## replace: bool
-
-If `true`, the latest entry on the history stack will be replaced with a new one.
+Please see [Route Components](../RouteComponent) for the props Router passes and how URL parameters work.
 
 ```jsx
-<Link to="?query=some+new+query" replace />
+<Router>
+  <App path="/">
+    <Dashboard path="/" />
+    <Event path="event/:eventId" />
+    <Calender path="calendar">
+      <Redirect from="/" to="weekly" />
+      <Monthly path="monthly" />
+      <Weekly path="weekly" />
+      <Daily path="daily" />
+    </Calender>
+  </App>
+  <NotFound default />
+</Router>
 ```
 
-## innerRef: function
+## basepath: string
 
-Allows access to the underlying `ref` of the component
+The path to base all relative paths down the tree too. Used internally but also helpful for rendering a root router in the sub directory of a larger app.
 
 ```jsx
-const refCallback = node => {
-  // `node` refers to the mounted DOM element or null when unmounted
-}
-
-<Link to="/" innerRef={refCallback} />
+<Router basepath="/admin" />
 ```
 
-## others
+## primary: bool
 
-You can also pass props you'd like to be on the `<a>` such as a `title`, `id`, `className`, etc.
+Defaults to true. Primary Routers will manage focus on location transitions. If false, focus will not be managed. This is useful for Routers rendered as asides, headers, breadcrumbs etc. but not the main content.
+
+```jsx
+const App = () => (
+  <div>
+    <Sidebar>
+      {/* we don't want this taking focus */}
+      <Router primary={false}>
+        <HomeNav path="/" />
+        <OrdersNav path="/orders" />
+        <SettingsNav path="/settings" />
+      </Router>
+    </Sidebar>
+
+    <main>
+      {/* but we do want this to manage focus */}
+      <Router>
+        <Home path="/" />
+        <Orders path="/orders" />
+        <Settings path="/settings" />
+      </Router>
+    </main>
+  </div>
+)
+```
+
+## location: location
+
+The location to match Route Components against. You don't typically need to pass this in as it is received from context by default. Passing in a location mostly useful for animations where you pass in the old location so the transitioning-out components continue to match the old location.
+
+```jsx
+import { Location, Router } from "@reach/router"
+import {
+  TransitionGroup,
+  CSSTransition
+} from "react-transition-group"
+
+const App = () => (
+  <Location>
+    {({ location }) => (
+      <TransitionGroup>
+        <CSSTransition key={location.key}>
+          {/* pass in the location so transitions work */}
+          <Router location={location}>
+            <HSL path="/" h="10" s="90" l="50" />
+            <HSL path="/:h/:s/:l" />
+            <RGB path="/:r/:g/:b" />
+          </Router>
+        </CSSTransition>
+      </TransitionGroup>
+    )}
+  </Location>
+)
+```

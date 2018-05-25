@@ -134,9 +134,7 @@ let Nav = () => (
                     <NavLink to="tutorial/10-next-steps">Next Steps</NavLink>
 
                     <Header>Guides</Header>
-                    <NavLink to="nesting">
-                      Nested Paths, Links, and Routers
-                    </NavLink>
+                    <NavLink to="nesting">Nesting and Relative Links</NavLink>
                     <NavLink to="redirects">Redirects</NavLink>
                     <NavLink to="ranking">Path Ranking</NavLink>
                     <NavLink to="large-scale">Large Scale Apps</NavLink>
@@ -213,11 +211,7 @@ let NavLink = ({ to, ...props }) => (
     {({ match }) => (
       <Component
         initialState={{ refs: { node: null } }}
-        didUpdate={({
-          state: {
-            refs: { node }
-          }
-        }) => {
+        didUpdate={({ state: { refs: { node } } }) => {
           if (match) {
             scrollIntoView(node, {
               behavior: "smooth",
