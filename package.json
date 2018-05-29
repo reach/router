@@ -1,6 +1,6 @@
 {
   "name": "@reach/router",
-  "version": "0.0.0-rc.2",
+  "version": "0.0.0-rc.3",
   "description": "Next generation Routing for React.",
   "main": "index.js",
   "module": "es/index.js",
