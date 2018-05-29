@@ -149,6 +149,7 @@ class RouterImpl extends React.PureComponent {
       primary,
       children,
       component = "div",
+      baseuri,
       ...domProps
     } = this.props;
     let routes = React.Children.map(children, createRoute(basepath));
