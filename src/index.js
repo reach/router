@@ -348,7 +348,7 @@ function RedirectRequest(uri) {
 
 let isRedirect = o => o instanceof RedirectRequest;
 
-let redirect = to => {
+let redirectTo = to => {
   throw new RedirectRequest(to);
 };
 
@@ -365,7 +365,7 @@ class RedirectImpl extends React.Component {
     let {
       props: { navigate, to, from, replace, state, noThrow, ...props }
     } = this;
-    if (!noThrow) redirect(insertParams(to, props));
+    if (!noThrow) redirectTo(insertParams(to, props));
     return null;
   }
 }
@@ -463,5 +463,5 @@ export {
   createMemorySource,
   isRedirect,
   navigate,
-  redirect
+  redirectTo
 };
