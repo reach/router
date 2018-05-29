@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React, { Fragment } from "react";
+import React from "react";
 import warning from "warning";
 import invariant from "invariant";
 import createContext from "create-react-context";
@@ -142,7 +142,15 @@ class RouterImpl extends React.PureComponent {
   };
 
   render() {
-    let { location, navigate, basepath, primary, children } = this.props;
+    let {
+      location,
+      navigate,
+      basepath,
+      primary,
+      children,
+      component = "div",
+      ...domProps
+    } = this.props;
     let routes = React.Children.map(children, createRoute(basepath));
     let { pathname } = location;
 
@@ -165,23 +173,21 @@ class RouterImpl extends React.PureComponent {
         element,
         props,
         element.props.children ? (
-          <Router>{element.props.children}</Router>
+          <Router primary={primary}>{element.props.children}</Router>
         ) : (
           undefined
         )
       );
 
       // using 'div' for < 16.3 support
-      let FocusWrapper = primary ? FocusHandler : Fragment || "div";
+      let FocusWrapper = primary ? FocusHandler : component;
       // don't pass any props to 'div'
-      let wrapperProps = primary ? { uri, location } : undefined;
+      let wrapperProps = primary ? { uri, location, ...domProps } : domProps;
 
       return (
-        <FocusWrapper {...wrapperProps}>
-          <BaseContext.Provider value={{ baseuri: uri, basepath }}>
-            {clone}
-          </BaseContext.Provider>
-        </FocusWrapper>
+        <BaseContext.Provider value={{ baseuri: uri, basepath }}>
+          <FocusWrapper {...wrapperProps}>{clone}</FocusWrapper>
+        </BaseContext.Provider>
       );
     } else {
       // Not sure if we want this, would require index routes at every level
@@ -206,14 +212,14 @@ let FocusContext = createContext();
 FocusContext.Provider.displayName = "Focus.Provider";
 FocusContext.Consumer.displayName = "Focus.Consumer";
 
-let FocusHandler = ({ uri, location, children }) => (
+let FocusHandler = ({ uri, location, ...domProps }) => (
   <FocusContext.Consumer>
     {requestFocus => (
       <FocusHandlerImpl
+        {...domProps}
         requestFocus={requestFocus}
         uri={uri}
         location={location}
-        children={children}
       />
     )}
   </FocusContext.Consumer>
@@ -291,17 +297,28 @@ class FocusHandlerImpl extends React.Component {
   };
 
   render() {
+    let {
+      children,
+      style,
+      requestFocus,
+      role = "group",
+      component: Comp = "div",
+      uri,
+      location,
+      ...domProps
+    } = this.props;
     return (
-      <div
-        style={{ outline: "none" }}
+      <Comp
+        style={{ outline: "none", ...style }}
         tabIndex="-1"
-        role="group"
+        role={role}
         ref={n => (this.node = n)}
+        {...domProps}
       >
         <FocusContext.Provider value={this.requestFocus}>
           {this.props.children}
         </FocusContext.Provider>
-      </div>
+      </Comp>
     );
   }
 }
@@ -322,10 +339,10 @@ let Link = props => (
 
           return (
             <a
+              aria-current={isCurrent ? "page" : undefined}
               {...anchorProps}
               {...getProps(isCurrent, href, location)}
               href={href}
-              aria-current={isCurrent ? "page" : undefined}
               onClick={event => {
                 if (anchorProps.onClick) anchorProps.onClick(event);
                 if (shouldNavigate(event)) {
