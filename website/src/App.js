@@ -3,7 +3,14 @@ import Component from "@reactions/component";
 import { hot } from "react-hot-loader";
 import { Router, Link } from "@reach/router";
 import Nav from "./Nav";
-import { BLACK, BLUE, SMALL_BREAK, SIDEBAR_SIZE, TOPBAR_SIZE } from "./theme";
+import {
+  BLACK,
+  BLUE,
+  DARK_BLUE,
+  SMALL_BREAK,
+  SIDEBAR_SIZE,
+  TOPBAR_SIZE
+} from "./theme";
 
 let App = ({ children }) => (
   <div>
@@ -255,12 +262,7 @@ let Tutorial = ({ id, location }) => (
             >
               Next →
             </Link>
-          ) : (
-            <p css={{ padding: "0 20px" }}>
-              Congratulations! You now know everything you need to know to get
-              started.
-            </p>
-          );
+          ) : null;
         })()}
         <div css={{ height: 40 }} />
       </div>
@@ -296,7 +298,32 @@ class AsyncModule extends React.Component {
 }
 
 let MarkdownRoute = ({ dir, filename }) => (
-  <div css={{ padding: 40, maxWidth: 800, lineHeight: 1.3 }}>
+  <div
+    css={{
+      padding: 40,
+      maxWidth: 800,
+      lineHeight: 1.3,
+      " .markdown > hr": {
+        margin: "4em 0",
+        border: 0,
+        height: 1,
+        background: "#ccc"
+      },
+      " .markdown > h2": {
+        marginTop: "2em"
+      },
+      " .markdown > h3": {
+        opacity: 0.75,
+        marginTop: "2em"
+      },
+      " .markdown > p.category": {
+        marginTop: "-1.5em",
+        fontWeight: "bold",
+        opacity: "0.5",
+        fontStyle: "italic"
+      }
+    }}
+  >
     <MarkdownPage
       dir={dir}
       filename={filename}
@@ -325,12 +352,25 @@ let MarkdownPage = ({ dir, filename, css }) => (
   </AsyncModule>
 );
 
+let exampleSandboxen = {
+  basic: "lyzwj8w0qz",
+  "url-params": "qqovozny8q",
+  "nested-routes": "3n5nzprm6",
+  "active-links": "mjpw966808",
+  "relative-links": "q9928xjo4w",
+  "multiple-routers": "ppw7rn952j",
+  "embedded-routers": "xlj73mjy0w",
+  animation: "8xrzkk42j2",
+  "location-state": "o916kx8rn9",
+  "query-params": "jz89k2jv79"
+};
+
 let Example = ({ id }) => (
   <Fragment>
     <DocumentTitle title={`Reach Router - Example - ${id}`} />
     <iframe
       title="example"
-      src="https://codesandbox.io/embed/1on84p30nj?fontsize=13"
+      src={`https://codesandbox.io/embed/${exampleSandboxen[id]}?fontsize=13`}
       css={{
         display: "block",
         width: "100%",

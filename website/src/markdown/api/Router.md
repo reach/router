@@ -1,6 +1,6 @@
 # Router
 
-Matches children [Route Components](../RouteComponent) to the location and renders the matching child.
+Matches children [Route Components](RouteComponent) to the location and renders the matching child.
 
 ## children: elements
 
@@ -10,7 +10,7 @@ Route Components can be nested and their paths will inherit their parent's path.
 
 Route Components must have a `path` prop, a `default` prop, or be a `Redirect`. When no other child matches, the child with a `default` prop will be rendered.
 
-Please see [Route Components](../RouteComponent) for the props Router passes and how URL parameters work.
+Please see [Route Components](RouteComponent) for the props Router passes and how URL parameters work.
 
 ```jsx
 <Router>
