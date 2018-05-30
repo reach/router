@@ -121,10 +121,6 @@ let Nav = () => (
                         Embedded Routers
                       </NavLink>
                       <NavLink to="example/animation">Animation</NavLink>
-                      <NavLink to="example/location-state">
-                        Location State
-                      </NavLink>
-                      <NavLink to="example/query-params">Query Params</NavLink>
 
                       <Header>Tutorial</Header>
                       <NavLink to="tutorial/01-intro">Introduction</NavLink>
@@ -150,16 +146,9 @@ let Nav = () => (
 
                       <Header>Guides</Header>
                       <NavLink to="nesting">Nesting and Relative Links</NavLink>
-                      <NavLink to="redirects">Redirects</NavLink>
                       <NavLink to="ranking">Path Ranking</NavLink>
                       <NavLink to="large-scale">Large Scale Apps</NavLink>
                       <NavLink to="server-rendering">Server Rendering</NavLink>
-                      <NavLink to="animation">Animation</NavLink>
-                      <NavLink to="scroll-management">
-                        Scroll Management
-                      </NavLink>
-                      <NavLink to="testing">Testing</NavLink>
-                      <NavLink to="redux">Redux Integration</NavLink>
 
                       <Header>Primary API</Header>
                       <div
@@ -183,6 +172,7 @@ let Nav = () => (
                           fontFamily: `'SFMono-Regular', Consolas, 'Roboto Mono', 'Droid Sans Mono', 'Liberation Mono', Menlo, Courier, monospace`
                         }}
                       >
+                        <NavLink to="api/Location">Location</NavLink>
                         <NavLink to="api/LocationProvider">
                           LocationProvider
                         </NavLink>
