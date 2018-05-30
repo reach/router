@@ -41,7 +41,7 @@ ReactionsRouter.Redirect;
 </script>
 ```
 
-For usage information please see the [docs](https://reach.tech/router)
+For usage information please see the [docs](https://reach.tech/router). You can also find the docs in the [website directory](./website/src/markdown).
 
 ## Legal
 
