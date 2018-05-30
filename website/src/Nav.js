@@ -63,7 +63,6 @@ let Nav = () => (
                     bottom: 0,
                     overflow: "auto",
                     width: SIDEBAR_SIZE,
-                    borderRight: "solid 2px black",
                     backgroundColor:
                       location.pathname.startsWith("/example") ||
                       location.pathname.startsWith("/tutorial")
@@ -84,7 +83,10 @@ let Nav = () => (
                     <Logo />
 
                     <div css={{ padding: 20 }}>
-                      <div css={{ fontSize: "85%", marginTop: 20 }}>v1.0.0</div>
+                      <div css={{ fontSize: "85%" }}>
+                        v1.0.0 -{" "}
+                        <a href="https://github.com/reach/router">Github</a>
+                      </div>
 
                       <Header>About</Header>
 

@@ -33,11 +33,12 @@ let Tile = ({ title, children }) => (
   <div
     css={{
       width: "40%",
-      maxWidth: 350,
-      padding: 20
+      maxWidth: 400,
+      padding: 20,
+      margin: 20
     }}
   >
-    <h2>{title}</h2>
+    <h2 css={{ color: BLUE }}>{title}</h2>
     {children}
   </div>
 );
@@ -101,15 +102,6 @@ let FeatureTiles = () => (
         </TileLink>
       </p>
     </Tile>
-    <Tile title="Async React Ready">
-      <p>
-        Reach Router has been developed against the master branch of React back
-        to v14. It's as ready as you are.
-      </p>
-      <p>
-        <TileLink to="examples/async">View the Example</TileLink>
-      </p>
-    </Tile>
   </div>
 );
 
@@ -128,32 +120,25 @@ let DocumentTitle = ({ title }) => (
 let Home = () => (
   <Fragment>
     <DocumentTitle title="Reach Router - Next Generation Routing for React" />
-    <div css={{ padding: 20, paddingBottom: 80 }}>
-      <h1
-        css={{
-          fontSize: "300%",
-          textAlign: "center"
-        }}
-      >
-        Next Generation Routing for React
-      </h1>
+    <div css={{ padding: 0, paddingBottom: 80 }}>
       <FeatureTiles />
-      <div css={{ height: 40 }} />
-      <iframe
-        style={{
-          display: "block",
-          margin: "auto",
-          border: 0,
-          width: "840px",
-          height: "472.5px",
-          maxWidth: "100%",
-          boxShadow: "0 5px 30px hsla(0, 0%, 0%, 0.33)"
-        }}
-        title="Introduction Video"
-        src="https://www.youtube.com/embed/gjOzVlCmeKk?rel=0"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-      />
+      <div css={{ padding: 40 }}>
+        <iframe
+          style={{
+            display: "block",
+            margin: "auto",
+            border: 0,
+            width: "840px",
+            height: "472.5px",
+            maxWidth: "100%",
+            boxShadow: "0 5px 30px hsla(0, 0%, 0%, 0.33)"
+          }}
+          title="Introduction Video"
+          src="https://www.youtube.com/embed/gjOzVlCmeKk?rel=0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      </div>
     </div>
   </Fragment>
 );

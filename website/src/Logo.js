@@ -2,7 +2,7 @@ import React from "react";
 import { BLUE } from "./theme";
 
 export default () => (
-  <div css={{ background: BLUE, padding: "10px 40px" }}>
+  <div css={{ background: BLUE, padding: "10px" }}>
     <svg
       width="100%"
       viewBox="0 0 831 111"
