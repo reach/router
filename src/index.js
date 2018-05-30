@@ -337,12 +337,13 @@ let Link = props => (
           let { to, state, replace, getProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
           let isCurrent = location.pathname === href;
+          let isPartiallyCurrent = location.pathname.startsWith(href);
 
           return (
             <a
               aria-current={isCurrent ? "page" : undefined}
               {...anchorProps}
-              {...getProps(isCurrent, href, location)}
+              {...getProps({ isCurrent, isPartiallyCurrent, href, location })}
               href={href}
               onClick={event => {
                 if (anchorProps.onClick) anchorProps.onClick(event);

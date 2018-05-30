@@ -22,10 +22,8 @@ const withInvalidateContacts = Comp => props => (
 
 const NavLink = props => (
   <Link
-    getProps={(_, href, location) => ({
-      className: location.pathname.startsWith(href)
-        ? "nav-link active"
-        : "nav-link"
+    getProps={({ isPartiallyCurrent }) => ({
+      className: isPartiallyCurrent ? "nav-link active" : "nav-link"
     })}
     {...props}
   />

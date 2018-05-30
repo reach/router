@@ -29,20 +29,21 @@ If `true`, the latest entry on the history stack will be replaced with a new one
 <Link to="?query=some+new+query" replace />
 ```
 
-## getProps: func
+## getProps: func(obj)
 
 Calls up to you to get props for the underlying anchor element. Useful for styling the anchor as active.
 
-Arguments:
+Argument `obj` Properties:
 
 * `isCurrent` - true if the `location.pathname` is exactly the same as the anchor's href.
+* `isPartiallyCurrent` - true if the `location.pathname` starts with the anchor's href.
 * `href` - the fully resolved href of the link.
 * `location` - the app's location.
 
 ```jsx
 // this is only active when the location pathname is exactly
 // the same as the href.
-const isActive = (isCurrent, href, location) => {
+const isActive = ({ isCurrent }) => {
   return isCurrent ? { className: "active" } : null
 }
 
@@ -52,8 +53,10 @@ const ExactNavLink = props => (
 
 // this link will be active when itself or deeper routes
 // are current
-const isPartiallyActive = (_, href, location) => {
-  return location.pathname.startsWith(href)
+const isPartiallyActive = ({
+  isPartiallyCurrent
+}) => {
+  return isPartiallyCurrent
     ? { className: "active" }
     : null
 }
