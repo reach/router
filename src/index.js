@@ -414,22 +414,27 @@ Redirect.propTypes = {
 
 ////////////////////////////////////////////////////////////////////////////////
 let Match = ({ path, children }) => (
-  <Location>
-    {({ navigate, location }) => {
-      let result = match(path, location.pathname);
-      return children({
-        navigate,
-        location,
-        match: result
-          ? {
-              ...result.params,
-              uri: result.uri,
-              path
-            }
-          : null
-      });
-    }}
-  </Location>
+  <BaseContext.Consumer>
+    {({ baseuri }) => (
+      <Location>
+        {({ navigate, location }) => {
+          let resolvedPath = resolve(path, baseuri);
+          let result = match(resolvedPath, location.pathname);
+          return children({
+            navigate,
+            location,
+            match: result
+              ? {
+                  ...result.params,
+                  uri: result.uri,
+                  path
+                }
+              : null
+          });
+        }}
+      </Location>
+    )}
+  </BaseContext.Consumer>
 );
 
 ////////////////////////////////////////////////////////////////////////////////

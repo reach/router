@@ -1,6 +1,6 @@
 # Match
 
-Matches a path to the location and calls back with a match or null.
+Matches a path to the location and calls back with a match or null. Matching is relative to any parent Routers, but not parent Match's, because they render even if they don't match.
 
 ```jsx
 import { Match } from "@reach/router"
