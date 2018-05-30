@@ -13,16 +13,6 @@ import Component from "@reactions/component";
 import scrollIntoView from "scroll-into-view-if-needed";
 import Media from "react-media";
 
-let MatchCodeSandbox = ({ children }) => (
-  <Match path="api/*">
-    {({ match: api }) => (
-      <Match path="tutorial/*">
-        {({ match: tutorial }) => children({ api, tutorial })}
-      </Match>
-    )}
-  </Match>
-);
-
 let Nav = () => (
   <Media query={SMALL_BREAK_QUERY}>
     {isSmall => (
@@ -77,8 +67,8 @@ let Nav = () => (
                     backgroundColor:
                       location.pathname.startsWith("/example") ||
                       location.pathname.startsWith("/tutorial")
-                        ? BLACK
-                        : BLACK,
+                        ? BLUE
+                        : BLUE,
                     color: "white",
                     " a": { color: "white" },
                     [SMALL_BREAK]: {
@@ -94,13 +84,11 @@ let Nav = () => (
                     <Logo />
 
                     <div css={{ padding: 20 }}>
-                      <div css={{ fontSize: "85%", marginTop: 20 }}>
-                        v1.0.0 <Link to="versions">change</Link>
-                      </div>
+                      <div css={{ fontSize: "85%", marginTop: 20 }}>v1.0.0</div>
 
                       <Header>About</Header>
 
-                      <NavLink to="/">Features</NavLink>
+                      <NavLink to="./">Features</NavLink>
                       <NavLink to="accessibility">Accessibility</NavLink>
                       <NavLink to="credits">Credits and Trade-offs</NavLink>
 

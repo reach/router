@@ -384,7 +384,7 @@ let Example = ({ id }) => (
 
 let Root = () => (
   <div css={{ color: BLACK }}>
-    <Router>
+    <Router basepath={BASEPATH}>
       <App path="/">
         <Home path="/" />
         <Example path="example/:id" />

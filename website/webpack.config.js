@@ -8,10 +8,11 @@ const PROD = process.env.NODE_ENV === "production";
 
 module.exports = {
   entry: {
-    app: "./src/index.js"
+    app: "./src/index.js",
+    vendor: ["react", "react-dom"]
   },
   mode: PROD ? "production" : "development",
-  devtool: PROD ? "source-map" : "inline-source-map",
+  devtool: PROD ? undefined : "inline-source-map",
   devServer: {
     contentBase: "./dist",
     hot: true,
@@ -21,7 +22,12 @@ module.exports = {
     filename: "static/js/[name].[hash:8].js",
     chunkFilename: "static/js/[name].[chunkhash:8].chunk.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/"
+    publicPath: PROD ? "/router/" : "/"
+  },
+  optimization: {
+    splitChunks: {
+      chunks: "all"
+    }
   },
   plugins: [
     new CleanWebpackPlugin(["dist"]),
@@ -30,6 +36,9 @@ module.exports = {
       template: "src/index.html"
     }),
     new webpack.NamedModulesPlugin(),
+    new webpack.DefinePlugin({
+      BASEPATH: JSON.stringify(PROD ? "/router" : "/")
+    }),
     new webpack.ProvidePlugin({
       Glamor: "glamor/react"
     })
