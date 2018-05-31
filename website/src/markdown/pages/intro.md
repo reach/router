@@ -10,9 +10,11 @@ npm install @reach/router
 yarn add @reach/router
 ```
 
+Reach Router is compatible with React 15+.
+
 ## Accessibility
 
-Router manages the focus of your app on route transitions. There's nothing you have to do about it, it just happens. [Read more about accessibility](accessibility).
+Router manages the focus of your app on route transitions. There's nothing you have to do about it, it just happens.
 
 ## Rendering
 
