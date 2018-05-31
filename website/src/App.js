@@ -29,81 +29,6 @@ let App = ({ children }) => (
   </div>
 );
 
-let Tile = ({ title, children }) => (
-  <div
-    css={{
-      width: "40%",
-      maxWidth: 400,
-      padding: 20
-    }}
-  >
-    <h2>{title}</h2>
-    {children}
-  </div>
-);
-
-let TileLink = ({ children, ...props }) => (
-  <Link
-    {...props}
-    css={{
-      color: BLUE,
-      textDecoration: "none",
-      ":hover": { textDecoration: "underline" }
-    }}
-  >
-    {children} →
-  </Link>
-);
-
-let FeatureTiles = () => (
-  <div
-    css={{
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "center"
-    }}
-  >
-    <Tile title="Accessible by Default">
-      <p>
-        Not only are the Links accessible, but focus on route transitions is
-        managed for you, providing all of your users with a great experience.
-      </p>
-      <p>
-        <TileLink to="accessibility">Learn More</TileLink>
-      </p>
-    </Tile>
-    <Tile title="Relative Links">
-      <p>
-        React developers have wanted relative links for a long time. Building
-        large-scale apps and code-splitting has never been more composable.
-      </p>
-      <p>
-        <TileLink to="nesting">Learn More</TileLink>
-      </p>
-    </Tile>
-    <Tile title="Ranked Routes">
-      <p>
-        Intelligent route ranking matches the route that makes the most sense,
-        no messing around with route ordering or confusing API.
-      </p>
-      <p>
-        <TileLink to="ranking">Learn More</TileLink>
-      </p>
-    </Tile>
-    <Tile title="Dead Simple API">
-      <p>
-        Grab Router and Link, everything else is yours. It's all component-based
-        so you’ll feel right at home.
-      </p>
-      <p>
-        <TileLink to={`tutorial/${tutorialLinks[0]}`}>
-          Start the Tutorial
-        </TileLink>
-      </p>
-    </Tile>
-  </div>
-);
-
 let DocumentTitle = ({ title }) => (
   <Component
     title={title}
@@ -120,7 +45,6 @@ let Home = () => (
   <Fragment>
     <DocumentTitle title="Reach Router - Next Generation Routing for React" />
     <div css={{ padding: 0, paddingBottom: 80 }}>
-      <FeatureTiles />
       <div css={{ padding: 40 }}>
         <iframe
           style={{
@@ -138,6 +62,7 @@ let Home = () => (
           allowFullScreen
         />
       </div>
+      <MarkdownRoute dir="pages" filename="intro" />
     </div>
   </Fragment>
 );
