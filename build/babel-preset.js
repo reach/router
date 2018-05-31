@@ -6,6 +6,12 @@ const plugins = [
   "transform-object-rest-spread",
   "dev-expression",
   [
+    "transform-react-remove-prop-types",
+    {
+      "mode": "unsafe-wrap"
+    }
+  ],
+  [
     "transform-inline-environment-variables",
     {
       include: ["COMPAT"]
