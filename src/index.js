@@ -40,7 +40,7 @@ let Location = ({ children }) => (
       context ? (
         children(context)
       ) : (
-        <LocationProvider>{context => children(context)}</LocationProvider>
+        <LocationProvider>{children}</LocationProvider>
       )
     }
   </LocationContext.Consumer>
