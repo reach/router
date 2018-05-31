@@ -16,32 +16,9 @@
 
 ## Documentation
 
-https://reach.tech/router
+[Documentation Site](https://reach.tech/router)
 
-## Installation
-
-```bash
-yarn add @reach/router
-```
-
-And then import it:
-
-```js
-import { Router, Link, Redirect } from "@reach/router";
-```
-
-Or use script tags and globals.
-
-```html
-<script src="https://unpkg.com/@reach/router"></script>
-<script>
-ReachRouter.Router;
-ReachRouter.Link;
-ReachRouter.Redirect;
-</script>
-```
-
-For usage information please see the [docs](https://reach.tech/router). You can also find the docs in the [website directory](./website/src/markdown).
+You can also find the docs in the [website directory](./website/src/markdown).
 
 ## Legal
 
