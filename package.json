@@ -28,6 +28,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-inline-environment-variables": "^0.3.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "eslint": "^4.18.2",
