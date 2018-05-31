@@ -34,8 +34,7 @@ let Tile = ({ title, children }) => (
     css={{
       width: "40%",
       maxWidth: 400,
-      padding: 20,
-      margin: 20
+      padding: 20
     }}
   >
     <h2 css={{ color: BLUE }}>{title}</h2>
@@ -134,7 +133,7 @@ let Home = () => (
             boxShadow: "0 5px 30px hsla(0, 0%, 0%, 0.33)"
           }}
           title="Introduction Video"
-          src="https://www.youtube.com/embed/gjOzVlCmeKk?rel=0"
+          src="https://www.youtube.com/embed/3tgz1E4MsAk?rel=0"
           allow="autoplay; encrypted-media"
           allowFullScreen
         />
