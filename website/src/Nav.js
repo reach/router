@@ -1,3 +1,4 @@
+/* global VERSION */
 import React from "react";
 import { Link, Match } from "@reach/router";
 import Logo from "./Logo";
@@ -63,11 +64,8 @@ let Nav = () => (
                     bottom: 0,
                     overflow: "auto",
                     width: SIDEBAR_SIZE,
-                    backgroundColor:
-                      location.pathname.startsWith("/example") ||
-                      location.pathname.startsWith("/tutorial")
-                        ? BLUE
-                        : BLUE,
+                    borderRight: "solid 2px black",
+                    backgroundColor: BLACK,
                     color: "white",
                     " a": { color: "white" },
                     [SMALL_BREAK]: {
@@ -84,7 +82,7 @@ let Nav = () => (
 
                     <div css={{ padding: 20 }}>
                       <div css={{ fontSize: "85%" }}>
-                        v1.0.0 -{" "}
+                        v{VERSION} -{" "}
                         <a href="https://github.com/reach/router">Github</a>
                       </div>
 

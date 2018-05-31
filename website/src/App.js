@@ -37,7 +37,7 @@ let Tile = ({ title, children }) => (
       padding: 20
     }}
   >
-    <h2 css={{ color: BLUE }}>{title}</h2>
+    <h2>{title}</h2>
     {children}
   </div>
 );

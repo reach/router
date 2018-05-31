@@ -37,7 +37,8 @@ module.exports = {
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.DefinePlugin({
-      BASEPATH: JSON.stringify(PROD ? "/router" : "/")
+      BASEPATH: JSON.stringify(PROD ? "/router" : "/"),
+      VERSION: JSON.stringify(require("../package.json").version)
     }),
     new webpack.ProvidePlugin({
       Glamor: "glamor/react"
