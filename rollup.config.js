@@ -7,7 +7,7 @@ import resolve from "rollup-plugin-node-resolve";
 const config = {
   input: "src/index.js",
   output: {
-    name: "ReactionsRouter",
+    name: "ReachRouter",
     globals: {
       react: "React",
       "react-dom": "ReactDOM"

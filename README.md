@@ -35,9 +35,9 @@ Or use script tags and globals.
 ```html
 <script src="https://unpkg.com/@reach/router"></script>
 <script>
-ReactionsRouter.Router;
-ReactionsRouter.Link;
-ReactionsRouter.Redirect;
+ReachRouter.Router;
+ReachRouter.Link;
+ReachRouter.Redirect;
 </script>
 ```
 
