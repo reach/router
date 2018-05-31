@@ -26,11 +26,16 @@ if (unstable_deferredUpdates === undefined) {
   unstable_deferredUpdates = fn => fn();
 }
 
+const createNamedContext = (name, defaultValue) => {
+  const Ctx = createContext(defaultValue);
+  Ctx.Consumer.displayName = `${name}.Consumer`;
+  Ctx.Provider.displayName = `${name}.Provider`;
+  return Ctx;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Location Context/Provider
-let LocationContext = createContext();
-LocationContext.Consumer.displayName = "Location.Consumer";
-LocationContext.Provider.displayName = "Location.Provider";
+let LocationContext = createNamedContext("Location");
 
 // sets up a listener if there isn't one already so apps don't need to be
 // wrapped in some top level provider
@@ -118,9 +123,7 @@ let ServerLocation = ({ url, children }) => (
 
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
-let BaseContext = createContext({ baseuri: "/", basepath: "/" });
-BaseContext.Consumer.displayName = "Base.Consumer";
-BaseContext.Provider.displayName = "Base.Provider";
+let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
 
 ////////////////////////////////////////////////////////////////////////////////
 // The main event, welcome to the show everybody.
@@ -209,9 +212,7 @@ class RouterImpl extends React.PureComponent {
   }
 }
 
-let FocusContext = createContext();
-FocusContext.Provider.displayName = "Focus.Provider";
-FocusContext.Consumer.displayName = "Focus.Consumer";
+let FocusContext = createNamedContext("Focus");
 
 let FocusHandler = ({ uri, location, ...domProps }) => (
   <FocusContext.Consumer>
