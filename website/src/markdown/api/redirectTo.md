@@ -1,6 +1,6 @@
 # redirectTo(uri)
 
-React 16+ only. For React < 16 use [`navigate`](../navigate) or [Redirect](../Redirect).
+React 16+ only. For React < 16 use [`navigate`](./navigate) or [Redirect](./Redirect).
 
 Imperatively redirects to a new location by throwing a redirect request.
 
