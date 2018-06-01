@@ -4,7 +4,7 @@ The trick to building large apps is to not to! Instead, build large apps by comp
 
 There are couple of benefits to this approach to UI development:
 
-* Teams can work on their features in isolation and then compose their screens into a larger app without little effort.
+* Teams can work on their features in isolation and then compose their screens into a larger app with little effort.
 
 * Build tools like webpack can code-split features into their own bundles so users don't have to download the whole application on first load. Adding new routes to a photo viewer or reports screen doesn't have to change anything about the initial bundle size.
 
