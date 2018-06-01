@@ -1,6 +1,12 @@
 import invariant from "invariant";
 
 ////////////////////////////////////////////////////////////////////////////////
+// startsWith(string, search) - Check if `string` starts with `search`
+let startsWith = (string, search) => {
+	return string.substr(0, search.length) === search;
+};
+
+////////////////////////////////////////////////////////////////////////////////
 // pick(routes, uri)
 //
 // Ranks and picks the best route to match. Each segment gets the highest
@@ -140,7 +146,7 @@ let match = (path, uri) => pick([{ path }], uri);
 // require less contextual information and (fingers crossed) be more intuitive.
 let resolve = (to, base) => {
   // /foo/bar, /baz/qux => /foo/bar
-  if (to.startsWith("/")) {
+  if (startsWith(to, "/")) {
     return to;
   }
 
@@ -156,7 +162,7 @@ let resolve = (to, base) => {
   }
 
   // profile, /users/789 => /users/789/profile
-  if (!toSegments[0].startsWith(".")) {
+  if (!startsWith(toSegments[0], ".")) {
     let pathname = baseSegments.concat(toSegments).join("/");
     return addQuery((basePathname === "/" ? "" : "/") + pathname, toQuery);
   }
