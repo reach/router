@@ -48,7 +48,7 @@ You can pass elements as children to wrap an app in location context.
 
 ## children: func
 
-If you pass a child render function `LocationProvider` will pass you the context it creates: `location` and `navigate`. If you want access to these values somewhere arbitrary in your app, use [Location](../Location) instead.
+If you pass a child render function `LocationProvider` will pass you the context it creates: `location` and `navigate`. If you want access to these values somewhere arbitrary in your app, use [Location](Location) instead.
 
 ```jsx
 <LocationProvider>
