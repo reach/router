@@ -78,4 +78,4 @@ The location of the app. Typically you don't need this, but you can log it and s
 
 ## navigate(to, { state={}, replace=false })
 
-A version of [navigate](../navigate) that does not support relative paths because we might not be matching anything to be relative to.
+A version of [navigate](navigate) that does not support relative paths because we might not be matching anything to be relative to.

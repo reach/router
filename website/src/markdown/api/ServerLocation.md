@@ -17,7 +17,7 @@ const markup = renderToString(
 )
 ```
 
-Please see the [Server Rendering Guide](../../server-rendering) for the complete story on server rendering.
+Please see the [Server Rendering Guide](../server-rendering) for the complete story on server rendering.
 
 ## url: string
 

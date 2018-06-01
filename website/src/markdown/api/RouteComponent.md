@@ -177,7 +177,7 @@ The location of the app. Typically you don't need this, but you can log it and s
 
 <p class="category">route prop</p>
 
-A version of [navigate](../navigate) that supports relative paths.
+A version of [navigate](navigate) that supports relative paths.
 
 ```jsx
 const NewInvoice = props => (

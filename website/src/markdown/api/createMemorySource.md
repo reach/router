@@ -1,6 +1,6 @@
 # createMemorySource(initialPath)
 
-Creates a source for [`createHistory`](../createHistory) that manages a history stack in memory. Mostly for testing.
+Creates a source for [`createHistory`](createHistory) that manages a history stack in memory. Mostly for testing.
 
 ```jsx
 import {

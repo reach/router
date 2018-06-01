@@ -43,4 +43,4 @@ try {
 }
 ```
 
-Please see the [Server Rendering](../../server-rendering) doc for the full server rendering story.
+Please see the [Server Rendering](../server-rendering) doc for the full server rendering story.
