@@ -7,6 +7,7 @@ import createContext from "create-react-context";
 import { polyfill } from "react-lifecycles-compat";
 import ReactDOM from "react-dom";
 import {
+  startsWith,
   pick,
   resolve,
   match,
@@ -339,7 +340,7 @@ let Link = props => (
           let { to, state, replace, getProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
           let isCurrent = location.pathname === href;
-          let isPartiallyCurrent = location.pathname.startsWith(href);
+          let isPartiallyCurrent = startsWith(location.pathname, href);
 
           return (
             <a
