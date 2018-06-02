@@ -4,11 +4,13 @@
   "description": "Next generation Routing for React.",
   "main": "index.js",
   "module": "es/index.js",
+  "types": "types/index.d.ts",
   "files": [
     "es",
     "index.js",
     "umd",
-    "lib"
+    "lib",
+    "types/index.d.ts"
   ],
   "scripts": {
     "build": "node build/build.js",
@@ -27,6 +29,8 @@
     "react-dom": "15.x || 16.x || 16.4.0-alpha.0911da3"
   },
   "devDependencies": {
+    "@types/react": "^16.3.16",
+    "@types/react-dom": "^16.0.5",
     "babel-cli": "^6.26.0",
     "babel-core": "^6",
     "babel-eslint": "^7.2.3",
@@ -58,6 +62,8 @@
     "rollup-plugin-node-resolve": "^3.0.3",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-uglify": "^3.0.0",
+    "typescript": "^2.9.1",
+    "typings-tester": "^0.3.1",
     "watch-cli": "^0.2.2"
   },
   "author": "Ryan Florence",
