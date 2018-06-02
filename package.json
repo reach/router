@@ -13,8 +13,14 @@
   "scripts": {
     "build": "node build/build.js",
     "watch": "watch -p \"src/**/*.js\" -c \"yarn build\"",
-    "test": "jest **/*.test.js --globals '{\"__DEV__\": true }'",
+    "test": "jest",
     "clean": "rm -rf lib es umd index.js"
+  },
+  "jest": {
+    "globals": {
+      "__DEV__": true
+    },
+    "testRegex": ".+\\.test\\.js$"
   },
   "peerDependencies": {
     "react": "15.x || 16.x || 16.4.0-alpha.0911da3",
