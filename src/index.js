@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
 import warning from "warning";
+import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
 import { polyfill } from "react-lifecycles-compat";
@@ -31,7 +32,7 @@ const createNamedContext = (name, defaultValue) => {
   Ctx.Consumer.displayName = `${name}.Consumer`;
   Ctx.Provider.displayName = `${name}.Provider`;
   return Ctx;
-}
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Location Context/Provider
@@ -397,21 +398,8 @@ let Redirect = props => (
 );
 
 Redirect.propTypes = {
-  from: (props, name) => {
-    if (!props.to)
-      return new Error('<Redirect> requires both "from" and "to" props.');
-    if (!validateRedirect(props.from, props.to)) {
-      return new Error(
-        `<Redirect from="${props.from} to="${
-          props.to
-        }"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`
-      );
-    }
-  },
-  to: (props, name) => {
-    if (!props.from)
-      return new Error('<Redirect> requires both "from" and "to" props.');
-  }
+  from: PropTypes.string,
+  to: PropTypes.string.isRequired
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -449,6 +437,23 @@ let createRoute = basepath => element => {
     `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
       element.type
     }\``
+  );
+
+  invariant(
+    !(element.type === Redirect && (!element.props.from || !element.props.to)),
+    `<Redirect from="${element.props.from} to="${
+      element.props.to
+    }"/> requires both "from" and "to" props when inside a <Router>.`
+  );
+
+  invariant(
+    !(
+      element.type === Redirect &&
+      !validateRedirect(element.props.from, element.props.to)
+    ),
+    `<Redirect from="${element.props.from} to="${
+      element.props.to
+    }"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`
   );
 
   if (element.props.default) {
