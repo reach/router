@@ -38,6 +38,7 @@ export interface LinkGetProps {
 export class Link<TState> extends React.Component<LinkProps<TState>> {}
 
 export type RouteComponentProps<TParams = {}> = Partial<TParams> & {
+  path?: string;
   default?: boolean;
   location?: WindowLocation;
   navigate?: NavigateFn;
@@ -127,9 +128,3 @@ export interface RedirectRequest {
 export function isRedirect(error: any): error is RedirectRequest;
 
 export function redirectTo(uri: string): void;
-
-declare module "react" {
-  interface Attributes {
-    path?: string;
-  }
-}
