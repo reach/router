@@ -17,7 +17,7 @@ You can read more about both in the [Nesting Guide](nesting).
 
 ## Top Level Code Splitting
 
-Here's some sample code that, when coupled with webpack and React Loadable, would generate separate bundles for the `Chat` and `Reports` screens, only loading them on demand.
+Here's some sample code that, when coupled with webpack and React Loadable, would generate separate bundles for the `Dashboard` and `Reports` screens, only loading them on demand.
 
 ```jsx
 import React from "react"
