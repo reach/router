@@ -258,4 +258,4 @@ let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
 let reservedNames = ["uri", "path"];
 
 ////////////////////////////////////////////////////////////////////////////////
-export { pick, match, resolve, insertParams, validateRedirect };
+export { startsWith, pick, match, resolve, insertParams, validateRedirect };
