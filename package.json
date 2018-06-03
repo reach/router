@@ -48,7 +48,6 @@
     "jest": "^22.4.2",
     "prettier": "^1.10.2",
     "pretty-bytes": "^4.0.2",
-    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-test-renderer": "16",
@@ -83,6 +82,7 @@
   "dependencies": {
     "create-react-context": "^0.2.1",
     "invariant": "^2.2.3",
+    "prop-types": "^15.6.1",
     "query-string": "4.2.2",
     "react-lifecycles-compat": "^3.0.4",
     "warning": "^3.0.0"
