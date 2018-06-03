@@ -37,17 +37,13 @@ export interface LinkGetProps {
 
 export class Link<TState> extends React.Component<LinkProps<TState>> {}
 
-export type ExternalRouteProps = { path: string } | { default: boolean };
-
-export type InternalRouteProps = {
+export type RouteComponentProps<TParams = {}> = Partial<TParams> & {
+  path?: string;
+  default?: boolean;
   location?: WindowLocation;
   navigate?: NavigateFn;
   uri?: string;
 };
-
-export type RouteComponentProps<TParams = {}> = Partial<TParams> &
-  ExternalRouteProps &
-  InternalRouteProps;
 
 export interface RedirectProps {
   from?: string;
