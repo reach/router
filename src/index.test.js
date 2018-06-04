@@ -1,17 +1,18 @@
+import { resolve } from "path";
 import React from "react";
-import renderer from "react-test-renderer";
 import { renderToString } from "react-dom/server";
-
+import renderer from "react-test-renderer";
+import { checkDirectory } from "typings-tester";
 import {
-  createHistory,
-  createMemorySource,
-  Router,
-  LocationProvider,
   Link,
+  LocationProvider,
   Match,
   Redirect,
-  isRedirect,
-  ServerLocation
+  Router,
+  ServerLocation,
+  createHistory,
+  createMemorySource,
+  isRedirect
 } from "./index";
 
 let snapshot = ({ pathname, element }) => {
@@ -550,5 +551,15 @@ describe("ServerLocation", () => {
       expect(isRedirect(error)).toBe(true);
       expect(error.uri).toBe("/groups/123");
     }
+  });
+});
+
+describe("typescript types", () => {
+  it("typechecks without compile errors", () => {
+    const checkTypes = () => {
+      checkDirectory(resolve(__dirname, "../types/tests"));
+    };
+
+    expect(checkTypes).not.toThrow();
   });
 });
