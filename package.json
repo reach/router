@@ -30,6 +30,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6",
     "babel-eslint": "^7.2.3",
+    "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-inline-environment-variables": "^0.3.0",
@@ -47,7 +48,6 @@
     "jest": "^22.4.2",
     "prettier": "^1.10.2",
     "pretty-bytes": "^4.0.2",
-    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-test-renderer": "16",
@@ -80,9 +80,9 @@
     }
   },
   "dependencies": {
-    "babel-plugin-dev-expression": "^0.2.1",
     "create-react-context": "^0.2.1",
     "invariant": "^2.2.3",
+    "prop-types": "^15.6.1",
     "query-string": "4.2.2",
     "react-lifecycles-compat": "^3.0.4",
     "warning": "^3.0.0"
