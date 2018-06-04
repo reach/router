@@ -20,8 +20,17 @@ export interface RouterProps {
 
 export class Router extends React.Component<RouterProps> {}
 
-export interface LinkProps<TState>
-  extends React.HTMLAttributes<HTMLAnchorElement> {
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
+type AnchorProps = Omit<
+  React.DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >,
+  "href" // remove href, as it's ignored by the router
+>;
+
+export interface LinkProps<TState> extends AnchorProps {
   to?: string;
   replace?: boolean;
   getProps?: (props: LinkGetProps) => {};
