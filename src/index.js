@@ -88,7 +88,9 @@ class LocationProvider extends React.Component {
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
         unstable_deferredUpdates(() => {
-          this.setState(() => ({ context: this.getContext() }));
+          if (!this.unmounted) {
+            this.setState(() => ({ context: this.getContext() }));
+          }
         });
       });
     });
@@ -96,6 +98,7 @@ class LocationProvider extends React.Component {
 
   componentWillUnmount() {
     let { state: { refs } } = this;
+    this.unmounted = true;
     refs.unlisten();
   }
 
