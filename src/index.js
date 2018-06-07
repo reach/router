@@ -383,7 +383,9 @@ class RedirectImpl extends React.Component {
     let {
       props: { navigate, to, from, replace = true, state, noThrow, ...props }
     } = this;
-    navigate(insertParams(to, props), { replace, state });
+    Promise.resolve().then(() => {
+      navigate(insertParams(to, props), { replace, state });
+    });
   }
 
   render() {
