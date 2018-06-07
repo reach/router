@@ -82,8 +82,9 @@ let pick = (routes, uri) => {
       let dynamicMatch = paramRe.exec(routeSegment);
 
       if (dynamicMatch && !isRootUri) {
+        let matchIsNotReserved = (reservedNames.indexOf(dynamicMatch[1]) === -1)
         invariant(
-          !reservedNames.includes(dynamicMatch[1]),
+          matchIsNotReserved,
           `<Router> dynamic segment "${
             dynamicMatch[1]
           }" is a reserved name. Please use a different name in path "${
