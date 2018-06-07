@@ -191,7 +191,7 @@ class RouterImpl extends React.PureComponent {
       // using 'div' for < 16.3 support
       let FocusWrapper = primary ? FocusHandler : component;
       // don't pass any props to 'div'
-      let wrapperProps = primary ? { uri, location, ...domProps } : domProps;
+      let wrapperProps = primary ? { uri, location, component, ...domProps } : domProps;
 
       return (
         <BaseContext.Provider value={{ baseuri: uri, basepath }}>
