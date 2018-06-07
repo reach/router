@@ -156,7 +156,6 @@ class RouterImpl extends React.PureComponent {
       basepath,
       primary,
       children,
-      component = "div",
       baseuri,
       ...domProps
     } = this.props;
