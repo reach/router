@@ -29,7 +29,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.0.0-beta.46",
     "@mdx-js/mdx": "^0.8.1",
-    "@reach/router": "^0.0.0-alpha.9",
+    "@reach/router": "latest",
     "@reactions/component": "^2.0.2",
     "glamor": "^2.20.40",
     "html-webpack-plugin": "^3.2.0",
