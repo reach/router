@@ -8,7 +8,7 @@ const PROD = process.env.NODE_ENV === "production";
 
 module.exports = {
   entry: {
-    app: "./src/index.js",
+    app: [require.resolve("./src/polyfills"), "./src/index.js"],
     vendor: ["react", "react-dom"]
   },
   mode: PROD ? "production" : "development",
