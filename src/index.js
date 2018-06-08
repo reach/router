@@ -193,7 +193,7 @@ class RouterImpl extends React.PureComponent {
       // don't pass any props to 'div'
       let wrapperProps = primary
         ? { uri, location, component, ...domProps }
-        : { component, ...domProps };
+        : domProps;
 
       return (
         <BaseContext.Provider value={{ baseuri: uri, basepath }}>
