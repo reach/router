@@ -14,7 +14,10 @@
     "build": "node build/build.js",
     "watch": "watch -p \"src/**/*.js\" -c \"yarn build\"",
     "test": "jest",
-    "clean": "rm -rf lib es umd index.js"
+    "clean": "rm -rf lib es umd index.js",
+    "precommit": "pretty-quick --staged",
+    "format": "prettier src/**.js src/**/*.js --write",
+    "lint": "eslint src"
   },
   "jest": {
     "globals": {
@@ -45,9 +48,11 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
     "gzip-size": "^4.1.0",
+    "husky": "^0.14.3",
     "jest": "^22.4.2",
-    "prettier": "^1.10.2",
+    "prettier": "^1.13.4",
     "pretty-bytes": "^4.0.2",
+    "pretty-quick": "^1.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-test-renderer": "16",
