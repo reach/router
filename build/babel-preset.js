@@ -8,7 +8,7 @@ const plugins = [
   [
     "transform-react-remove-prop-types",
     {
-      "mode": "unsafe-wrap"
+      mode: "unsafe-wrap"
     }
   ],
   [

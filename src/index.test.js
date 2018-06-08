@@ -410,7 +410,10 @@ describe("links", () => {
 
 describe("transitions", () => {
   it("transitions pages", async () => {
-    const { snapshot, history: { navigate } } = runWithNavigation(
+    const {
+      snapshot,
+      history: { navigate }
+    } = runWithNavigation(
       <Router>
         <Home path="/" />
         <Reports path="reports" />
@@ -422,7 +425,11 @@ describe("transitions", () => {
   });
 
   it("keeps the stack right on interrupted transitions", async () => {
-    const { snapshot, history, history: { navigate } } = runWithNavigation(
+    const {
+      snapshot,
+      history,
+      history: { navigate }
+    } = runWithNavigation(
       <Router>
         <Home path="/" />
         <Reports path="reports" />

@@ -64,13 +64,21 @@ class LocationProvider extends React.Component {
   };
 
   getContext() {
-    let { props: { history: { navigate, location } } } = this;
+    let {
+      props: {
+        history: { navigate, location }
+      }
+    } = this;
     return { navigate, location };
   }
 
   componentDidCatch(error, info) {
     if (isRedirect(error)) {
-      let { props: { history: { navigate } } } = this;
+      let {
+        props: {
+          history: { navigate }
+        }
+      } = this;
       navigate(error.uri, { replace: true });
     } else {
       throw error;
@@ -84,7 +92,10 @@ class LocationProvider extends React.Component {
   }
 
   componentDidMount() {
-    let { state: { refs }, props: { history } } = this;
+    let {
+      state: { refs },
+      props: { history }
+    } = this;
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
         unstable_deferredUpdates(() => {
@@ -97,13 +108,18 @@ class LocationProvider extends React.Component {
   }
 
   componentWillUnmount() {
-    let { state: { refs } } = this;
+    let {
+      state: { refs }
+    } = this;
     this.unmounted = true;
     refs.unlisten();
   }
 
   render() {
-    let { state: { context }, props: { children } } = this;
+    let {
+      state: { context },
+      props: { children }
+    } = this;
     return (
       <LocationContext.Provider value={context}>
         {typeof children === "function" ? children(context) : children || null}
@@ -166,7 +182,12 @@ class RouterImpl extends React.PureComponent {
     let match = pick(routes, pathname);
 
     if (match) {
-      let { params, uri, route, route: { value: element } } = match;
+      let {
+        params,
+        uri,
+        route,
+        route: { value: element }
+      } = match;
 
       // remove the /* from the end for child routes relative paths
       basepath = route.default ? basepath : route.path.replace(/\*$/, "");

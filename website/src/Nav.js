@@ -211,7 +211,11 @@ let NavLink = ({ to, ...props }) => (
     {({ match }) => (
       <Component
         initialState={{ refs: { node: null } }}
-        didUpdate={({ state: { refs: { node } } }) => {
+        didUpdate={({
+          state: {
+            refs: { node }
+          }
+        }) => {
           if (match) {
             scrollIntoView(node, {
               behavior: "smooth",

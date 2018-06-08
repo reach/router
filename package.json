@@ -16,7 +16,7 @@
     "test": "jest",
     "clean": "rm -rf lib es umd index.js",
     "precommit": "pretty-quick --staged",
-    "format": "prettier src/**.js src/**/*.js --write",
+    "format": "prettier '**/*.js' --write",
     "lint": "eslint src"
   },
   "jest": {
