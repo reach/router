@@ -1,6 +1,7 @@
 package.json
-es
-lib
-umd
+/es
+/index.js
+/lib
+/umd
 website/dist
 
