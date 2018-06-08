@@ -221,11 +221,12 @@ class RouterImpl extends React.PureComponent {
 
 let FocusContext = createNamedContext("Focus");
 
-let FocusHandler = ({ uri, location, ...domProps }) => (
+let FocusHandler = ({ uri, location, component, ...domProps }) => (
   <FocusContext.Consumer>
     {requestFocus => (
       <FocusHandlerImpl
         {...domProps}
+        component={component}
         requestFocus={requestFocus}
         uri={uri}
         location={location}
