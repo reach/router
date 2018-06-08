@@ -3,7 +3,7 @@ import invariant from "invariant";
 ////////////////////////////////////////////////////////////////////////////////
 // startsWith(string, search) - Check if `string` starts with `search`
 let startsWith = (string, search) => {
-	return string.substr(0, search.length) === search;
+  return string.substr(0, search.length) === search;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ let pick = (routes, uri) => {
       let dynamicMatch = paramRe.exec(routeSegment);
 
       if (dynamicMatch && !isRootUri) {
-        let matchIsNotReserved = (reservedNames.indexOf(dynamicMatch[1]) === -1)
+        let matchIsNotReserved = reservedNames.indexOf(dynamicMatch[1]) === -1;
         invariant(
           matchIsNotReserved,
           `<Router> dynamic segment "${
