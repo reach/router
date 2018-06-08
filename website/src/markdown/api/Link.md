@@ -29,16 +29,32 @@ If `true`, the latest entry on the history stack will be replaced with a new one
 <Link to="?query=some+new+query" replace />
 ```
 
+## ref: func
+
+If using React >=16.4, `Link` will forward its ref to you.
+
+```jsx
+<Link to="./" ref={node => /* ... */} />
+```
+
+## innerRef: func
+
+Calls up with its inner ref for apps on React <16.4. If using React >=16.4, use `ref` instead.
+
+```jsx
+<Link to="./" ref={node => /* ... */} />
+```
+
 ## getProps: func(obj)
 
 Calls up to you to get props for the underlying anchor element. Useful for styling the anchor as active.
 
 Argument `obj` Properties:
 
-* `isCurrent` - true if the `location.pathname` is exactly the same as the anchor's href.
-* `isPartiallyCurrent` - true if the `location.pathname` starts with the anchor's href.
-* `href` - the fully resolved href of the link.
-* `location` - the app's location.
+- `isCurrent` - true if the `location.pathname` is exactly the same as the anchor's href.
+- `isPartiallyCurrent` - true if the `location.pathname` starts with the anchor's href.
+- `href` - the fully resolved href of the link.
+- `location` - the app's location.
 
 ```jsx
 // this is only active when the location pathname is exactly

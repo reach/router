@@ -359,7 +359,12 @@ polyfill(FocusHandlerImpl);
 let k = () => {};
 
 ////////////////////////////////////////////////////////////////////////////////
-let Link = props => (
+let { forwardRef } = React;
+if (typeof forwardRef === "undefined") {
+  forwardRef = C => C;
+}
+
+let Link = forwardRef(({ innerRef, ...props }, ref) => (
   <BaseContext.Consumer>
     {({ basepath, baseuri }) => (
       <Location>
@@ -371,6 +376,7 @@ let Link = props => (
 
           return (
             <a
+              ref={ref || innerRef}
               aria-current={isCurrent ? "page" : undefined}
               {...anchorProps}
               {...getProps({ isCurrent, isPartiallyCurrent, href, location })}
@@ -388,7 +394,7 @@ let Link = props => (
       </Location>
     )}
   </BaseContext.Consumer>
-);
+));
 
 ////////////////////////////////////////////////////////////////////////////////
 function RedirectRequest(uri) {

@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import renderer from "react-test-renderer";
 import { renderToString } from "react-dom/server";
 
@@ -345,6 +346,30 @@ describe("disrespect", () => {
 });
 
 describe("links", () => {
+  it("accepts an innerRef prop", done => {
+    let ref;
+    let div = document.createElement("div");
+    ReactDOM.render(
+      <Link to="/" innerRef={node => (ref = node)} />,
+      div,
+      () => {
+        expect(ref).toBeInstanceOf(HTMLAnchorElement);
+        ReactDOM.unmountComponentAtNode(div);
+        done();
+      }
+    );
+  });
+
+  it("forwards refs", done => {
+    let ref;
+    let div = document.createElement("div");
+    ReactDOM.render(<Link to="/" ref={node => (ref = node)} />, div, () => {
+      expect(ref).toBeInstanceOf(HTMLAnchorElement);
+      ReactDOM.unmountComponentAtNode(div);
+      done();
+    });
+  });
+
   it("renders links with relative hrefs", () => {
     const Parent = ({ children }) => (
       <div>
