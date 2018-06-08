@@ -21,7 +21,7 @@ Router manages the focus of your app on route transitions. There's nothing you h
 Routers select a child to render based on the child's path. The children are just other components that could be rendered on their own outside of a Router.
 
 ```js
-import { React } from "react"
+import React from "react"
 import { render } from "react-dom"
 import { Router, Link } from "@reach/router"
 
