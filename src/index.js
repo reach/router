@@ -465,7 +465,7 @@ let Match = ({ path, children }) => (
 
 ////////////////////////////////////////////////////////////////////////////////
 // Junk
-let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
+let stripSlashes = str => str.replace ? str.replace(/(^\/+|\/+$)/g, "") : str;
 
 let createRoute = basepath => element => {
   invariant(
