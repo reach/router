@@ -50,7 +50,6 @@ let pick = (routes, uri) => {
     }
 
     let routeSegments = segmentize(route.path);
-    let isRootRoute = routeSegments[0] === "";
     let params = {};
     let max = Math.max(uriSegments.length, routeSegments.length);
     let index = 0;
@@ -222,7 +221,7 @@ let DYNAMIC_POINTS = 2;
 let SPLAT_PENALTY = 1;
 let ROOT_POINTS = 1;
 
-let isRootSegment = segment => segment == "";
+let isRootSegment = segment => segment === "";
 let isDynamic = segment => paramRe.test(segment);
 let isSplat = segment => segment === "*";
 
