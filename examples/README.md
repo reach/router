@@ -5,7 +5,7 @@ Each example uses create-react-app. To develop against the examples you just nee
 ```
 # from the root of the repository
 yarn link @reach/router
-cd examples/contacts
+cd examples/crud
 yarn && yarn start
 ```
 
