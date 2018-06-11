@@ -42,7 +42,7 @@ If using React >=16.4, `Link` will forward its ref to you.
 Calls up with its inner ref for apps on React <16.4. If using React >=16.4, use `ref` instead.
 
 ```jsx
-<Link to="./" ref={node => /* ... */} />
+<Link to="./" innerRef={node => /* ... */} />
 ```
 
 ## getProps: func(obj)
