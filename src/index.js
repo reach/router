@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import warning from "warning";
 import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
@@ -54,6 +53,10 @@ let Location = ({ children }) => (
 );
 
 class LocationProvider extends React.Component {
+  static propTypes = {
+    history: PropTypes.object
+  };
+
   static defaultProps = {
     history: globalHistory
   };
@@ -141,6 +144,10 @@ let ServerLocation = ({ url, children }) => (
     {children}
   </LocationContext.Provider>
 );
+
+ServerLocation.propTypes = {
+  url: PropTypes.string.isRequired
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
