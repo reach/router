@@ -4,6 +4,6 @@
     "__DEV__": true
   },
   "rules": {
-    "react/prop-types": ["warn", { "ignore": ["children"] }]
+    "react/prop-types": ["warn"]
   }
 }
