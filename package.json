@@ -78,12 +78,6 @@
   "prettier": {
     "printWidth": 80
   },
-  "eslintConfig": {
-    "extends": "react-app",
-    "globals": {
-      "__DEV__": true
-    }
-  },
   "dependencies": {
     "create-react-context": "^0.2.1",
     "invariant": "^2.2.3",

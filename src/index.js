@@ -54,6 +54,10 @@ let Location = ({ children }) => (
 );
 
 class LocationProvider extends React.Component {
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  };
+
   static defaultProps = {
     history: globalHistory
   };
