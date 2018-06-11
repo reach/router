@@ -9,6 +9,15 @@ describe("pick", () => {
     expect(pick(routes, "/").route.value).toBe("root");
   });
 
+  test.only("pick static-nested or dynamic", () => {
+    let routes = [
+      { value: "dynamic", path: "/:foo" },
+      { value: "static-nested", path: "/bar/*" }
+    ];
+
+    expect(pick(routes, "/bar").route.value).toBe("static-nested");
+  });
+
   test("a bunch of scenarios", () => {
     expect(pick(routes, "/").route.value).toBe("Root");
     expect(pick(routes, "/groups/main/users/me").route.value).toBe(
