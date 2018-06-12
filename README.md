@@ -20,6 +20,10 @@
 
 You can also find the docs in the [website directory](./website/src/markdown).
 
+## Community
+
+[Join us on Spectrum](https://spectrum.chat/reach)
+
 ## Legal
 
 MIT License
