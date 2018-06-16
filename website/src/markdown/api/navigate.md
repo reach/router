@@ -98,7 +98,7 @@ const NewTodo = () => (
     onSubmit={async todo => {
       let id = await createNewTodo(todo)
       // put some state on the location
-      navigate("/todos", { newId: id })
+      navigate("/todos", { state: { newId: id } })
     }}
   />
 )
@@ -110,7 +110,7 @@ const Todos = props => (
         style={{
           background:
             // read the location state
-            todo.id === props.location.state.id
+            todo.id === props.location.state.newId
               ? "yellow"
               : ""
         }}
