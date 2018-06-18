@@ -586,3 +586,17 @@ describe.skip("ServerLocation", () => {
     }
   });
 });
+
+describe("null routes", () => {
+  it("allows null routes", () => {
+    expect(() => {
+      renderToString(
+        <Router>
+          <Home path="/" />
+          {null}
+          <Dash path="/dash" />
+        </Router>
+      );
+    }).not.toThrow();
+  });
+});

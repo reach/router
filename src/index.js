@@ -180,7 +180,7 @@ class RouterImpl extends React.PureComponent {
       component = "div",
       ...domProps
     } = this.props;
-    let routes = React.Children.map(children, createRoute(basepath));
+    let routes = React.Children.toArray(children).map(createRoute(basepath));
     let { pathname } = location;
 
     let match = pick(routes, pathname);
