@@ -46,6 +46,12 @@ let createHistory = (source, options) => {
 
     navigate(to, { state, replace = false } = {}) {
       state = { ...state, key: Date.now() + "" };
+
+      if (typeof to === "number") {
+        source.history.go(to);
+        return Promise.resolve();
+      }
+
       // try...catch iOS Safari limits to 100 pushState calls
       try {
         if (transitioning || replace) {
