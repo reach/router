@@ -5970,8 +5970,8 @@ scoped-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/scoped-regex/-/scoped-regex-1.0.0.tgz#a346bb1acd4207ae70bd7c0c7ca9e566b6baddb8"
 
 scroll-into-view-if-needed@^2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.1.5.tgz#0ded69275e0172c71f523722d497aef44f6c6bad"
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.7.tgz#59bb77c65c024da55ff703e7232f7175ceed397f"
 
 select-hose@^2.0.0:
   version "2.0.0"
