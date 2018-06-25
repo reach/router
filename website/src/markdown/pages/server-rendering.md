@@ -65,4 +65,4 @@ createServer((req, res) => {
 
 ## Data Loading
 
-When React Suspense ships, these docs will be updated with some great of server rendering with data loading. Until then, you'll need to come up with your own strategy.
+When React Suspense ships, these docs will be updated with some great examples of server rendering with data loading. Until then, you'll need to come up with your own strategy.
