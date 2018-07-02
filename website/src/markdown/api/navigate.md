@@ -76,7 +76,7 @@ class Invoices extends React.Component {
 
 ## to
 
-The path to navigate to.
+The path to navigate to, or the amount of routes to go back.
 
 ```jsx
 navigate("/some/where")
@@ -86,6 +86,12 @@ If using `props.navigate` in a Route Component, this can be a relative path.
 
 ```jsx
 props.navigate("../")
+```
+
+You can pass a number to go to a previously visited route.
+
+```jsx
+navigate(-1)
 ```
 
 ## option - state
