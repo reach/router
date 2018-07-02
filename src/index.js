@@ -377,13 +377,14 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
           let href = resolve(to, baseuri);
           let isCurrent = location.pathname === href;
           let isPartiallyCurrent = startsWith(location.pathname, href);
+          let isCurrentHash = `${location.pathname}${location.hash}` === href
 
           return (
             <a
               ref={ref || innerRef}
               aria-current={isCurrent ? "page" : undefined}
               {...anchorProps}
-              {...getProps({ isCurrent, isPartiallyCurrent, href, location })}
+              {...getProps({ isCurrent, isPartiallyCurrent, isCurrentHash, href, location })}
               href={href}
               onClick={event => {
                 if (anchorProps.onClick) anchorProps.onClick(event);
