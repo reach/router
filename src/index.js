@@ -207,7 +207,9 @@ class RouterImpl extends React.PureComponent {
         element,
         props,
         element.props.children ? (
-          <Router primary={primary}>{element.props.children}</Router>
+          <Router location={location} primary={primary}>
+            {element.props.children}
+          </Router>
         ) : (
           undefined
         )

@@ -543,6 +543,35 @@ exports[`passed props passes the matched URI to the component 1`] = `
 </div>
 `;
 
+exports[`passed props router location prop to nested path 1`] = `
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Reports 
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`passed props shadows params in nested paths 1`] = `
 <div
   role="group"
