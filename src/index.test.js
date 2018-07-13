@@ -171,6 +171,24 @@ describe("passed props", () => {
       )
     });
   });
+
+  it("router location prop to nested path", () => {
+    const pathname = "/reports/1";
+    const history = createHistory(createMemorySource(pathname));
+    const location = history.location;
+
+    snapshot({
+      pathname: "/",
+      element: (
+        <Router location={location}>
+          <Dash path="/">
+            <Dash path="/" />
+            <Reports path="reports/:reportId" />
+          </Dash>
+        </Router>
+      )
+    });
+  });
 });
 
 describe("route ranking", () => {
