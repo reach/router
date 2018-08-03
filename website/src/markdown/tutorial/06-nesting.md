@@ -2,7 +2,7 @@
 
 The child Route Components of Router can have their own children, then all the paths and links will nest automatically.
 
-Let's create another component called `Invoices` that keeps a persistent set of links to our invoices. Due note the `props.children`, we'll talk more about that in a second.
+Let's create another component called `Invoices` that keeps a persistent set of links to our invoices. Do note the `props.children`, we'll talk more about that in a second.
 
 ```jsx
 const Invoices = props => (
