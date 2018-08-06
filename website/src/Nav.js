@@ -83,7 +83,7 @@ let Nav = () => (
                     <div css={{ padding: 20 }}>
                       <div css={{ fontSize: "85%" }}>
                         v{VERSION} -{" "}
-                        <a href="https://github.com/reach/router">Github</a>
+                        <a href="https://github.com/reach/router">GitHub</a>
                       </div>
 
                       <Header>About</Header>
