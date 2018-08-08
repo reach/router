@@ -432,6 +432,32 @@ describe("links", () => {
       )
     });
   });
+
+  it("passes ownProps (static props) to getProps", done => {
+    let root = document.createElement("div");
+    let passedProps;
+
+    ReactDOM.render(
+      <Link
+        to="/"
+        className="pass-me-down"
+        style={{ color: "red" }}
+        getProps={(_, props) => (passedProps = props)}
+      />,
+      root,
+      () => {
+        expect(passedProps).toMatchObject({
+          className: "pass-me-down",
+          style: {
+            color: "red"
+          }
+        });
+
+        ReactDOM.unmountComponentAtNode(root);
+        done();
+      }
+    );
+  });
 });
 
 describe("transitions", () => {

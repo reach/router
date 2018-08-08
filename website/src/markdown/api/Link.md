@@ -45,7 +45,7 @@ Calls up with its inner ref for apps on React <16.4. If using React >=16.4, use 
 <Link to="./" innerRef={node => /* ... */} />
 ```
 
-## getProps: func(obj)
+## getProps: func(obj, ownProps)
 
 Calls up to you to get props for the underlying anchor element. Useful for styling the anchor as active.
 
@@ -79,6 +79,41 @@ const isPartiallyActive = ({
 
 const PartialNavLink = props => (
   <Link getProps={isPartiallyActive} {...props} />
+)
+```
+
+Argument `ownProps` might be useful for controlling result props (passed to anchor).
+E.g. `className`:
+
+```jsx
+// add "active" class to existing one (do not override it)
+const isActive = ({ isCurrent }, ownProps) => {
+  return isCurrent
+    ? { className: `${ownProps.className} active` }
+    : null
+}
+
+// this would be rendered to <a class="my-link active" ...>
+const ExactNavLink = props => (
+  <Link
+    className="my-link"
+    getProps={isActive}
+    {...props}
+  />
+)
+```
+
+or `style`:
+
+```jsx
+// merge inline styles passed to Link and our "active" style
+const isActive = ({ isCurrent }, { style }) => {
+  return isCurrent ? { style: { ...style, color: 'red' } } : null
+}
+
+// this would be rendered to <a class="my-link active" ...>
+const ExactNavLink = props => (
+  <Link style={ textDecoration: "none" } getProps={isActive} {...props} />
 )
 ```
 

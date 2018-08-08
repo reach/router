@@ -383,7 +383,10 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
               ref={ref || innerRef}
               aria-current={isCurrent ? "page" : undefined}
               {...anchorProps}
-              {...getProps({ isCurrent, isPartiallyCurrent, href, location })}
+              {...getProps(
+                { isCurrent, isPartiallyCurrent, href, location },
+                anchorProps
+              )}
               href={href}
               onClick={event => {
                 if (anchorProps.onClick) anchorProps.onClick(event);
