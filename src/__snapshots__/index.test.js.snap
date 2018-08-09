@@ -63,6 +63,31 @@ exports[`disrespect has complete disrespect for leading and trailing slashes 1`]
 </div>
 `;
 
+exports[`isCurrent supports unicode 1`] = `
+<a
+  aria-current="page"
+  className="active"
+  href="/✓"
+  onClick={[Function]}
+/>
+`;
+
+exports[`isCurrent works 1`] = `
+<div>
+  <a
+    aria-current="page"
+    className="active"
+    href="/home"
+    onClick={[Function]}
+  />
+  <a
+    aria-current={undefined}
+    href="/not-home"
+    onClick={[Function]}
+  />
+</div>
+`;
+
 exports[`links renders links with relative hrefs 1`] = `
 <div
   role="group"

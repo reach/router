@@ -375,8 +375,9 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
         {({ location, navigate }) => {
           let { to, state, replace, getProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
-          let isCurrent = location.pathname === href;
-          let isPartiallyCurrent = startsWith(location.pathname, href);
+          let pathname = decodeURI(location.pathname);
+          let isCurrent = pathname === href;
+          let isPartiallyCurrent = startsWith(pathname, href);
 
           return (
             <a
