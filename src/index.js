@@ -479,15 +479,24 @@ let createRoute = basepath => element => {
     return null;
   }
 
+  // This is a strategy for playing nicely under react-hot-loader.
+  // See https://github.com/gaearon/react-hot-loader/issues/304
+  let RedirectType = <Redirect to="" />.type;
+
   invariant(
-    element.props.path || element.props.default || element.type === Redirect,
+    element.props.path ||
+      element.props.default ||
+      element.type === RedirectType,
     `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
       element.type
     }\``
   );
 
   invariant(
-    !(element.type === Redirect && (!element.props.from || !element.props.to)),
+    !(
+      element.type === RedirectType &&
+      (!element.props.from || !element.props.to)
+    ),
     `<Redirect from="${element.props.from} to="${
       element.props.to
     }"/> requires both "from" and "to" props when inside a <Router>.`
@@ -495,7 +504,7 @@ let createRoute = basepath => element => {
 
   invariant(
     !(
-      element.type === Redirect &&
+      element.type === RedirectType &&
       !validateRedirect(element.props.from, element.props.to)
     ),
     `<Redirect from="${element.props.from} to="${
@@ -508,7 +517,7 @@ let createRoute = basepath => element => {
   }
 
   let elementPath =
-    element.type === Redirect ? element.props.from : element.props.path;
+    element.type === RedirectType ? element.props.from : element.props.path;
 
   let path =
     elementPath === "/"
