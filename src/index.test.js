@@ -542,6 +542,35 @@ describe("Match", () => {
   });
 });
 
+describe("Redirect", () => {
+  it("passes state when redirecting", async () => {
+    function UseState({ location }) {
+      const state = (location && location.state) || {};
+
+      if (!state.passedState) {
+        return <p>State not passed</p>;
+      }
+
+      return <p>State passed</p>;
+    }
+
+    const {
+      history: { navigate },
+      snapshot
+    } = runWithNavigation(
+      <Router>
+        <UseState path="/" />
+        <Redirect from="/redirect" to="/" state={{ passedState: true }} />
+      </Router>
+    );
+
+    await navigate("/redirect");
+    await Promise.resolve(); // Not entirely sure why this is necessary, but without it the snapshot is null
+
+    snapshot();
+  });
+});
+
 // React 16.4 is buggy https://github.com/facebook/react/issues/12968
 describe.skip("ServerLocation", () => {
   let App = () => (

@@ -17,6 +17,22 @@ exports[`Match matches a path 1`] = `
 </pre>
 `;
 
+exports[`Redirect passes state when redirecting 1`] = `
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <p>
+    State passed
+  </p>
+</div>
+`;
+
 exports[`ServerLocation works 1`] = `"<div style=\\"outline:none\\" tabindex=\\"-1\\" role=\\"group\\"><div>Home</div></div>"`;
 
 exports[`ServerLocation works 2`] = `"<div style=\\"outline:none\\" tabindex=\\"-1\\" role=\\"group\\" data-reactroot=\\"\\"><div>Group: <!-- -->123</div></div>"`;
