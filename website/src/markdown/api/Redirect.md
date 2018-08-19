@@ -66,6 +66,14 @@ This indicates which path to redirect to, note the parameters must match the `fr
 <Redirect noThrow />
 ```
 
+## state: object
+
+This is an optional prop that additional information to the `to` route. Please see [navigate](navigate) for more information.
+
+```jsx
+<Redirect state={{ newId: 1 }} />
+```
+
 Redirect works with `componentDidCatch` to prevent the tree from rendering and starts over with a new location.
 
 Because React doesn't swallow the error this might bother you. For example, a redirect will trigger Create React App's error overlay. In production, everything is fine. If it bothers you, add `noThrow` and Redirect will do redirect without using `componentDidCatch`.
