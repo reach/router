@@ -83,7 +83,7 @@ class LocationProvider extends React.Component {
           history: { navigate }
         }
       } = this;
-      navigate(error.uri, { replace: true });
+      navigate(error.uri, { replace: true, state: error.state });
     } else {
       throw error;
     }
@@ -401,14 +401,15 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
 ));
 
 ////////////////////////////////////////////////////////////////////////////////
-function RedirectRequest(uri) {
+function RedirectRequest(uri, state = {}) {
   this.uri = uri;
+  this.state = state;
 }
 
 let isRedirect = o => o instanceof RedirectRequest;
 
-let redirectTo = to => {
-  throw new RedirectRequest(to);
+let redirectTo = (to, state) => {
+  throw new RedirectRequest(to, state);
 };
 
 class RedirectImpl extends React.Component {
@@ -426,7 +427,7 @@ class RedirectImpl extends React.Component {
     let {
       props: { navigate, to, from, replace, state, noThrow, ...props }
     } = this;
-    if (!noThrow) redirectTo(insertParams(to, props));
+    if (!noThrow) redirectTo(insertParams(to, props), state);
     return null;
   }
 }
