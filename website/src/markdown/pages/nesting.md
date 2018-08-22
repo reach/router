@@ -158,4 +158,4 @@ const Dashboard = () => (
 )
 ```
 
-All links and route paths will are relative to the router above them. This makes code splitting and compartmentalizing your app really easy. You could render the Dashboard as its own independent app, or embed it into your large app without making any changes to it.
+All links and route paths are relative to the router above them. This makes code splitting and compartmentalizing your app really easy. You could render the Dashboard as its own independent app, or embed it into your large app without making any changes to it.
