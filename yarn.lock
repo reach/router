@@ -4289,12 +4289,6 @@ walker@~1.0.5:
   dependencies:
     makeerror "1.0.x"
 
-warning@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
-  dependencies:
-    loose-envify "^1.0.0"
-
 watch-cli@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/watch-cli/-/watch-cli-0.2.2.tgz#7a48fd6e87d04fc120b86dc82be374a9d2726ca7"
