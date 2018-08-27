@@ -1,3 +1,37 @@
 {
-  "presets": [ "../build/babel-preset" ]
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    },
+    "development": {
+      "plugins": ["external-helpers"]
+    },
+  },
+  "presets": [
+    [
+      "env",
+      {
+        "loose": true,
+        "modules": false
+      }
+    ],
+    "react"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    "transform-object-rest-spread",
+    "dev-expression",
+    [
+      "transform-react-remove-prop-types",
+      {
+        "mode": "unsafe-wrap"
+      }
+    ],
+    [
+      "transform-inline-environment-variables",
+      {
+        "include": ["COMPAT"]
+      }
+    ]
+  ]
 }
