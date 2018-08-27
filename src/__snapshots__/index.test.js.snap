@@ -98,7 +98,6 @@ exports[`links renders links with relative hrefs 1`] = `
           Child
         </h2>
         <a
-          aria-current={undefined}
           href="/dash"
           onClick={[Function]}
         >
@@ -168,21 +167,18 @@ exports[`links uses the right href in multiple root paths 1`] = `
                   /one/two
                 </div>
                 <a
-                  aria-current={undefined}
                   href="/one/two/three"
                   onClick={[Function]}
                 >
                   /one/two/three
                 </a>
                 <a
-                  aria-current={undefined}
                   href="/one"
                   onClick={[Function]}
                 >
                   /one
                 </a>
                 <a
-                  aria-current={undefined}
                   href="/"
                   onClick={[Function]}
                 >
