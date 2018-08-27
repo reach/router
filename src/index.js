@@ -533,5 +533,7 @@ export {
   createMemorySource,
   isRedirect,
   navigate,
-  redirectTo
+  redirectTo,
+  match as matchPath,
+  pick as pickRoute
 };
