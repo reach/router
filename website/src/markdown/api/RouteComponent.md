@@ -126,7 +126,7 @@ When no children match, a route component with a `default` prop will render. Thi
 
 <p class="category">route prop</p>
 
-When Route Components are nested, the matching child is passed in as `props.children`. If ever you think `Router` isn't working, make sure you renderd `props.children`!
+When Route Components are nested, the matching child is passed in as `props.children`. If ever you think `Router` isn't working, make sure you rendered `props.children`!
 
 ```jsx
 // note that `Root` has child routes
