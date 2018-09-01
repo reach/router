@@ -79,7 +79,7 @@
     "printWidth": 80
   },
   "dependencies": {
-    "create-react-context": "^0.2.1",
+    "create-react-context": "0.2.1",
     "invariant": "^2.2.3",
     "prop-types": "^15.6.1",
     "react-lifecycles-compat": "^3.0.4",
