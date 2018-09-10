@@ -11,7 +11,8 @@ import {
   resolve,
   match,
   insertParams,
-  validateRedirect
+  validateRedirect,
+  makeCancelable
 } from "./lib/utils";
 import {
   globalHistory,
@@ -371,36 +372,100 @@ if (typeof forwardRef === "undefined") {
   forwardRef = C => C;
 }
 
-let Link = forwardRef(({ innerRef, ...props }, ref) => (
-  <BaseContext.Consumer>
-    {({ basepath, baseuri }) => (
-      <Location>
-        {({ location, navigate }) => {
-          let { to, state, replace, getProps = k, ...anchorProps } = props;
-          let href = resolve(to, baseuri);
-          let isCurrent = location.pathname === href;
-          let isPartiallyCurrent = startsWith(location.pathname, href);
+class LinkImpl extends React.Component {
+  _navigationCancelablePromise = null;
 
-          return (
-            <a
-              ref={ref || innerRef}
-              aria-current={isCurrent ? "page" : undefined}
-              {...anchorProps}
-              {...getProps({ isCurrent, isPartiallyCurrent, href, location })}
-              href={href}
-              onClick={event => {
-                if (anchorProps.onClick) anchorProps.onClick(event);
-                if (shouldNavigate(event)) {
-                  event.preventDefault();
-                  navigate(href, { state, replace });
-                }
-              }}
-            />
-          );
-        }}
-      </Location>
-    )}
-  </BaseContext.Consumer>
+  state = {
+    navigating: false
+  };
+
+  stopNavigation = canceled =>
+    !canceled && this.setState({ navigating: false });
+
+  onClick = (href, state, replace, onClickProp) => event => {
+    if (onClickProp) onClickProp(event);
+    if (shouldNavigate(event)) {
+      event.preventDefault();
+      // set current link state as navigating
+      this.setState({ navigating: true });
+
+      // create a cancelable promise out of navigate
+      // we need to be able to cancel on willUnmount to
+      // avoid setting state on an unmounted component
+      const cp = makeCancelable(navigate(href, { state, replace }));
+
+      // set promise handlers after creation in order to be queued
+      // after cancelation handlers
+      cp.promise
+        .then(() => this.stopNavigation())
+        .catch(e => this.stopNavigation(e && e.isCanceled ? true : false));
+
+      // attach cancelable promise to the component instance
+      // to be able to reference and cancel it from componentWillUnmount
+      this._navigationCancelablePromise = cp;
+    }
+  };
+
+  componentWillUnmount() {
+    const ncp = this._navigationCancelablePromise;
+    if (ncp) ncp.cancel();
+  }
+
+  render() {
+    const { innerRef, ...props } = this.props;
+    const navigating = this.state.navigating;
+    return (
+      <BaseContext.Consumer>
+        {({ basepath, baseuri }) => (
+          <Location>
+            {({ location, navigate }) => {
+              let {
+                to,
+                state,
+                replace,
+                getProps = k,
+                children,
+                ...anchorProps
+              } = props;
+              let href = resolve(to, baseuri);
+              let isCurrent = location.pathname === href;
+              let isPartiallyCurrent = startsWith(location.pathname, href);
+
+              return (
+                <a
+                  ref={innerRef}
+                  aria-current={isCurrent ? "page" : undefined}
+                  {...anchorProps}
+                  {...getProps({
+                    isCurrent,
+                    isPartiallyCurrent,
+                    href,
+                    location,
+                    navigating
+                  })}
+                  href={href}
+                  onClick={this.onClick(
+                    href,
+                    state,
+                    replace,
+                    anchorProps.onClick
+                  )}
+                >
+                  {typeof children === "function"
+                    ? children(navigating)
+                    : children}
+                </a>
+              );
+            }}
+          </Location>
+        )}
+      </BaseContext.Consumer>
+    );
+  }
+}
+
+const Link = forwardRef(({ innerRef, ...props }, ref) => (
+  <LinkImpl {...props} innerRef={ref || innerRef} />
 ));
 
 ////////////////////////////////////////////////////////////////////////////////

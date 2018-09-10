@@ -11,6 +11,7 @@ let createHistory = (source, options) => {
   let location = getLocation(source);
   let transitioning = false;
   let resolveTransition = () => {};
+  let rejectTransition = () => {};
 
   return {
     get location() {
@@ -57,7 +58,11 @@ let createHistory = (source, options) => {
 
       location = getLocation(source);
       transitioning = true;
-      let transition = new Promise(res => (resolveTransition = res));
+      let transition = new Promise((res, rej) => {
+        rejectTransition();
+        resolveTransition = res;
+        rejectTransition = rej;
+      });
       listeners.forEach(listener => listener({ location, action: "PUSH" }));
       return transition;
     }
