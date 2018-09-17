@@ -128,7 +128,7 @@ To sum it up, just imagine every url is a "directory" and you’ll do just fine.
 
 ## Embedded Routers
 
-Embedded Routers are any Routers you render deeper inside your app beneath another outer. For example, suppose this is at the top of your app:
+Embedded Routers are any Routers you render deeper inside your app beneath another Router. For example, suppose this is at the top of your app:
 
 ```jsx
 <Router>
