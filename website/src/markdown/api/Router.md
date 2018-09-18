@@ -92,3 +92,29 @@ const App = () => (
   </Location>
 )
 ```
+
+## component: component|string
+
+The component that will be used to wrap the Router's children. Defaults to a `<div />`. You can pass in a component or a string matching the name of a DOM element. Any additional props that are passed to the Router will be passed on to the rendered component.
+
+```jsx
+class Container extends React.Component {
+  render () {
+    return (
+      <main>
+        { this.props.children }
+      </main>
+    )
+  }
+}
+
+// Passing a component
+<Router component={Container}>
+  <Dashboard path="/" />
+</Router>
+
+// Passing a string
+<Router component="main" className="container">
+  <Dashboard path="/" />
+</Router>
+```
