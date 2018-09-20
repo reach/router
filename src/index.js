@@ -136,7 +136,11 @@ class LocationProvider extends React.Component {
 let ServerLocation = ({ url, children }) => (
   <LocationContext.Provider
     value={{
-      location: { pathname: url },
+      location: {
+        pathname: url,
+        search: "",
+        hash: ""
+      },
       navigate: () => {
         throw new Error("You can't call navigate on the server.");
       }
