@@ -1,5 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// createHistory(source) - wraps a history source
 let getLocation = source => {
   return {
     ...source.location,
