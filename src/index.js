@@ -472,6 +472,10 @@ let Match = ({ path, children }) => (
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
 
 let createRoute = basepath => element => {
+  if (!element) {
+    return null;
+  }
+
   invariant(
     element.props.path || element.props.default || element.type === Redirect,
     `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
