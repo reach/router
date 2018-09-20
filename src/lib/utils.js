@@ -212,6 +212,14 @@ let validateRedirect = (from, to) => {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+// getActiveElement()
+//
+// Returns the current active element if in a browser, otherwise returns null
+let getActiveElement = () => {
+  return typeof window !== "undefined" ? document.activeElement : null;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Junk
 let paramRe = /^:(.+)/;
 
@@ -258,4 +266,4 @@ let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
 let reservedNames = ["uri", "path"];
 
 ////////////////////////////////////////////////////////////////////////////////
-export { startsWith, pick, match, resolve, insertParams, validateRedirect };
+export { startsWith, pick, match, resolve, insertParams, validateRedirect, getActiveElement };

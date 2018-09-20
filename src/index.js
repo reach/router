@@ -12,7 +12,8 @@ import {
   resolve,
   match,
   insertParams,
-  validateRedirect
+  validateRedirect,
+  getActiveElement
 } from "./lib/utils";
 import {
   globalHistory,
@@ -312,17 +313,28 @@ class FocusHandlerImpl extends React.Component {
       return;
     }
 
-    let { requestFocus } = this.props;
-
-    if (requestFocus) {
-      requestFocus(this.node);
-    } else {
-      if (initialRender) {
-        initialRender = false;
-      } else {
-        this.node.focus();
+    Promise.resolve().then(() => {
+      if (
+        getActiveElement() !==
+        "LAST_ACTIVE_ELEMENT" /* not sure how best to track this */
+      ) {
+        // if the app has already updated the active (focused) element, leave
+        // it as is and don't focus the route
+        return;
       }
-    }
+
+      let { requestFocus } = this.props;
+
+      if (requestFocus) {
+        requestFocus(this.node);
+      } else {
+        if (initialRender) {
+          initialRender = false;
+        } else {
+          this.node.focus();
+        }
+      }
+    });
   }
 
   requestFocus = node => {
