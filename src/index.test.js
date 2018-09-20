@@ -75,6 +75,20 @@ describe("smoke tests", () => {
   });
 });
 
+describe("Router children", () => {
+  it("ignores falsey chidlren", () => {
+    snapshot({
+      pathname: "/",
+      element: (
+        <Router>
+          <Home path="/" />
+          {null}
+        </Router>
+      )
+    });
+  });
+});
+
 describe("passed props", () => {
   it("parses dynamic segments and passes to components", () => {
     snapshot({
