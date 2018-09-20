@@ -31,7 +31,7 @@ let createHistory = (source, options) => {
 
       let popstateListener = () => {
         location = getLocation(source);
-        listener();
+        listener({ location, action: "POP" });
       };
 
       source.addEventListener("popstate", popstateListener);
@@ -58,7 +58,7 @@ let createHistory = (source, options) => {
       location = getLocation(source);
       transitioning = true;
       let transition = new Promise(res => (resolveTransition = res));
-      listeners.forEach(fn => fn());
+      listeners.forEach(listener => listener({ location, action: "PUSH" }));
       return transition;
     }
   };

@@ -13,8 +13,8 @@ import {
 } from "./utils";
 import createContext from "create-react-context";
 
-globalHistory.listen(() => {
-  console.log("yooooooooooo");
+globalHistory.listen(({ location, action }) => {
+  console.log({ location, action });
 });
 
 const InvalidateContacts = createContext();
