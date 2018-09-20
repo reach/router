@@ -537,5 +537,6 @@ export {
   createMemorySource,
   isRedirect,
   navigate,
-  redirectTo
+  redirectTo,
+  globalHistory
 };
