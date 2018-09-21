@@ -324,7 +324,11 @@ class FocusHandlerImpl extends React.Component {
       if (initialRender) {
         initialRender = false;
       } else {
-        this.node.focus();
+        // React polyfills [autofocus] and it fires earlier than cDM,
+        // so we were stealing focus away, this line prevents that.
+        if (!this.node.contains(document.activeElement)) {
+          this.node.focus();
+        }
       }
     }
   }
