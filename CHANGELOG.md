@@ -1,3 +1,7 @@
+## v1.2.1
+
+- 1f9f908 replace unstable_deferredUpdates with rAF
+
 ## v1.2.0
 
 - a7a1c84 fixed focus being stolen from [autofocus] elements
