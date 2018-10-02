@@ -1,6 +1,6 @@
 # Nesting and Relative Links
 
-Reach Router has the concept of nesting and relativity in a three places:
+Reach Router has the concept of nesting and relativity in three places:
 
 1. Nested Routes
 2. Relative Links
@@ -8,7 +8,7 @@ Reach Router has the concept of nesting and relativity in a three places:
 
 ## Nested Routes
 
-When you render a router, you can nest routes inside other routes and the path's and the render tree will be nested as well.
+When you render a router, you can nest routes inside other routes and the paths and the render tree will be nested as well.
 
 ```jsx
 <Router>
@@ -74,7 +74,7 @@ For example, in the `Dashboard` component from the previous section, these two l
 <Link to="trends" />
 ```
 
-And if we were in the trends component we could link back up to the dashboard like this:
+And if we were in the `Trends` component, we could link back up to the dashboard like this:
 
 ```jsx
 <Link to="../" />
@@ -128,7 +128,7 @@ To sum it up, just imagine every url is a "directory" and you’ll do just fine.
 
 ## Embedded Routers
 
-Embedded Routers are any Routers you render deeper inside your app beneath another outer. For example, suppose this is at the top of your app:
+Embedded Routers are any Routers you render deeper inside your app beneath another router. For example, suppose this is at the top of your app:
 
 ```jsx
 <Router>
@@ -158,4 +158,4 @@ const Dashboard = () => (
 )
 ```
 
-All links and route paths will are relative to the router above them. This makes code splitting and compartmentalizing your app really easy. You could render the Dashboard as its own independent app, or embed it into your large app without making any changes to it.
+All links and route paths are relative to the router above them. This makes code splitting and compartmentalizing your app really easy. You could render the Dashboard as its own independent app, or embed it into your large app without making any changes to it.
