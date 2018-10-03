@@ -4,5 +4,6 @@
 /index.js
 /lib
 /compat
+/.idea
 npm-debug.log*
 yarn-error.log*

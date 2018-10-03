@@ -31,7 +31,7 @@ let runWithNavigation = (element, pathname = "/") => {
   let wrapper = renderer.create(
     <LocationProvider history={history}>{element}</LocationProvider>
   );
-  const snapshot = string => {
+  const snapshot = () => {
     expect(wrapper.toJSON()).toMatchSnapshot();
   };
   return { history, snapshot, wrapper };
@@ -598,5 +598,30 @@ describe.skip("ServerLocation", () => {
       expect(isRedirect(error)).toBe(true);
       expect(error.uri).toBe("/groups/123");
     }
+  });
+});
+
+describe("isCurrent", () => {
+  const setActive = ({ isCurrent }) => {
+    return isCurrent ? { className: "active" } : null;
+  };
+
+  it("works", () => {
+    snapshot({
+      pathname: "/home",
+      element: (
+        <div>
+          <Link to="/home" getProps={setActive} />
+          <Link to="/not-home" getProps={setActive} />
+        </div>
+      )
+    });
+  });
+
+  it("supports unicode", () => {
+    snapshot({
+      pathname: `/${encodeURI("✓")}`,
+      element: <Link to="/✓" getProps={setActive} />
+    });
   });
 });
