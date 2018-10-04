@@ -116,3 +116,13 @@ You can also pass props you'd like to be on the `<a>` such as a `title`, `id`, `
   onClick={youBet}
 />
 ```
+
+## ingoreTab
+
+Enable ignoring tabulation when your component has focus
+
+```jsx
+<Link to="somewhere" className="whatev" ignoreTab>
+  <Button title="Hello" />
+</Link>
+```
