@@ -589,5 +589,6 @@ export {
   isRedirect,
   navigate,
   redirectTo,
-  globalHistory
+  globalHistory,
+  match as matchPath
 };
