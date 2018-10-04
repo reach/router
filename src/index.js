@@ -380,7 +380,7 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
           let href = resolve(to, baseuri);
           let isCurrent = location.pathname === href;
           let isPartiallyCurrent = startsWith(location.pathname, href);
-          let ignoreTab = props.ignoreTab ? "0" : "-1";
+          let ignoreTab = props.ignoreTab ? "-1" : "0";
 
           return (
             <a
