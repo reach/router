@@ -380,6 +380,7 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
           let href = resolve(to, baseuri);
           let isCurrent = location.pathname === href;
           let isPartiallyCurrent = startsWith(location.pathname, href);
+          let ignoreTab = props.ignoreTab ? "-1" : "0";
 
           return (
             <a
@@ -388,6 +389,7 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
               {...anchorProps}
               {...getProps({ isCurrent, isPartiallyCurrent, href, location })}
               href={href}
+              tabIndex={ignoreTab}
               onClick={event => {
                 if (anchorProps.onClick) anchorProps.onClick(event);
                 if (shouldNavigate(event)) {
