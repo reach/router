@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import warning from "warning";
+// import warning from "warning";
 import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
