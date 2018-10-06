@@ -47,8 +47,13 @@ let Location = ({ children }) => (
   </LocationContext.Consumer>
 );
 
+Location.propTypes = {
+  children: PropTypes.func.isRequired
+};
+
 class LocationProvider extends React.Component {
   static propTypes = {
+    children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
     history: PropTypes.object.isRequired
   };
 
@@ -145,6 +150,11 @@ let ServerLocation = ({ url, children }) => (
   </LocationContext.Provider>
 );
 
+ServerLocation.propTypes = {
+  children: PropTypes.node.isRequired,
+  url: PropTypes.string.isRequired
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
 let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
@@ -164,8 +174,19 @@ let Router = props => (
 );
 
 class RouterImpl extends React.PureComponent {
+  static propTypes = {
+    basepath: PropTypes.string,
+    baseuri: PropTypes.string,
+    children: PropTypes.node.isRequired,
+    component: PropTypes.string,
+    location: PropTypes.object,
+    navigate: PropTypes.func,
+    primary: PropTypes.bool
+  };
+
   static defaultProps = {
-    primary: true
+    primary: true,
+    component: "div"
   };
 
   render() {
@@ -176,7 +197,7 @@ class RouterImpl extends React.PureComponent {
       primary,
       children,
       baseuri,
-      component = "div",
+      component,
       ...domProps
     } = this.props;
     let routes = React.Children.map(children, createRoute(basepath));
@@ -259,11 +280,32 @@ let FocusHandler = ({ uri, location, component, ...domProps }) => (
   </FocusContext.Consumer>
 );
 
+FocusHandler.propTypes = {
+  component: PropTypes.string,
+  location: PropTypes.object,
+  uri: PropTypes.string
+};
+
 // don't focus on initial render
 let initialRender = true;
 let focusHandlerCount = 0;
 
 class FocusHandlerImpl extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    component: PropTypes.string,
+    location: PropTypes.object,
+    requestFocus: PropTypes.func,
+    role: PropTypes.string,
+    style: PropTypes.object,
+    uri: PropTypes.string
+  };
+
+  static defaultProps = {
+    component: "div",
+    role: "group"
+  };
+
   state = {};
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -339,8 +381,8 @@ class FocusHandlerImpl extends React.Component {
       children,
       style,
       requestFocus,
-      role = "group",
-      component: Comp = "div",
+      role,
+      component: Comp,
       uri,
       location,
       ...domProps
@@ -415,10 +457,23 @@ let redirectTo = to => {
 };
 
 class RedirectImpl extends React.Component {
+  static propTypes = {
+    from: PropTypes.string.isRequired,
+    navigate: PropTypes.func,
+    noThrow: PropTypes.bool,
+    replace: PropTypes.bool,
+    state: PropTypes.object,
+    to: PropTypes.string.isRequired
+  };
+
+  static defaultProps = {
+    replace: true
+  };
+
   // Support React < 16 with this hook
   componentDidMount() {
     let {
-      props: { navigate, to, from, replace = true, state, noThrow, ...props }
+      props: { navigate, to, from, replace, state, noThrow, ...props }
     } = this;
     Promise.resolve().then(() => {
       navigate(insertParams(to, props), { replace, state });
@@ -469,6 +524,11 @@ let Match = ({ path, children }) => (
     )}
   </BaseContext.Consumer>
 );
+
+Match.propTypes = {
+  children: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Junk
