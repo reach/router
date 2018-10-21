@@ -53,6 +53,7 @@ let createHistory = (source, options) => {
         }
       } catch (e) {
         source.location[replace ? "replace" : "assign"](to);
+        console.error(e);
       }
 
       location = getLocation(source);
