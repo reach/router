@@ -201,15 +201,25 @@ class RouterImpl extends React.PureComponent {
         location,
         navigate: (to, options) => navigate(resolve(to, uri), options)
       };
+      
+      let elementChildren
+      
+      if (element.props.children) {
+        // Check element for a 'stop' prop
+        if (element.props.stop) {
+          // If found, don't wrap children in router
+          elementChildren = element.props.children
+        } else {
+          elementChildren = (
+            <Router primary={primary}>{element.props.children}</Router>
+          )
+        }
+      }
 
       let clone = React.cloneElement(
         element,
         props,
-        element.props.children ? (
-          <Router primary={primary}>{element.props.children}</Router>
-        ) : (
-          undefined
-        )
+        elementChildren
       );
 
       // using 'div' for < 16.3 support
