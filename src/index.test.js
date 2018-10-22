@@ -340,6 +340,22 @@ describe("nested rendering", () => {
       )
     });
   });
+  
+  it("does not match nested children after stop prop", () => {
+    snapshot({
+      pathname: "/yo",
+      element: (
+        <Router>
+          <div path="/">
+            <div>
+              <div />
+            </div>
+          </div>
+        </Router>
+      )
+    });
+  });
+  
 });
 
 describe("disrespect", () => {
