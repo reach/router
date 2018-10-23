@@ -403,6 +403,10 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
   </BaseContext.Consumer>
 ));
 
+Link.propTypes = {
+  to: PropTypes.string.isRequired,
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 function RedirectRequest(uri) {
   this.uri = uri;
