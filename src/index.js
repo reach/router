@@ -179,7 +179,7 @@ class RouterImpl extends React.PureComponent {
       component = "div",
       ...domProps
     } = this.props;
-    let routes = React.Children.map(children, createRoute(basepath));
+    let routes = createRoutes(basepath, children);
     let { pathname } = location;
 
     let match = pick(routes, pathname);
@@ -473,6 +473,15 @@ let Match = ({ path, children }) => (
 ////////////////////////////////////////////////////////////////////////////////
 // Junk
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
+
+let createRoutes = (basepath, children) =>
+  React.Children.toArray(children).reduce((routes, element) => {
+    if (element.type === React.Fragment) {
+      return [...routes, ...createRoutes(basepath, element.props.children)];
+    } else {
+      return [...routes, createRoute(basepath)(element)];
+    }
+  }, []);
 
 let createRoute = basepath => element => {
   if (!element) {
