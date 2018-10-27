@@ -83,7 +83,7 @@ let createMemorySource = (
       hash: initialHash
     }
   ];
-  let states = [{ key: Date.now() + "" }];
+  let states = [{ key: "initial" }];
 
   return {
     get location() {
