@@ -69,7 +69,7 @@ let createHistory = (source, options) => {
 let createMemorySource = (initialPathname = "/") => {
   let index = 0;
   let stack = [{ pathname: initialPathname, search: "" }];
-  let states = [{ key: Date.now() + "" }];
+  let states = [{ key: "initial" }];
 
   return {
     get location() {
