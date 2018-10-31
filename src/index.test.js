@@ -491,7 +491,8 @@ describe("relative navigate prop", () => {
       relativeNavigate = navigate;
       return (
         <div>
-          User:{userId}
+          User:
+          {userId}
           {children}
         </div>
       );
@@ -558,11 +559,18 @@ describe("Match", () => {
 
 // React 16.4 is buggy https://github.com/facebook/react/issues/12968
 describe.skip("ServerLocation", () => {
+  let NestedRouter = () => (
+    <Router>
+      <Home path="/home" />
+      <Redirect from="/" to="./home" />
+    </Router>
+  );
   let App = () => (
     <Router>
       <Home path="/" />
       <Group path="/groups/:groupId" />
       <Redirect from="/g/:groupId" to="/groups/:groupId" />
+      <NestedRouter path="/nested/*" />
     </Router>
   );
 
@@ -594,9 +602,25 @@ describe.skip("ServerLocation", () => {
         </ServerLocation>
       );
     } catch (error) {
-      expect(markup).not.toBeDefined();
       expect(isRedirect(error)).toBe(true);
       expect(error.uri).toBe("/groups/123");
     }
+    expect(markup).not.toBeDefined();
+  });
+
+  test("nested redirects", () => {
+    let redirectedPath = "/nested";
+    let markup;
+    try {
+      markup = renderToString(
+        <ServerLocation url={redirectedPath}>
+          <App />
+        </ServerLocation>
+      );
+    } catch (error) {
+      expect(isRedirect(error)).toBe(true);
+      expect(error.uri).toBe("/nested/home");
+    }
+    expect(markup).not.toBeDefined();
   });
 });
