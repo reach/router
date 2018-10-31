@@ -418,26 +418,43 @@ class RedirectImpl extends React.Component {
   // Support React < 16 with this hook
   componentDidMount() {
     let {
-      props: { navigate, to, from, replace = true, state, noThrow, ...props }
+      props: {
+        navigate,
+        to,
+        from,
+        replace = true,
+        state,
+        noThrow,
+        baseuri,
+        ...props
+      }
     } = this;
     Promise.resolve().then(() => {
-      navigate(insertParams(to, props), { replace, state });
+      let resolvedTo = resolve(to, baseuri);
+      navigate(insertParams(resolvedTo, props), { replace, state });
     });
   }
 
   render() {
     let {
-      props: { navigate, to, from, replace, state, noThrow, ...props }
+      props: { navigate, to, from, replace, state, noThrow, baseuri, ...props }
     } = this;
-    if (!noThrow) redirectTo(insertParams(to, props));
+    let resolvedTo = resolve(to, baseuri);
+    if (!noThrow) redirectTo(insertParams(resolvedTo, props));
     return null;
   }
 }
 
 let Redirect = props => (
-  <Location>
-    {locationContext => <RedirectImpl {...locationContext} {...props} />}
-  </Location>
+  <BaseContext.Consumer>
+    {({ baseuri }) => (
+      <Location>
+        {locationContext => (
+          <RedirectImpl {...locationContext} baseuri={baseuri} {...props} />
+        )}
+      </Location>
+    )}
+  </BaseContext.Consumer>
 );
 
 Redirect.propTypes = {
