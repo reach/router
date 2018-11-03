@@ -251,7 +251,8 @@ let segmentize = uri =>
   uri
     // strip starting/ending slashes
     .replace(/(^\/+|\/+$)/g, "")
-    .split("/");
+    .split("/")
+    .map(s => (s.charAt(0) === ":" ? s : s.toLowerCase()));
 
 let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
 

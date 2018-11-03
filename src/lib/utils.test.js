@@ -25,6 +25,9 @@ describe("pick", () => {
     expect(pick(routes, "/groups").route.value).toBe("Groups");
     expect(pick(routes, "/files/some/long/path").route.value).toBe("FilesDeep");
     expect(pick(routes, "/files").route.value).toBe("Files");
+    expect(pick(routes, "/mixed/case").route.value).toBe("MixedCase");
+    expect(pick(routes, "/MIXED/CASE").route.value).toBe("MixedCase");
+    expect(pick(routes, "/mIxEd/cAsE").route.value).toBe("MixedCase");
     expect(pick(routes, "/no/where").route.value).toBe("Default");
   });
 
@@ -150,6 +153,10 @@ let routes = shuffle([
   {
     value: "Root",
     path: "/"
+  },
+  {
+    value: "MixedCase",
+    path: "/MiXeD/CaSe"
   },
   {
     value: "Default",
