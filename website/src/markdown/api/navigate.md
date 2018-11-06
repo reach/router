@@ -88,6 +88,12 @@ If using `props.navigate` in a Route Component, this can be a relative path.
 props.navigate("../")
 ```
 
+You can pass a number to go to a previously visited route.
+
+```jsx
+navigate(-1)
+```
+
 ## option - state
 
 An object to store on location state. This is useful for state that doesn't need to be in the URL but is associated with a route transition. Think of it like "post" data on a server.
