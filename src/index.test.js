@@ -158,7 +158,8 @@ describe("route ranking", () => {
   const MyGroup = () => <div>MyGroup</div>;
   const MyGroupsUsers = () => <div>MyGroupUsers</div>;
   const Users = () => <div>Users</div>;
-  const UsersSplat = ({ splat }) => <div>Users Splat: {splat}</div>;
+  const UsersSplat = ({ "*": splat }) => <div>Users Splat: {splat}</div>;
+  const UsersNamedSplat = ({ splat }) => <div>Users Named Splat: {splat}</div>;
   const User = ({ userId, groupId }) => (
     <div>
       User id: {userId}, Group Id: {groupId}
@@ -181,6 +182,7 @@ describe("route ranking", () => {
       <Users path="/groups/:groupId/users" />
       <MyGroupsUsers path="/groups/mine/users" />
       <UsersSplat path="/groups/:groupId/users/*" />
+      <UsersNamedSplat path="/groups/:groupId/users/*splat" />
       <User path="/groups/:groupId/users/:userId" />
       <Me path="/groups/:groupId/users/me" />
       <MyGroupsAndMe path="/groups/mine/users/me" />

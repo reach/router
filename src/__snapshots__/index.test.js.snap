@@ -733,6 +733,7 @@ exports[`route ranking /groups/123/users/a/bunch/of/junk 1`] = `
 >
   <div>
     Users Splat: 
+    a/bunch/of/junk
   </div>
 </div>
 `;

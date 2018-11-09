@@ -32,6 +32,10 @@ describe("pick", () => {
     expect(match("/*", "/whatever/else")).toMatchSnapshot();
   });
 
+  test("pick /*name", () => {
+    expect(match("/*name", "/whatever/else")).toMatchSnapshot();
+  });
+
   test("pick return value", () => {
     expect(pick(routes, "/one/two/three/four/five")).toMatchSnapshot();
   });

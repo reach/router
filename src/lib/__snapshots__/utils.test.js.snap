@@ -37,6 +37,18 @@ Object {
 }
 `;
 
+exports[`pick pick /*name 1`] = `
+Object {
+  "params": Object {
+    "name": "whatever/else",
+  },
+  "route": Object {
+    "path": "/*name",
+  },
+  "uri": "/",
+}
+`;
+
 exports[`pick pick return value 1`] = `
 Object {
   "params": Object {

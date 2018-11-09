@@ -193,7 +193,7 @@ class RouterImpl extends React.PureComponent {
       } = match;
 
       // remove the /* from the end for child routes relative paths
-      basepath = route.default ? basepath : route.path.replace(/\*$/, "");
+      basepath = route.default ? basepath : route.path.replace(/\*(.+)?$/, "");
 
       let props = {
         ...params,

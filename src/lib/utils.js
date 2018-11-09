@@ -58,16 +58,17 @@ let pick = (routes, uri) => {
       let routeSegment = routeSegments[index];
       let uriSegment = uriSegments[index];
 
-      let isSplat = routeSegment === "*";
-      if (isSplat) {
-        // Hit a splat, just grab the rest, and return a match
-        // uri:   /files/documents/work
-        // route: /files/*
-        params["*"] = uriSegments
-          .slice(index)
-          .map(decodeURIComponent)
-          .join("/");
-        break;
+      if (routeSegment != null) {
+        let splat = routeSegment.match(/^\*(.+)?$/);
+        if (splat) {
+          let splatName = splat[1];
+          if (splatName == null) splatName = "*";
+          params[splatName] = uriSegments
+            .slice(index)
+            .map(decodeURIComponent)
+            .join("/");
+          break;
+        }
       }
 
       if (uriSegment === undefined) {
@@ -223,7 +224,7 @@ let ROOT_POINTS = 1;
 
 let isRootSegment = segment => segment === "";
 let isDynamic = segment => paramRe.test(segment);
-let isSplat = segment => segment === "*";
+let isSplat = segment => segment != null && segment.match(/^\*(.+)?$/);
 
 let rankRoute = (route, index) => {
   let score = route.default
