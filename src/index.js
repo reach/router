@@ -530,6 +530,7 @@ let shouldNavigate = event =>
 ////////////////////////////////////////////////////////////////////////
 export {
   Link,
+  LocationContext,
   Location,
   LocationProvider,
   Match,
