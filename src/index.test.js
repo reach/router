@@ -451,9 +451,9 @@ describe("links", () => {
     let ref;
     let div = document.createElement("div");
     let className = "btn btn-link";
-    let LinkComponent = React.forwardRef((props, ref) => (
-      <a className={className} ref={ref}>
-        {props.children}
+    let LinkComponent = React.forwardRef(({ children, ...props }, ref) => (
+      <a className={className} ref={ref} {...props}>
+        {children}
       </a>
     ));
     ReactDOM.render(
