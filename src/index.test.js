@@ -446,6 +446,27 @@ describe("links", () => {
       )
     });
   });
+
+  it("accepts `as` prop to render custom element", done => {
+    let ref;
+    let div = document.createElement("div");
+    let className = "btn btn-link";
+    let LinkComponent = React.forwardRef((props, ref) => (
+      <a className={className} ref={ref}>
+        {props.children}
+      </a>
+    ));
+    ReactDOM.render(
+      <Link to="/" as={LinkComponent} ref={node => (ref = node)} />,
+      div,
+      () => {
+        expect(ref).toBeInstanceOf(HTMLAnchorElement);
+        expect(ref.className).toBe(className);
+        ReactDOM.unmountComponentAtNode(div);
+        done();
+      }
+    );
+  });
 });
 
 describe("transitions", () => {
