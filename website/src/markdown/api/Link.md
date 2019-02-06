@@ -97,7 +97,7 @@ const NewsFeed = () => (
 )
 
 const Photo = ({ location, photoId }) => {
-  if (location.state.fromFeed) {
+  if (location.state.fromNewsFeed) {
     return <FromFeedPhoto id={photoId} />
   } else {
     return <Photo id={photoId} />
