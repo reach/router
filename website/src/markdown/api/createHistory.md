@@ -16,9 +16,7 @@ let source = createMemorySource("/starting/url")
 let history = createHistory(source)
 ```
 
-There may be times within your screen where you may need to change a part of the
-UI based on some query param. By default we do not parse the search property of the source `location`. To do so we allow you to pass in a custom `getLocation` function into
-the options object. For example:
+There may be times within your screen where you may need to change a part of the UI based on some query param. By default we do not parse the search property of the source `location`. To do so we allow you to pass in a custom `getLocation` function into the options object. For example:
 
 ```jsx
 import {
