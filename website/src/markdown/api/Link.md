@@ -91,7 +91,7 @@ const NewsFeed = () => (
   <div>
     <Link
       to="photos/123"
-      state={{ fromNewsFeed: true }}
+      state={{ fromFeed: true }}
     />
   </div>
 )
