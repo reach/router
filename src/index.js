@@ -505,7 +505,7 @@ let createRoute = basepath => element => {
 
   invariant(
     !(element.type === Redirect && (!element.props.from || !element.props.to)),
-    `<Redirect from="${element.props.from} to="${
+    `<Redirect from="${element.props.from}" to="${
       element.props.to
     }"/> requires both "from" and "to" props when inside a <Router>.`
   );
