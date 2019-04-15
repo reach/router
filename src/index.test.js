@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import ReactDOM from "react-dom";
+import ReactTestUtils from "react-dom/test-utils";
 import renderer from "react-test-renderer";
 import { renderToString, renderToStaticMarkup } from "react-dom/server";
 
@@ -452,6 +453,61 @@ describe("links", () => {
         </Router>
       )
     });
+  });
+
+  it("calls history.pushState when clicked", () => {
+    const testSource = createMemorySource("/");
+    testSource.history.replaceState = jest.fn();
+    testSource.history.pushState = jest.fn();
+    const testHistory = createHistory(testSource);
+    const SomePage = () => <Link to="/reports">Go To Reports</Link>;
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <SomePage path="/" />
+          <Reports path="/reports" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.pushState).toHaveBeenCalled();
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
+
+  it("calls history.pushState when clicked -- even if navigated before", () => {
+    const testSource = createMemorySource("/#payload=...");
+    const { history } = testSource;
+    history.replaceState = jest.fn(history.replaceState.bind(history));
+    history.pushState = jest.fn(history.pushState.bind(history));
+    const testHistory = createHistory(testSource);
+    // Simulate that payload in URL hash is being hidden
+    // before React renders anything ...
+    testHistory.navigate("/", { replace: true });
+    expect(testSource.history.replaceState).toHaveBeenCalled();
+    const SomePage = () => <Link to="/reports">Go To Reports</Link>;
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <SomePage path="/" />
+          <Reports path="/reports" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.pushState).toHaveBeenCalled();
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
   });
 });
 
