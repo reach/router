@@ -1,9 +1,10 @@
+import { extend } from "./utils";
+
 let getLocation = source => {
-  return {
-    ...source.location,
+  return extend({}, source.location, {
     state: source.history.state,
     key: (source.history.state && source.history.state.key) || "initial"
-  };
+  });
 };
 
 let createHistory = (source, options) => {

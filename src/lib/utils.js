@@ -212,6 +212,21 @@ let validateRedirect = (from, to) => {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+// extend({}, a, b)
+//
+// implement a customized Object.assign, remove the hasOwnProperty if statement
+// see issue #252
+let extend = (target, ...args) => {
+  for (let i = 0; i < args.length; i++) {
+    const source = args[i];
+    for (let key in source) {
+      target[key] = source[key];
+    }
+  }
+  return target;
+};
+
+////////////////////////////////////////////////////////////////////////////////
 // Junk
 let paramRe = /^:(.+)/;
 
@@ -258,4 +273,12 @@ let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
 let reservedNames = ["uri", "path"];
 
 ////////////////////////////////////////////////////////////////////////////////
-export { startsWith, pick, match, resolve, insertParams, validateRedirect };
+export {
+  startsWith,
+  pick,
+  match,
+  resolve,
+  insertParams,
+  validateRedirect,
+  extend
+};
