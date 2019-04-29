@@ -66,9 +66,19 @@ let createHistory = (source, options) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Stores history entries in memory for testing or other platforms like Native
-let createMemorySource = (initialPathname = "/") => {
+let createMemorySource = (
+  initialPathname = "/",
+  initialSearch = "",
+  initialHash = ""
+) => {
   let index = 0;
-  let stack = [{ pathname: initialPathname, search: "" }];
+  let stack = [
+    {
+      pathname: initialPathname,
+      search: initialSearch,
+      hash: initialHash
+    }
+  ];
   let states = [];
 
   return {

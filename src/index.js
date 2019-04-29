@@ -583,22 +583,3 @@ export {
   redirectTo,
   globalHistory
 };
-
-// describe("location", () => {
-//   it("correctly parses pathname, search and hash fields", () => {
-//     let testHistory = createHistory(createMemorySource(
-//       '/print-location',
-//       '?it=works&with=queries',
-//       '#and-hashes',
-//       ));
-//     let wrapper = renderer.create(
-//       <LocationProvider history={testHistory}>
-//         <Router>
-//           <PrintLocation path="/print-location" />
-//         </Router>
-//       </LocationProvider>
-//     );
-//     const tree = wrapper.toJSON();
-//     expect(tree).toMatchSnapshot();
-//   });
-// });
