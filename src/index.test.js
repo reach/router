@@ -2,7 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import renderer from "react-test-renderer";
-import { renderToString } from "react-dom/server";
+import { renderToString, renderToStaticMarkup } from "react-dom/server";
 
 import {
   createHistory,
@@ -48,6 +48,13 @@ let Group = ({ groupId, children }) => (
 let PropsPrinter = props => <pre>{JSON.stringify(props, null, 2)}</pre>;
 let Reports = ({ children }) => <div>Reports {children}</div>;
 let AnnualReport = () => <div>Annual Report</div>;
+let PrintLocation = ({ location }) => (
+  <div>
+    <div>location.pathname: [{location.pathname}]</div>
+    <div>location.search: [{location.search}]</div>
+    <div>location.hash: [{location.hash}]</div>
+  </div>
+);
 
 describe("smoke tests", () => {
   it(`renders the root component at "/"`, () => {
@@ -558,7 +565,8 @@ describe("Match", () => {
 });
 
 // React 16.4 is buggy https://github.com/facebook/react/issues/12968
-describe.skip("ServerLocation", () => {
+// so some tests are skipped
+describe("ServerLocation", () => {
   let NestedRouter = () => (
     <Router>
       <Home path="/home" />
@@ -571,10 +579,11 @@ describe.skip("ServerLocation", () => {
       <Group path="/groups/:groupId" />
       <Redirect from="/g/:groupId" to="/groups/:groupId" />
       <NestedRouter path="/nested/*" />
+      <PrintLocation path="/print-location" />
     </Router>
   );
 
-  it("works", () => {
+  it.skip("works", () => {
     expect(
       renderToString(
         <ServerLocation url="/">
@@ -592,7 +601,7 @@ describe.skip("ServerLocation", () => {
     ).toMatchSnapshot();
   });
 
-  test("redirects", () => {
+  test.skip("redirects", () => {
     let redirectedPath = "/g/123";
     let markup;
     try {
@@ -608,7 +617,7 @@ describe.skip("ServerLocation", () => {
     expect(markup).not.toBeDefined();
   });
 
-  test("nested redirects", () => {
+  test.skip("nested redirects", () => {
     let redirectedPath = "/nested";
     let markup;
     try {
@@ -622,5 +631,43 @@ describe.skip("ServerLocation", () => {
       expect(error.uri).toBe("/nested/home");
     }
     expect(markup).not.toBeDefined();
+  });
+
+  test("location.search", () => {
+    let markup = renderToStaticMarkup(
+      <ServerLocation url="/print-location?it=works">
+        <App />
+      </ServerLocation>
+    );
+
+    expect(markup).toContain("location.pathname: [/print-location]");
+    expect(markup).toContain("location.search: [?it=works]");
+    expect(markup).toContain("location.hash: []");
+  });
+
+  test("location.hash", () => {
+    let markup = renderToStaticMarkup(
+      <ServerLocation url="/print-location#it-works">
+        <App />
+      </ServerLocation>
+    );
+
+    expect(markup).toContain("location.pathname: [/print-location]");
+    expect(markup).toContain("location.search: []");
+    expect(markup).toContain("location.hash: [#it-works]");
+  });
+
+  test("location.search AND location.hash", () => {
+    let markup = renderToStaticMarkup(
+      <ServerLocation url="/print-location?it=works&with=otherparams#it-works">
+        <App />
+      </ServerLocation>
+    );
+
+    expect(markup).toContain("location.pathname: [/print-location]");
+    expect(markup).toContain(
+      "location.search: [?it=works&amp;with=otherparams]"
+    );
+    expect(markup).toContain("location.hash: [#it-works]");
   });
 });
