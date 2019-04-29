@@ -564,6 +564,27 @@ describe("Match", () => {
   });
 });
 
+describe("location", () => {
+  it("correctly parses pathname, search and hash fields", () => {
+    let testHistory = createHistory(
+      createMemorySource(
+        "/print-location",
+        "?it=works&with=queries",
+        "#and-hashes"
+      )
+    );
+    let wrapper = renderer.create(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <PrintLocation path="/print-location" />
+        </Router>
+      </LocationProvider>
+    );
+    const tree = wrapper.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+
 // React 16.4 is buggy https://github.com/facebook/react/issues/12968
 // so some tests are skipped
 describe("ServerLocation", () => {

@@ -214,6 +214,36 @@ exports[`links uses the right href in multiple root paths 1`] = `
 </div>
 `;
 
+exports[`location correctly parses pathname, search and hash fields 1`] = `
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    <div>
+      location.pathname: [
+      /print-location
+      ]
+    </div>
+    <div>
+      location.search: [
+      ?it=works&with=queries
+      ]
+    </div>
+    <div>
+      location.hash: [
+      #and-hashes
+      ]
+    </div>
+  </div>
+</div>
+`;
+
 exports[`nested rendering matches multiple nested / down to a child with a path 1`] = `
 <div
   role="group"
