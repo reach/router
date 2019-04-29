@@ -128,23 +128,46 @@ class LocationProvider extends React.Component {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-let ServerLocation = ({ url, children }) => (
-  <LocationContext.Provider
-    value={{
-      location: {
-        pathname: url,
-        search: "",
-        hash: ""
-      },
-      navigate: () => {
-        throw new Error("You can't call navigate on the server.");
-      }
-    }}
-  >
-    {children}
-  </LocationContext.Provider>
-);
+let ServerLocation = ({ url, children }) => {
+  let searchIndex = url.indexOf("?");
+  let hashIndex = url.indexOf("#");
+  let hashExists = hashIndex > -1;
+  let searchExists = searchIndex > -1;
+  let pathname;
+  let search = "";
+  let hash = "";
 
+  if (searchExists && hashExists) {
+    pathname = url.substring(0, searchIndex);
+    search = url.substring(searchIndex, hashIndex);
+    hash = url.substring(hashIndex);
+  } else if (searchExists) {
+    pathname = url.substring(0, searchIndex);
+    search = url.substring(searchIndex);
+  } else if (hashExists) {
+    pathname = url.substring(0, hashIndex);
+    hash = url.substring(hashIndex);
+  } else {
+    pathname = url;
+  }
+
+  return (
+    <LocationContext.Provider
+      value={{
+        location: {
+          pathname,
+          search,
+          hash
+        },
+        navigate: () => {
+          throw new Error("You can't call navigate on the server.");
+        }
+      }}
+    >
+      {children}
+    </LocationContext.Provider>
+  );
+};
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
 let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
@@ -560,3 +583,22 @@ export {
   redirectTo,
   globalHistory
 };
+
+// describe("location", () => {
+//   it("correctly parses pathname, search and hash fields", () => {
+//     let testHistory = createHistory(createMemorySource(
+//       '/print-location',
+//       '?it=works&with=queries',
+//       '#and-hashes',
+//       ));
+//     let wrapper = renderer.create(
+//       <LocationProvider history={testHistory}>
+//         <Router>
+//           <PrintLocation path="/print-location" />
+//         </Router>
+//       </LocationProvider>
+//     );
+//     const tree = wrapper.toJSON();
+//     expect(tree).toMatchSnapshot();
+//   });
+// });
