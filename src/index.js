@@ -179,7 +179,15 @@ class RouterImpl extends React.PureComponent {
       component = "div",
       ...domProps
     } = this.props;
-    let routes = React.Children.map(children, createRoute(basepath));
+    let routes = React.Children.toArray(children).reduce((array, child) => {
+      const routes = createRoute(basepath)(child);
+      if (routes instanceof Array) {
+        return array.concat(routes);
+      } else {
+        array.push(routes);
+        return array;
+      }
+    }, []);
     let { pathname } = location;
 
     let match = pick(routes, pathname);
@@ -496,6 +504,9 @@ let createRoute = basepath => element => {
     return null;
   }
 
+  if (element.type === React.Fragment && element.props.children) {
+    return React.Children.map(element.props.children, createRoute(basepath));
+  }
   invariant(
     element.props.path || element.props.default || element.type === Redirect,
     `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${

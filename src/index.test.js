@@ -87,6 +87,20 @@ describe("Router children", () => {
       )
     });
   });
+  it.only("allows for fragments", () => {
+    snapshot({
+      pathname: "/report",
+      element: (
+        <Router>
+          <Home path="/" />
+          <React.Fragment>
+            <Dash path="/dash" />
+            <AnnualReport path="/report" />
+          </React.Fragment>
+        </Router>
+      )
+    });
+  });
 });
 
 describe("passed props", () => {
