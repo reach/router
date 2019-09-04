@@ -48,7 +48,7 @@ If you'd like to match a path with optional extra segments, use the wild card on
 </Router>
 ```
 
-This is useful for embedded Routers. Perhaps Admin renders it's own router, we use the wildcard to make sure the deeper routes in the parent router match the `Admin` component.
+This is useful for embedded Routers. Perhaps Admin renders its own router, we use the wildcard to make sure the deeper routes in the parent router match the `Admin` component.
 
 ```jsx
 render(
@@ -126,7 +126,7 @@ When no children match, a route component with a `default` prop will render. Thi
 
 <p class="category">route prop</p>
 
-When Route Components are nested, the matching child is passed in as `props.children`. If ever you think `Router` isn't working, make sure you renderd `props.children`!
+When Route Components are nested, the matching child is passed in as `props.children`. If ever you think `Router` isn't working, make sure you rendered `props.children`!
 
 ```jsx
 // note that `Root` has child routes
