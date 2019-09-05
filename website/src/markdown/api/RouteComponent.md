@@ -2,11 +2,11 @@
 
 Any component passed as a child to `<Router>` is called a "Route Component". There are three types of props for Route Components.
 
-1. **Matching Props** - You provide these props where the `<Router>` is rendered. They are used by `Router` to match the component against the location to see if the component should be rendered. But, they're not really all that important to the component itself. Think of these like the `key` prop in React. Your component doesn't really care about it, but it's information React needs in the parent.
+1.  **Matching Props** - You provide these props where the `<Router>` is rendered. They are used by `Router` to match the component against the location to see if the component should be rendered. But, they're not really all that important to the component itself. Think of these like the `key` prop in React. Your component doesn't really care about it, but it's information React needs in the parent.
 
-2. **Route Props** - These props are passed to your component by `Router` when your component matches the URL: URL parameters and `navigate` are a couple of them. They are all documented on this page.
+2.  **Route Props** - These props are passed to your component by `Router` when your component matches the URL: URL parameters and `navigate` are a couple of them. They are all documented on this page.
 
-3. **Other Props** - Route Components are your own components so go ahead and pass them whatever props they need.
+3.  **Other Props** - Route Components are your own components so go ahead and pass them whatever props they need.
 
 ## path: string
 
@@ -48,7 +48,7 @@ If you'd like to match a path with optional extra segments, use the wild card on
 </Router>
 ```
 
-This is useful for embedded Routers. Perhaps Admin renders it's own router, we use the wildcard to make sure the deeper routes in the parent router match the `Admin` component.
+This is useful for embedded Routers. Perhaps Admin renders its own router, we use the wildcard to make sure the deeper routes in the parent router match the `Admin` component.
 
 ```jsx
 render(
@@ -126,7 +126,7 @@ When no children match, a route component with a `default` prop will render. Thi
 
 <p class="category">route prop</p>
 
-When Route Components are nested, the matching child is passed in as `props.children`. If ever you think `Router` isn't working, make sure you renderd `props.children`!
+When Route Components are nested, the matching child is passed in as `props.children`. If ever you think `Router` isn't working, make sure you rendered `props.children`!
 
 ```jsx
 // note that `Root` has child routes

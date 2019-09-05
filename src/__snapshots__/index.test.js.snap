@@ -6,6 +6,7 @@ exports[`Match matches a path 1`] = `
   "location": {
     "pathname": "/groups/123",
     "search": "",
+    "state": null,
     "key": "initial"
   },
   "match": {
@@ -15,6 +16,22 @@ exports[`Match matches a path 1`] = `
   }
 }
 </pre>
+`;
+
+exports[`Router children allows for fragments 1`] = `
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Annual Report
+  </div>
+</div>
 `;
 
 exports[`Router children ignores falsey chidlren 1`] = `
@@ -209,6 +226,31 @@ exports[`links uses the right href in multiple root paths 1`] = `
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`location correctly parses pathname, search and hash fields 1`] = `
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    <div>
+      location.pathname: [
+      /print-location
+      ]
+    </div>
+    <div>
+      location.search: [
+      ?it=works&with=queries
+      ]
     </div>
   </div>
 </div>
@@ -552,10 +594,40 @@ exports[`passed props passes the matched URI to the component 1`] = `
   "location": {
     "pathname": "/groups/123/users/456",
     "search": "",
+    "state": null,
     "key": "initial"
   }
 }
   </pre>
+</div>
+`;
+
+exports[`passed props router location prop to nested path 1`] = `
+<div
+  role="group"
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <div>
+    Dash 
+    <div
+      role="group"
+      style={
+        Object {
+          "outline": "none",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div>
+        Reports 
+      </div>
+    </div>
+  </div>
 </div>
 `;
 

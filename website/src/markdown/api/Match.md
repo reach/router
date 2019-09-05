@@ -22,9 +22,9 @@ const App = () => (
 
 Will be null if your path does not match the location. If it does match it will contain:
 
-* `uri`
-* `path`
-* `:params`
+- `uri`
+- `path`
+- `:params`
 
 ```jsx
 <Match path="/cool/beans">
@@ -47,8 +47,8 @@ Any params in your the path will be parsed and passed as `match[param]` to your 
   {props => (
     <div>
       {props.match
-        ? "No match"
-        : props.match.eventId}
+        ? props.match.eventId
+        : "No match"}
     </div>
   )}
 </Match>

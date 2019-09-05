@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import warning from "warning";
 import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
@@ -94,6 +93,7 @@ class LocationProvider extends React.Component {
       state: { refs },
       props: { history }
     } = this;
+    history._onTransitionComplete();
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
         // TODO: replace rAF with react deferred update API when it's ready https://github.com/facebook/react/issues/13306
@@ -128,23 +128,37 @@ class LocationProvider extends React.Component {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-let ServerLocation = ({ url, children }) => (
-  <LocationContext.Provider
-    value={{
-      location: {
-        pathname: url,
-        search: "",
-        hash: ""
-      },
-      navigate: () => {
-        throw new Error("You can't call navigate on the server.");
-      }
-    }}
-  >
-    {children}
-  </LocationContext.Provider>
-);
+let ServerLocation = ({ url, children }) => {
+  let searchIndex = url.indexOf("?");
+  let searchExists = searchIndex > -1;
+  let pathname;
+  let search = "";
+  let hash = "";
 
+  if (searchExists) {
+    pathname = url.substring(0, searchIndex);
+    search = url.substring(searchIndex);
+  } else {
+    pathname = url;
+  }
+
+  return (
+    <LocationContext.Provider
+      value={{
+        location: {
+          pathname,
+          search,
+          hash
+        },
+        navigate: () => {
+          throw new Error("You can't call navigate on the server.");
+        }
+      }}
+    >
+      {children}
+    </LocationContext.Provider>
+  );
+};
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
 let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
@@ -179,7 +193,15 @@ class RouterImpl extends React.PureComponent {
       component = "div",
       ...domProps
     } = this.props;
-    let routes = React.Children.map(children, createRoute(basepath));
+    let routes = React.Children.toArray(children).reduce((array, child) => {
+      const routes = createRoute(basepath)(child);
+      if (routes instanceof Array) {
+        return array.concat(routes);
+      } else {
+        array.push(routes);
+        return array;
+      }
+    }, []);
     let { pathname } = location;
 
     let match = pick(routes, pathname);
@@ -206,7 +228,9 @@ class RouterImpl extends React.PureComponent {
         element,
         props,
         element.props.children ? (
-          <Router primary={primary}>{element.props.children}</Router>
+          <Router location={location} primary={primary}>
+            {element.props.children}
+          </Router>
         ) : (
           undefined
         )
@@ -385,8 +409,9 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
             ...anchorProps
           } = props;
           let href = resolve(to, baseuri);
-          let isCurrent = location.pathname === href;
-          let isPartiallyCurrent = startsWith(location.pathname, href);
+          let encodedHref = encodeURI(href);
+          let isCurrent = location.pathname === encodedHref;
+          let isPartiallyCurrent = startsWith(location.pathname, encodedHref);
 
           return (
             <LinkComponent
@@ -410,6 +435,10 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
   </BaseContext.Consumer>
 ));
 
+Link.propTypes = {
+  to: PropTypes.string.isRequired
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 function RedirectRequest(uri) {
   this.uri = uri;
@@ -425,26 +454,43 @@ class RedirectImpl extends React.Component {
   // Support React < 16 with this hook
   componentDidMount() {
     let {
-      props: { navigate, to, from, replace = true, state, noThrow, ...props }
+      props: {
+        navigate,
+        to,
+        from,
+        replace = true,
+        state,
+        noThrow,
+        baseuri,
+        ...props
+      }
     } = this;
     Promise.resolve().then(() => {
-      navigate(insertParams(to, props), { replace, state });
+      let resolvedTo = resolve(to, baseuri);
+      navigate(insertParams(resolvedTo, props), { replace, state });
     });
   }
 
   render() {
     let {
-      props: { navigate, to, from, replace, state, noThrow, ...props }
+      props: { navigate, to, from, replace, state, noThrow, baseuri, ...props }
     } = this;
-    if (!noThrow) redirectTo(insertParams(to, props));
+    let resolvedTo = resolve(to, baseuri);
+    if (!noThrow) redirectTo(insertParams(resolvedTo, props));
     return null;
   }
 }
 
 let Redirect = props => (
-  <Location>
-    {locationContext => <RedirectImpl {...locationContext} {...props} />}
-  </Location>
+  <BaseContext.Consumer>
+    {({ baseuri }) => (
+      <Location>
+        {locationContext => (
+          <RedirectImpl {...locationContext} baseuri={baseuri} {...props} />
+        )}
+      </Location>
+    )}
+  </BaseContext.Consumer>
 );
 
 Redirect.propTypes = {
@@ -486,6 +532,9 @@ let createRoute = basepath => element => {
     return null;
   }
 
+  if (element.type === React.Fragment && element.props.children) {
+    return React.Children.map(element.props.children, createRoute(basepath));
+  }
   invariant(
     element.props.path || element.props.default || element.type === Redirect,
     `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
@@ -495,7 +544,7 @@ let createRoute = basepath => element => {
 
   invariant(
     !(element.type === Redirect && (!element.props.from || !element.props.to)),
-    `<Redirect from="${element.props.from} to="${
+    `<Redirect from="${element.props.from}" to="${
       element.props.to
     }"/> requires both "from" and "to" props when inside a <Router>.`
   );
@@ -548,5 +597,6 @@ export {
   isRedirect,
   navigate,
   redirectTo,
-  globalHistory
+  globalHistory,
+  match as matchPath
 };

@@ -83,7 +83,7 @@ let Nav = () => (
                     <div css={{ padding: 20 }}>
                       <div css={{ fontSize: "85%" }}>
                         v{VERSION} -{" "}
-                        <a href="https://github.com/reach/router">Github</a>
+                        <a href="https://github.com/reach/router">GitHub</a>
                       </div>
 
                       <Header>About</Header>
@@ -133,10 +133,12 @@ let Nav = () => (
                       <NavLink to="tutorial/10-next-steps">Next Steps</NavLink>
 
                       <Header>Guides</Header>
+                      <NavLink to="server-config">Server Configuration</NavLink>
                       <NavLink to="nesting">Nesting and Relative Links</NavLink>
                       <NavLink to="ranking">Path Ranking</NavLink>
                       <NavLink to="large-scale">Large Scale Apps</NavLink>
                       <NavLink to="server-rendering">Server Rendering</NavLink>
+                      <NavLink to="typescript">Usage with TypeScript</NavLink>
 
                       <Header>Primary API</Header>
                       <div

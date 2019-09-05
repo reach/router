@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import ReactDOM from "react-dom";
+import ReactTestUtils from "react-dom/test-utils";
 import renderer from "react-test-renderer";
-import { renderToString } from "react-dom/server";
+import { renderToString, renderToStaticMarkup } from "react-dom/server";
 
 import {
   createHistory,
@@ -48,6 +49,12 @@ let Group = ({ groupId, children }) => (
 let PropsPrinter = props => <pre>{JSON.stringify(props, null, 2)}</pre>;
 let Reports = ({ children }) => <div>Reports {children}</div>;
 let AnnualReport = () => <div>Annual Report</div>;
+let PrintLocation = ({ location }) => (
+  <div>
+    <div>location.pathname: [{location.pathname}]</div>
+    <div>location.search: [{location.search}]</div>
+  </div>
+);
 
 describe("smoke tests", () => {
   it(`renders the root component at "/"`, () => {
@@ -83,6 +90,21 @@ describe("Router children", () => {
         <Router>
           <Home path="/" />
           {null}
+        </Router>
+      )
+    });
+  });
+
+  it("allows for fragments", () => {
+    snapshot({
+      pathname: "/report",
+      element: (
+        <Router>
+          <Home path="/" />
+          <React.Fragment>
+            <Dash path="/dash" />
+            <AnnualReport path="/report" />
+          </React.Fragment>
         </Router>
       )
     });
@@ -145,6 +167,24 @@ describe("passed props", () => {
           <Group path="group/:groupId">
             <User path="user/:userId" />
           </Group>
+        </Router>
+      )
+    });
+  });
+
+  it("router location prop to nested path", () => {
+    const pathname = "/reports/1";
+    const history = createHistory(createMemorySource(pathname));
+    const location = history.location;
+
+    snapshot({
+      pathname: "/",
+      element: (
+        <Router location={location}>
+          <Dash path="/">
+            <Dash path="/" />
+            <Reports path="reports/:reportId" />
+          </Dash>
         </Router>
       )
     });
@@ -447,7 +487,7 @@ describe("links", () => {
     });
   });
 
-  it("accepts `as` prop to render custom element", done => {
+  it("accepts `as` prop to render custom element", () => {
     let ref;
     let div = document.createElement("div");
     let className = "btn btn-link";
@@ -458,14 +498,69 @@ describe("links", () => {
     ));
     ReactDOM.render(
       <Link to="/" as={LinkComponent} ref={node => (ref = node)} />,
-      div,
-      () => {
-        expect(ref).toBeInstanceOf(HTMLAnchorElement);
-        expect(ref.className).toBe(className);
-        ReactDOM.unmountComponentAtNode(div);
-        done();
-      }
+      div
     );
+    try {
+      expect(ref).toBeInstanceOf(HTMLAnchorElement);
+      expect(ref.className).toBe(className);
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
+
+  it("calls history.pushState when clicked", () => {
+    const testSource = createMemorySource("/");
+    testSource.history.replaceState = jest.fn();
+    testSource.history.pushState = jest.fn();
+    const testHistory = createHistory(testSource);
+    const SomePage = () => <Link to="/reports">Go To Reports</Link>;
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <SomePage path="/" />
+          <Reports path="/reports" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.pushState).toHaveBeenCalled();
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
+
+  it("calls history.pushState when clicked -- even if navigated before", () => {
+    const testSource = createMemorySource("/#payload=...");
+    const { history } = testSource;
+    history.replaceState = jest.fn(history.replaceState.bind(history));
+    history.pushState = jest.fn(history.pushState.bind(history));
+    const testHistory = createHistory(testSource);
+    // Simulate that payload in URL hash is being hidden
+    // before React renders anything ...
+    testHistory.navigate("/", { replace: true });
+    expect(testSource.history.replaceState).toHaveBeenCalled();
+    const SomePage = () => <Link to="/reports">Go To Reports</Link>;
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <SomePage path="/" />
+          <Reports path="/reports" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.pushState).toHaveBeenCalled();
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
   });
 });
 
@@ -512,7 +607,8 @@ describe("relative navigate prop", () => {
       relativeNavigate = navigate;
       return (
         <div>
-          User:{userId}
+          User:
+          {userId}
           {children}
         </div>
       );
@@ -577,17 +673,43 @@ describe("Match", () => {
   });
 });
 
+describe("location", () => {
+  it("correctly parses pathname, search and hash fields", () => {
+    let testHistory = createHistory(
+      createMemorySource("/print-location?it=works&with=queries")
+    );
+    let wrapper = renderer.create(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <PrintLocation path="/print-location" />
+        </Router>
+      </LocationProvider>
+    );
+    const tree = wrapper.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+
 // React 16.4 is buggy https://github.com/facebook/react/issues/12968
-describe.skip("ServerLocation", () => {
+// so some tests are skipped
+describe("ServerLocation", () => {
+  let NestedRouter = () => (
+    <Router>
+      <Home path="/home" />
+      <Redirect from="/" to="./home" />
+    </Router>
+  );
   let App = () => (
     <Router>
       <Home path="/" />
       <Group path="/groups/:groupId" />
       <Redirect from="/g/:groupId" to="/groups/:groupId" />
+      <NestedRouter path="/nested/*" />
+      <PrintLocation path="/print-location" />
     </Router>
   );
 
-  it("works", () => {
+  it.skip("works", () => {
     expect(
       renderToString(
         <ServerLocation url="/">
@@ -605,7 +727,7 @@ describe.skip("ServerLocation", () => {
     ).toMatchSnapshot();
   });
 
-  test("redirects", () => {
+  test.skip("redirects", () => {
     let redirectedPath = "/g/123";
     let markup;
     try {
@@ -615,9 +737,36 @@ describe.skip("ServerLocation", () => {
         </ServerLocation>
       );
     } catch (error) {
-      expect(markup).not.toBeDefined();
       expect(isRedirect(error)).toBe(true);
       expect(error.uri).toBe("/groups/123");
     }
+    expect(markup).not.toBeDefined();
+  });
+
+  test.skip("nested redirects", () => {
+    let redirectedPath = "/nested";
+    let markup;
+    try {
+      markup = renderToString(
+        <ServerLocation url={redirectedPath}>
+          <App />
+        </ServerLocation>
+      );
+    } catch (error) {
+      expect(isRedirect(error)).toBe(true);
+      expect(error.uri).toBe("/nested/home");
+    }
+    expect(markup).not.toBeDefined();
+  });
+
+  test("location.search", () => {
+    let markup = renderToStaticMarkup(
+      <ServerLocation url="/print-location?it=works">
+        <App />
+      </ServerLocation>
+    );
+
+    expect(markup).toContain("location.pathname: [/print-location]");
+    expect(markup).toContain("location.search: [?it=works]");
   });
 });
