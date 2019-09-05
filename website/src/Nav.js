@@ -137,6 +137,7 @@ let Nav = () => (
                       <NavLink to="ranking">Path Ranking</NavLink>
                       <NavLink to="large-scale">Large Scale Apps</NavLink>
                       <NavLink to="server-rendering">Server Rendering</NavLink>
+                      <NavLink to="typescript">Usage with TypeScript</NavLink>
 
                       <Header>Primary API</Header>
                       <div
