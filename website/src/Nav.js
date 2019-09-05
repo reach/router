@@ -133,6 +133,7 @@ let Nav = () => (
                       <NavLink to="tutorial/10-next-steps">Next Steps</NavLink>
 
                       <Header>Guides</Header>
+                      <NavLink to="server-config">Server Configuration</NavLink>
                       <NavLink to="nesting">Nesting and Relative Links</NavLink>
                       <NavLink to="ranking">Path Ranking</NavLink>
                       <NavLink to="large-scale">Large Scale Apps</NavLink>
