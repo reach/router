@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import warning from "warning";
 import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
@@ -430,8 +429,8 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
 ));
 
 Link.propTypes = {
-  to: PropTypes.string.isRequired,
-}
+  to: PropTypes.string.isRequired
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 function RedirectRequest(uri) {
