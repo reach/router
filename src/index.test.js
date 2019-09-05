@@ -53,7 +53,6 @@ let PrintLocation = ({ location }) => (
   <div>
     <div>location.pathname: [{location.pathname}]</div>
     <div>location.search: [{location.search}]</div>
-    <div>location.hash: [{location.hash}]</div>
   </div>
 );
 
@@ -719,32 +718,5 @@ describe("ServerLocation", () => {
 
     expect(markup).toContain("location.pathname: [/print-location]");
     expect(markup).toContain("location.search: [?it=works]");
-    expect(markup).toContain("location.hash: []");
-  });
-
-  test("location.hash", () => {
-    let markup = renderToStaticMarkup(
-      <ServerLocation url="/print-location#it-works">
-        <App />
-      </ServerLocation>
-    );
-
-    expect(markup).toContain("location.pathname: [/print-location]");
-    expect(markup).toContain("location.search: []");
-    expect(markup).toContain("location.hash: [#it-works]");
-  });
-
-  test("location.search AND location.hash", () => {
-    let markup = renderToStaticMarkup(
-      <ServerLocation url="/print-location?it=works&with=otherparams#it-works">
-        <App />
-      </ServerLocation>
-    );
-
-    expect(markup).toContain("location.pathname: [/print-location]");
-    expect(markup).toContain(
-      "location.search: [?it=works&amp;with=otherparams]"
-    );
-    expect(markup).toContain("location.hash: [#it-works]");
   });
 });

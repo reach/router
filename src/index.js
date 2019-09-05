@@ -131,23 +131,14 @@ class LocationProvider extends React.Component {
 ////////////////////////////////////////////////////////////////////////////////
 let ServerLocation = ({ url, children }) => {
   let searchIndex = url.indexOf("?");
-  let hashIndex = url.indexOf("#");
-  let hashExists = hashIndex > -1;
   let searchExists = searchIndex > -1;
   let pathname;
   let search = "";
   let hash = "";
 
-  if (searchExists && hashExists) {
-    pathname = url.substring(0, searchIndex);
-    search = url.substring(searchIndex, hashIndex);
-    hash = url.substring(hashIndex);
-  } else if (searchExists) {
+  if (searchExists) {
     pathname = url.substring(0, searchIndex);
     search = url.substring(searchIndex);
-  } else if (hashExists) {
-    pathname = url.substring(0, hashIndex);
-    hash = url.substring(hashIndex);
   } else {
     pathname = url;
   }
@@ -402,7 +393,7 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
         {({ location, navigate }) => {
           let { to, state, replace, getProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
-          let encodedHref = encodeURI(href)
+          let encodedHref = encodeURI(href);
           let isCurrent = location.pathname === encodedHref;
           let isPartiallyCurrent = startsWith(location.pathname, encodedHref);
 

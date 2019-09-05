@@ -239,11 +239,6 @@ exports[`location correctly parses pathname, search and hash fields 1`] = `
       ?it=works&with=queries
       ]
     </div>
-    <div>
-      location.hash: [
-      #and-hashes
-      ]
-    </div>
   </div>
 </div>
 `;
