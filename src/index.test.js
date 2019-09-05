@@ -622,11 +622,7 @@ describe("Match", () => {
 describe("location", () => {
   it("correctly parses pathname, search and hash fields", () => {
     let testHistory = createHistory(
-      createMemorySource(
-        "/print-location",
-        "?it=works&with=queries",
-        "#and-hashes"
-      )
+      createMemorySource("/print-location?it=works&with=queries")
     );
     let wrapper = renderer.create(
       <LocationProvider history={testHistory}>
