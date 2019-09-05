@@ -94,7 +94,8 @@ describe("Router children", () => {
       )
     });
   });
-  it.only("allows for fragments", () => {
+
+  it("allows for fragments", () => {
     snapshot({
       pathname: "/report",
       element: (
