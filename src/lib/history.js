@@ -1,4 +1,4 @@
-let getLocation = source => {
+let defaultGetLocation = source => {
   return {
     ...source.location,
     state: source.history.state,
@@ -6,7 +6,9 @@ let getLocation = source => {
   };
 };
 
-let createHistory = (source, options) => {
+let createHistory = (source, options = {}) => {
+  let { getLocation = defaultGetLocation } = options;
+
   let listeners = [];
   let location = getLocation(source);
   let transitioning = false;
