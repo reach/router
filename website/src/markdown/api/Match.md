@@ -22,9 +22,9 @@ const App = () => (
 
 Will be null if your path does not match the location. If it does match it will contain:
 
-- `uri`
-- `path`
-- `:params`
+* `uri`
+* `path`
+* `:params`
 
 ```jsx
 <Match path="/cool/beans">

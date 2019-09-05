@@ -2,9 +2,9 @@
 
 Reach Router has the concept of nesting and relativity in a three places:
 
-1.  Nested Routes
-2.  Relative Links
-3.  Embedded Routers
+1. Nested Routes
+2. Relative Links
+3. Embedded Routers
 
 ## Nested Routes
 
