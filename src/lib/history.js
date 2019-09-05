@@ -2,11 +2,13 @@ let getLocation = source => {
   // ensure key properties are copied to location
   // see issue #252
   const location = { ...source.location };
-  ["pathname", "search", "hash"].forEach(key => {
-    if (key in source.location) {
-      location[key] = source.location[key];
-    }
-  });
+  if (source.location) {
+    ["pathname", "search", "hash"].forEach(key => {
+      if (key in source.location) {
+        location[key] = source.location[key];
+      }
+    });
+  }
 
   return {
     ...location,
