@@ -1,10 +1,18 @@
-import { extend } from "./utils";
-
 let getLocation = source => {
-  return extend({}, source.location, {
+  // ensure key properties are copied to location
+  // see issue #252
+  const location = { ...source.location };
+  ["pathname", "search", "hash"].forEach(key => {
+    if (key in source.location) {
+      location[key] = source.location[key];
+    }
+  });
+
+  return {
+    ...location,
     state: source.history.state,
     key: (source.history.state && source.history.state.key) || "initial"
-  });
+  };
 };
 
 let createHistory = (source, options) => {
