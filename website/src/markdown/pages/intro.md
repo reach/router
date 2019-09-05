@@ -1,6 +1,6 @@
 # Overview
 
-Here's a quick overview of the features and usage in Reach Router.
+Reach Router is a small, simple router for React that borrows the best aspects of React Router and Ember + Preact Router. Reach Router has a small footprint, supports only simple route patterns by design, and has strong accessibility features.
 
 ## Installation
 

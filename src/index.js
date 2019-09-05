@@ -94,6 +94,7 @@ class LocationProvider extends React.Component {
       state: { refs },
       props: { history }
     } = this;
+    history._onTransitionComplete();
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
         // TODO: replace rAF with react deferred update API when it's ready https://github.com/facebook/react/issues/13306
@@ -128,23 +129,37 @@ class LocationProvider extends React.Component {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-let ServerLocation = ({ url, children }) => (
-  <LocationContext.Provider
-    value={{
-      location: {
-        pathname: url,
-        search: "",
-        hash: ""
-      },
-      navigate: () => {
-        throw new Error("You can't call navigate on the server.");
-      }
-    }}
-  >
-    {children}
-  </LocationContext.Provider>
-);
+let ServerLocation = ({ url, children }) => {
+  let searchIndex = url.indexOf("?");
+  let searchExists = searchIndex > -1;
+  let pathname;
+  let search = "";
+  let hash = "";
 
+  if (searchExists) {
+    pathname = url.substring(0, searchIndex);
+    search = url.substring(searchIndex);
+  } else {
+    pathname = url;
+  }
+
+  return (
+    <LocationContext.Provider
+      value={{
+        location: {
+          pathname,
+          search,
+          hash
+        },
+        navigate: () => {
+          throw new Error("You can't call navigate on the server.");
+        }
+      }}
+    >
+      {children}
+    </LocationContext.Provider>
+  );
+};
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
 let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
@@ -179,7 +194,15 @@ class RouterImpl extends React.PureComponent {
       component = "div",
       ...domProps
     } = this.props;
-    let routes = React.Children.map(children, createRoute(basepath));
+    let routes = React.Children.toArray(children).reduce((array, child) => {
+      const routes = createRoute(basepath)(child);
+      if (routes instanceof Array) {
+        return array.concat(routes);
+      } else {
+        array.push(routes);
+        return array;
+      }
+    }, []);
     let { pathname } = location;
 
     let match = pick(routes, pathname);
@@ -206,7 +229,9 @@ class RouterImpl extends React.PureComponent {
         element,
         props,
         element.props.children ? (
-          <Router primary={primary}>{element.props.children}</Router>
+          <Router location={location} primary={primary}>
+            {element.props.children}
+          </Router>
         ) : (
           undefined
         )
@@ -378,8 +403,9 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
         {({ location, navigate }) => {
           let { to, state, replace, getProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
-          let isCurrent = location.pathname === href;
-          let isPartiallyCurrent = startsWith(location.pathname, href);
+          let encodedHref = encodeURI(href);
+          let isCurrent = location.pathname === encodedHref;
+          let isPartiallyCurrent = startsWith(location.pathname, encodedHref);
 
           return (
             <a
@@ -402,6 +428,10 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
     )}
   </BaseContext.Consumer>
 ));
+
+Link.propTypes = {
+  to: PropTypes.string.isRequired,
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function RedirectRequest(uri) {
@@ -496,6 +526,9 @@ let createRoute = basepath => element => {
     return null;
   }
 
+  if (element.type === React.Fragment && element.props.children) {
+    return React.Children.map(element.props.children, createRoute(basepath));
+  }
   invariant(
     element.props.path || element.props.default || element.type === Redirect,
     `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
@@ -505,7 +538,7 @@ let createRoute = basepath => element => {
 
   invariant(
     !(element.type === Redirect && (!element.props.from || !element.props.to)),
-    `<Redirect from="${element.props.from} to="${
+    `<Redirect from="${element.props.from}" to="${
       element.props.to
     }"/> requires both "from" and "to" props when inside a <Router>.`
   );
@@ -558,5 +591,6 @@ export {
   isRedirect,
   navigate,
   redirectTo,
-  globalHistory
+  globalHistory,
+  match as matchPath
 };

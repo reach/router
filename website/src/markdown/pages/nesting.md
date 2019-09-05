@@ -128,7 +128,7 @@ To sum it up, just imagine every url is a "directory" and you’ll do just fine.
 
 ## Embedded Routers
 
-Embedded Routers are any Routers you render deeper inside your app beneath another outer. For example, suppose this is at the top of your app:
+Embedded Routers are any Routers you render deeper inside your app beneath another Router. For example, suppose this is at the top of your app:
 
 ```jsx
 <Router>
@@ -158,4 +158,4 @@ const Dashboard = () => (
 )
 ```
 
-All links and route paths will are relative to the router above them. This makes code splitting and compartmentalizing your app really easy. You could render the Dashboard as its own independent app, or embed it into your large app without making any changes to it.
+All links and route paths are relative to the router above them. This makes code splitting and compartmentalizing your app really easy. You could render the Dashboard as its own independent app, or embed it into your large app without making any changes to it.
