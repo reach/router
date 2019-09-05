@@ -14,7 +14,7 @@ The string URI to link to. Supports relative and absolute URIs.
 
 ```jsx
 <Link to="relative">Relative</Link>
-<Link to="/absolute">Asolute</Link>
+<Link to="/absolute">Absolute</Link>
 <Link to="?relative=query&sure=why+not">Relative query</Link>
 <Link to="../back-up">Back up</Link>
 ```
@@ -91,7 +91,7 @@ const NewsFeed = () => (
   <div>
     <Link
       to="photos/123"
-      state={{ fromNewsFeed: true }}
+      state={{ fromFeed: true }}
     />
   </div>
 )

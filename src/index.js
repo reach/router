@@ -94,6 +94,7 @@ class LocationProvider extends React.Component {
       state: { refs },
       props: { history }
     } = this;
+    history._onTransitionComplete();
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
         // TODO: replace rAF with react deferred update API when it's ready https://github.com/facebook/react/issues/13306
@@ -128,23 +129,46 @@ class LocationProvider extends React.Component {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-let ServerLocation = ({ url, children }) => (
-  <LocationContext.Provider
-    value={{
-      location: {
-        pathname: url,
-        search: "",
-        hash: ""
-      },
-      navigate: () => {
-        throw new Error("You can't call navigate on the server.");
-      }
-    }}
-  >
-    {children}
-  </LocationContext.Provider>
-);
+let ServerLocation = ({ url, children }) => {
+  let searchIndex = url.indexOf("?");
+  let hashIndex = url.indexOf("#");
+  let hashExists = hashIndex > -1;
+  let searchExists = searchIndex > -1;
+  let pathname;
+  let search = "";
+  let hash = "";
 
+  if (searchExists && hashExists) {
+    pathname = url.substring(0, searchIndex);
+    search = url.substring(searchIndex, hashIndex);
+    hash = url.substring(hashIndex);
+  } else if (searchExists) {
+    pathname = url.substring(0, searchIndex);
+    search = url.substring(searchIndex);
+  } else if (hashExists) {
+    pathname = url.substring(0, hashIndex);
+    hash = url.substring(hashIndex);
+  } else {
+    pathname = url;
+  }
+
+  return (
+    <LocationContext.Provider
+      value={{
+        location: {
+          pathname,
+          search,
+          hash
+        },
+        navigate: () => {
+          throw new Error("You can't call navigate on the server.");
+        }
+      }}
+    >
+      {children}
+    </LocationContext.Provider>
+  );
+};
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
 let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
@@ -378,8 +402,9 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
         {({ location, navigate }) => {
           let { to, state, replace, getProps = k, ...anchorProps } = props;
           let href = resolve(to, baseuri);
-          let isCurrent = location.pathname === href;
-          let isPartiallyCurrent = startsWith(location.pathname, href);
+          let encodedHref = encodeURI(href)
+          let isCurrent = location.pathname === encodedHref;
+          let isPartiallyCurrent = startsWith(location.pathname, encodedHref);
 
           return (
             <a
@@ -418,26 +443,43 @@ class RedirectImpl extends React.Component {
   // Support React < 16 with this hook
   componentDidMount() {
     let {
-      props: { navigate, to, from, replace = true, state, noThrow, ...props }
+      props: {
+        navigate,
+        to,
+        from,
+        replace = true,
+        state,
+        noThrow,
+        baseuri,
+        ...props
+      }
     } = this;
     Promise.resolve().then(() => {
-      navigate(insertParams(to, props), { replace, state });
+      let resolvedTo = resolve(to, baseuri);
+      navigate(insertParams(resolvedTo, props), { replace, state });
     });
   }
 
   render() {
     let {
-      props: { navigate, to, from, replace, state, noThrow, ...props }
+      props: { navigate, to, from, replace, state, noThrow, baseuri, ...props }
     } = this;
-    if (!noThrow) redirectTo(insertParams(to, props));
+    let resolvedTo = resolve(to, baseuri);
+    if (!noThrow) redirectTo(insertParams(resolvedTo, props));
     return null;
   }
 }
 
 let Redirect = props => (
-  <Location>
-    {locationContext => <RedirectImpl {...locationContext} {...props} />}
-  </Location>
+  <BaseContext.Consumer>
+    {({ baseuri }) => (
+      <Location>
+        {locationContext => (
+          <RedirectImpl {...locationContext} baseuri={baseuri} {...props} />
+        )}
+      </Location>
+    )}
+  </BaseContext.Consumer>
 );
 
 Redirect.propTypes = {
@@ -488,7 +530,7 @@ let createRoute = basepath => element => {
 
   invariant(
     !(element.type === Redirect && (!element.props.from || !element.props.to)),
-    `<Redirect from="${element.props.from} to="${
+    `<Redirect from="${element.props.from}" to="${
       element.props.to
     }"/> requires both "from" and "to" props when inside a <Router>.`
   );

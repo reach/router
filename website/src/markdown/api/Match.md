@@ -47,8 +47,8 @@ Any params in your the path will be parsed and passed as `match[param]` to your 
   {props => (
     <div>
       {props.match
-        ? "No match"
-        : props.match.eventId}
+        ? props.match.eventId
+        : "No match"}
     </div>
   )}
 </Match>

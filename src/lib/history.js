@@ -43,16 +43,20 @@ let createHistory = (source, options) => {
     },
 
     navigate(to, { state, replace = false } = {}) {
-      state = { ...state, key: Date.now() + "" };
-      // try...catch iOS Safari limits to 100 pushState calls
-      try {
-        if (transitioning || replace) {
-          source.history.replaceState(state, null, to);
-        } else {
-          source.history.pushState(state, null, to);
+      if (typeof to === "number") {
+        source.history.go(to);
+      } else {
+        state = { ...state, key: Date.now() + "" };
+        // try...catch iOS Safari limits to 100 pushState calls
+        try {
+          if (transitioning || replace) {
+            source.history.replaceState(state, null, to);
+          } else {
+            source.history.pushState(state, null, to);
+          }
+        } catch (e) {
+          source.location[replace ? "replace" : "assign"](to);
         }
-      } catch (e) {
-        source.location[replace ? "replace" : "assign"](to);
       }
 
       location = getLocation(source);
@@ -66,9 +70,19 @@ let createHistory = (source, options) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Stores history entries in memory for testing or other platforms like Native
-let createMemorySource = (initialPathname = "/") => {
+let createMemorySource = (
+  initialPathname = "/",
+  initialSearch = "",
+  initialHash = ""
+) => {
   let index = 0;
-  let stack = [{ pathname: initialPathname, search: "" }];
+  let stack = [
+    {
+      pathname: initialPathname,
+      search: initialSearch,
+      hash: initialHash
+    }
+  ];
   let states = [{ key: "initial" }];
 
   return {
