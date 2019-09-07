@@ -428,6 +428,8 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
   </BaseContext.Consumer>
 ));
 
+Link.displayName = "Link";
+
 Link.propTypes = {
   to: PropTypes.string.isRequired
 };
