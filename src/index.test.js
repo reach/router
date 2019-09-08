@@ -541,6 +541,84 @@ describe("links", () => {
       ReactDOM.unmountComponentAtNode(div);
     }
   });
+
+  it("calls history.replaceState when link for current path is clicked without state", () => {
+    const testSource = createMemorySource("/test");
+    testSource.history.replaceState = jest.fn();
+    const testHistory = createHistory(testSource);
+    const TestPage = () => <Link to="/test">Go To Test</Link>;
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <TestPage path="/test" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.replaceState).toHaveBeenCalledTimes(1);
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
+  it("calls history.replaceState when link for current path is clicked with the same state", () => {
+    const testSource = createMemorySource("/test");
+    testSource.history.replaceState = jest.fn();
+    const testHistory = createHistory(testSource);
+    testHistory.navigate("/test", { state: { id: "123" } });
+    const TestPage = () => (
+      <Link to="/test" state={{ id: "123" }}>
+        Go To Test
+      </Link>
+    );
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <TestPage path="/test" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.replaceState).toHaveBeenCalledTimes(1);
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
+  it("calls history.pushState when link for current path is clicked with different state", async () => {
+    const testSource = createMemorySource("/test");
+    testSource.history.pushState = jest.fn(testSource.history.pushState);
+    const testHistory = createHistory(testSource);
+    const TestPage = () => (
+      <Link to="/test" state={{ id: 1 }}>
+        Go To Test
+      </Link>
+    );
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <TestPage path="/test" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      await testHistory.navigate("/test", { state: { id: 2 } });
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.pushState).toHaveBeenCalledTimes(2);
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
 });
 
 describe("transitions", () => {
