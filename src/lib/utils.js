@@ -257,5 +257,26 @@ let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
 
 let reservedNames = ["uri", "path"];
 
+/**
+ * Shallow compares two objects.
+ * @param {Object} obj1 The first object to compare.
+ * @param {Object} obj2 The second object to compare.
+ */
+const shallowCompare = (obj1, obj2) => {
+  const obj1Keys = Object.keys(obj1);
+  return (
+    obj1Keys.length === Object.keys(obj2).length &&
+    obj1Keys.every(key => obj2.hasOwnProperty(key) && obj1[key] === obj2[key])
+  );
+};
+
 ////////////////////////////////////////////////////////////////////////////////
-export { startsWith, pick, match, resolve, insertParams, validateRedirect };
+export {
+  startsWith,
+  pick,
+  match,
+  resolve,
+  insertParams,
+  validateRedirect,
+  shallowCompare
+};
