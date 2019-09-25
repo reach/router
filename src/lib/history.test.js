@@ -19,10 +19,22 @@ describe("navigate", () => {
     const mockSource = {
       history: {
         go: goMock
+      },
+      location: {
+        pathname: "",
+        search: "",
+        hash: ""
       }
     };
     const history = createHistory(mockSource);
     history.navigate(-1);
     expect(goMock).toHaveBeenCalledWith(-1);
   });
+});
+
+it("should have a proper search", () => {
+  const testHistory = createHistory(createMemorySource("/test"));
+  console.log(testHistory);
+  testHistory.navigate("/?asdf");
+  expect(testHistory.location.search).toEqual("?asdf");
 });
