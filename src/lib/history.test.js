@@ -13,22 +13,28 @@ describe("createMemorySource", () => {
 });
 
 describe("navigate", () => {
-  test("navigate with number as a first argument", () => {
-    const goMock = jest.fn();
-
-    const mockSource = {
-      history: {
-        go: goMock
-      },
-      location: {
-        pathname: "",
-        search: "",
-        hash: ""
-      }
-    };
+  test("should go to url", () => {
+    const mockSource = createMemorySource("/one");
     const history = createHistory(mockSource);
+    history.navigate("/two");
+    expect(history.location.pathname).toBe("/two");
+  });
+
+  test("should go to previous route", () => {
+    const mockSource = createMemorySource("/one");
+    const history = createHistory(mockSource);
+    history.navigate("/two");
     history.navigate(-1);
-    expect(goMock).toHaveBeenCalledWith(-1);
+    expect(history.location.pathname).toBe("/one");
+  });
+
+  test("should go to next route", () => {
+    const mockSource = createMemorySource("/one");
+    const history = createHistory(mockSource);
+    history.navigate("/two");
+    history.navigate(-1);
+    history.navigate(1);
+    expect(history.location.pathname).toBe("/two");
   });
 });
 
