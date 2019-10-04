@@ -185,7 +185,8 @@ let resolve = (to, base) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // insertParams(path, params)
-let insertParams = (path, params) => {
+
+const insertParams = (path, params) => {
   let [pathBase, query = ""] = path.split("?");
   let segments = segmentize(pathBase);
   let constructedPath =
@@ -197,7 +198,8 @@ let insertParams = (path, params) => {
       })
       .join("/");
   const { location: { search = "" } = {} } = params;
-  constructedPath = `${constructedPath}?${query}&${search.split("?")[1]}`;
+  const searchSplit = search.split("?")[1] || "";
+  constructedPath = addQuery(constructedPath, `${query}&${searchSplit}`);
   return constructedPath;
 };
 
