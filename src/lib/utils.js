@@ -186,16 +186,19 @@ let resolve = (to, base) => {
 ////////////////////////////////////////////////////////////////////////////////
 // insertParams(path, params)
 let insertParams = (path, params) => {
-  let segments = segmentize(path);
-  return (
+  let [pathBase, query = ""] = path.split("?");
+  let segments = segmentize(pathBase);
+  let constructedPath =
     "/" +
     segments
       .map(segment => {
         let match = paramRe.exec(segment);
         return match ? params[match[1]] : segment;
       })
-      .join("/")
-  );
+      .join("/");
+  const { location: { search = "" } = {} } = params;
+  constructedPath = `${constructedPath}?${query}&${search.split("?")[1]}`;
+  return constructedPath;
 };
 
 let validateRedirect = (from, to) => {
