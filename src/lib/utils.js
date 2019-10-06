@@ -258,7 +258,8 @@ let segmentize = uri =>
     .replace(/(^\/+|\/+$)/g, "")
     .split("/");
 
-let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
+let addQuery = (pathname, query) =>
+  pathname + (query && query.length > 0 ? `?${query}` : "");
 
 let reservedNames = ["uri", "path"];
 
