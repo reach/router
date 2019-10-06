@@ -199,7 +199,7 @@ const insertParams = (path, params) => {
       .join("/");
   const { location: { search = "" } = {} } = params;
   const searchSplit = search.split("?")[1] || "";
-  constructedPath = addQuery(constructedPath, `${query}&${searchSplit}`);
+  constructedPath = addQuery(constructedPath, query, searchSplit);
   return constructedPath;
 };
 
@@ -258,8 +258,10 @@ let segmentize = uri =>
     .replace(/(^\/+|\/+$)/g, "")
     .split("/");
 
-let addQuery = (pathname, query) =>
-  pathname + (query && query.length > 0 ? `?${query}` : "");
+let addQuery = (pathname, ...query) => {
+  query = query.filter(q => q && q.length > 0);
+  return pathname + (query && query.length > 0 ? `?${query.join("&")}` : "");
+};
 
 let reservedNames = ["uri", "path"];
 
