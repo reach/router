@@ -944,6 +944,18 @@ exports[`trailing wildcard passes down '*' as the prop name if not specified 1`]
 </div>
 `;
 
+exports[`trailing wildcard passes down to Match as unnamed '*' 1`] = `
+<div>
+  i/mean/really/deep
+</div>
+`;
+
+exports[`trailing wildcard passes down to Match as well 1`] = `
+<div>
+  i/mean/really/deep
+</div>
+`;
+
 exports[`trailing wildcard passes down wildcard name to the component as prop 1`] = `
 <div
   role="group"

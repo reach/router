@@ -776,4 +776,26 @@ describe("trailing wildcard", () => {
       )
     });
   });
+
+  it("passes down to Match as well", () => {
+    snapshot({
+      pathname: `/somewhere/deep/i/mean/really/deep`,
+      element: (
+        <Match path="/somewhere/deep/*rest">
+          {props => <div>{props.match.rest}</div>}
+        </Match>
+      )
+    });
+  });
+
+  it("passes down to Match as unnamed '*'", () => {
+    snapshot({
+      pathname: `/somewhere/deep/i/mean/really/deep`,
+      element: (
+        <Match path="/somewhere/deep/*">
+          {props => <div>{props.match["*"]}</div>}
+        </Match>
+      )
+    });
+  });
 });
