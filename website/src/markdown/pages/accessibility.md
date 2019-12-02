@@ -1,6 +1,6 @@
 # Accessibility
 
-Accessibilty is a first-class concern for Reach Router, so, naturally, it's baked in.
+Accessibility is a first-class concern for Reach Router, so, naturally, it's baked in.
 
 ## Links
 
