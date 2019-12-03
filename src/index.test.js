@@ -749,3 +749,53 @@ describe("ServerLocation", () => {
     expect(markup).toContain("location.search: [?it=works]");
   });
 });
+
+describe("trailing wildcard", () => {
+  it("passes down wildcard name to the component as prop", () => {
+    const FileBrowser = ({ filePath }) => filePath;
+
+    snapshot({
+      pathname: `/files/README.md`,
+      element: (
+        <Router>
+          <FileBrowser path="files/*filePath" />
+        </Router>
+      )
+    });
+  });
+
+  it("passes down '*' as the prop name if not specified", () => {
+    const FileBrowser = props => props["*"];
+
+    snapshot({
+      pathname: `/files/README.md`,
+      element: (
+        <Router>
+          <FileBrowser path="files/*" />
+        </Router>
+      )
+    });
+  });
+
+  it("passes down to Match as well", () => {
+    snapshot({
+      pathname: `/somewhere/deep/i/mean/really/deep`,
+      element: (
+        <Match path="/somewhere/deep/*rest">
+          {props => <div>{props.match.rest}</div>}
+        </Match>
+      )
+    });
+  });
+
+  it("passes down to Match as unnamed '*'", () => {
+    snapshot({
+      pathname: `/somewhere/deep/i/mean/really/deep`,
+      element: (
+        <Match path="/somewhere/deep/*">
+          {props => <div>{props.match["*"]}</div>}
+        </Match>
+      )
+    });
+  });
+});

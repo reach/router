@@ -2,11 +2,11 @@
 
 Any component passed as a child to `<Router>` is called a "Route Component". There are three types of props for Route Components.
 
-1. **Matching Props** - You provide these props where the `<Router>` is rendered. They are used by `Router` to match the component against the location to see if the component should be rendered. But, they're not really all that important to the component itself. Think of these like the `key` prop in React. Your component doesn't really care about it, but it's information React needs in the parent.
+1.  **Matching Props** - You provide these props where the `<Router>` is rendered. They are used by `Router` to match the component against the location to see if the component should be rendered. But, they're not really all that important to the component itself. Think of these like the `key` prop in React. Your component doesn't really care about it, but it's information React needs in the parent.
 
-2. **Route Props** - These props are passed to your component by `Router` when your component matches the URL: URL parameters and `navigate` are a couple of them. They are all documented on this page.
+2.  **Route Props** - These props are passed to your component by `Router` when your component matches the URL: URL parameters and `navigate` are a couple of them. They are all documented on this page.
 
-3. **Other Props** - Route Components are your own components so go ahead and pass them whatever props they need.
+3.  **Other Props** - Route Components are your own components so go ahead and pass them whatever props they need.
 
 ## path: string
 
@@ -85,7 +85,21 @@ const FileBrowser = props => {
 }
 ```
 
-(Now that I'm writing this doc, should probably allow you to just name it like `/*filePath` ... PRs welcome.)
+You can also name the wildcard portion with suffix.
+
+```jsx
+render(
+  <Router>
+    <FileBrowser path="files/*filePath" />
+  </Router>
+)
+
+const FileBrowser = props => {
+  let filePath = props.filePath
+  // URL: "/files/taxes/2018"
+  // filePath === "taxes/2018"
+}
+```
 
 ## path: "/" (Index Routes)
 
