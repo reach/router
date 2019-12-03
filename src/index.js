@@ -10,7 +10,8 @@ import {
   resolve,
   match,
   insertParams,
-  validateRedirect
+  validateRedirect,
+  shallowCompare
 } from "./lib/utils";
 import {
   globalHistory,
@@ -417,7 +418,15 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
                 if (anchorProps.onClick) anchorProps.onClick(event);
                 if (shouldNavigate(event)) {
                   event.preventDefault();
-                  navigate(href, { state, replace });
+                  let shouldReplace = replace;
+                  if (replace !== "boolean" && isCurrent) {
+                    const { key, ...restState } = { ...location.state };
+                    shouldReplace = shallowCompare({ ...state }, restState);
+                  }
+                  navigate(href, {
+                    state,
+                    replace: shouldReplace
+                  });
                 }
               }}
             />
