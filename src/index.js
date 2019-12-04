@@ -192,6 +192,7 @@ class RouterImpl extends React.PureComponent {
       children,
       baseuri,
       component = "div",
+      onPrivateRoute,
       ...domProps
     } = this.props;
     let routes = React.Children.toArray(children).reduce((array, child) => {
@@ -224,6 +225,10 @@ class RouterImpl extends React.PureComponent {
         location,
         navigate: (to, options) => navigate(resolve(to, uri), options)
       };
+
+      if (onPrivateRoute && element.props.private) {
+        onPrivateRoute(props.navigate);
+      }
 
       let clone = React.cloneElement(
         element,
