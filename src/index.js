@@ -196,12 +196,7 @@ class RouterImpl extends React.PureComponent {
     } = this.props;
     let routes = React.Children.toArray(children).reduce((array, child) => {
       const routes = createRoute(basepath)(child);
-      if (routes instanceof Array) {
-        return array.concat(routes);
-      } else {
-        array.push(routes);
-        return array;
-      }
+      return array.concat(routes);
     }, []);
     let { pathname } = location;
 
@@ -343,7 +338,7 @@ class FocusHandlerImpl extends React.Component {
     } else {
       if (initialRender) {
         initialRender = false;
-      } else {
+      } else if (this.node) {
         // React polyfills [autofocus] and it fires earlier than cDM,
         // so we were stealing focus away, this line prevents that.
         if (!this.node.contains(document.activeElement)) {
@@ -354,7 +349,7 @@ class FocusHandlerImpl extends React.Component {
   }
 
   requestFocus = node => {
-    if (!this.state.shouldFocus) {
+    if (!this.state.shouldFocus && node) {
       node.focus();
     }
   };
@@ -370,6 +365,7 @@ class FocusHandlerImpl extends React.Component {
       location,
       ...domProps
     } = this.props;
+
     return (
       <Comp
         style={{ outline: "none", ...style }}
@@ -419,7 +415,7 @@ let Link = forwardRef(({ innerRef, ...props }, ref) => (
                 if (shouldNavigate(event)) {
                   event.preventDefault();
                   let shouldReplace = replace;
-                  if (replace !== "boolean" && isCurrent) {
+                  if (typeof replace !== "boolean" && isCurrent) {
                     const { key, ...restState } = { ...location.state };
                     shouldReplace = shallowCompare({ ...state }, restState);
                   }
@@ -541,16 +537,12 @@ let createRoute = basepath => element => {
   }
   invariant(
     element.props.path || element.props.default || element.type === Redirect,
-    `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
-      element.type
-    }\``
+    `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${element.type}\``
   );
 
   invariant(
     !(element.type === Redirect && (!element.props.from || !element.props.to)),
-    `<Redirect from="${element.props.from}" to="${
-      element.props.to
-    }"/> requires both "from" and "to" props when inside a <Router>.`
+    `<Redirect from="${element.props.from}" to="${element.props.to}"/> requires both "from" and "to" props when inside a <Router>.`
   );
 
   invariant(
@@ -558,9 +550,7 @@ let createRoute = basepath => element => {
       element.type === Redirect &&
       !validateRedirect(element.props.from, element.props.to)
     ),
-    `<Redirect from="${element.props.from} to="${
-      element.props.to
-    }"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`
+    `<Redirect from="${element.props.from} to="${element.props.to}"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`
   );
 
   if (element.props.default) {
