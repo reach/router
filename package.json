@@ -23,7 +23,8 @@
     "globals": {
       "__DEV__": true
     },
-    "testRegex": ".+\\.test\\.js$"
+    "testRegex": ".+\\.test\\.js$",
+    "testURL": "http://localhost"
   },
   "peerDependencies": {
     "react": "15.x || 16.x || 16.4.0-alpha.0911da3",

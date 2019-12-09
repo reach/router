@@ -84,11 +84,7 @@ let pick = (routes, uri) => {
         let matchIsNotReserved = reservedNames.indexOf(dynamicMatch[1]) === -1;
         invariant(
           matchIsNotReserved,
-          `<Router> dynamic segment "${
-            dynamicMatch[1]
-          }" is a reserved name. Please use a different name in path "${
-            route.path
-          }".`
+          `<Router> dynamic segment "${dynamicMatch[1]}" is a reserved name. Please use a different name in path "${route.path}".`
         );
         let value = decodeURIComponent(uriSegment);
         params[dynamicMatch[1]] = value;
@@ -242,9 +238,8 @@ let rankRoute = (route, index) => {
 let rankRoutes = routes =>
   routes
     .map(rankRoute)
-    .sort(
-      (a, b) =>
-        a.score < b.score ? 1 : a.score > b.score ? -1 : a.index - b.index
+    .sort((a, b) =>
+      a.score < b.score ? 1 : a.score > b.score ? -1 : a.index - b.index
     );
 
 let segmentize = uri =>

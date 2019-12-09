@@ -32,7 +32,8 @@ let runWithNavigation = (element, pathname = "/") => {
   let wrapper = renderer.create(
     <LocationProvider history={history}>{element}</LocationProvider>
   );
-  const snapshot = string => {
+
+  const snapshot = () => {
     expect(wrapper.toJSON()).toMatchSnapshot();
   };
   return { history, snapshot, wrapper };
@@ -685,8 +686,6 @@ describe("relative navigate prop", () => {
     await relativeNavigate("settings");
     snapshot();
   });
-
-  it("navigates relative", () => {});
 });
 
 describe("nested routers", () => {
