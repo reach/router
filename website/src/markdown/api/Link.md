@@ -60,7 +60,7 @@ Argument `obj` Properties:
 // this is only active when the location pathname is exactly
 // the same as the href.
 const isActive = ({ isCurrent }) => {
-  return isCurrent ? { className: "active" } : null
+  return isCurrent ? { className: "active" } : {}
 }
 
 const ExactNavLink = props => (
@@ -74,7 +74,7 @@ const isPartiallyActive = ({
 }) => {
   return isPartiallyCurrent
     ? { className: "active" }
-    : null
+    : {}
 }
 
 const PartialNavLink = props => (

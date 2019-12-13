@@ -1,4 +1,4 @@
-import { pick, match, resolve, insertParams } from "./utils";
+import { pick, match, resolve, insertParams, shallowCompare } from "./utils";
 
 describe("pick", () => {
   test("pick root or dynamic", () => {
@@ -95,6 +95,18 @@ describe("insertParams", () => {
         groupId: "4"
       })
     ).toEqual("/users/2/groups/4");
+  });
+});
+
+describe("shallowCompare", () => {
+  test("objects are the same", () => {
+    expect(shallowCompare({}, {})).toBeTruthy();
+    expect(shallowCompare({ test: 1 }, { test: 1 })).toBeTruthy();
+  });
+  test("objects are different", () => {
+    expect(shallowCompare({ a: undefined }, { b: undefined })).toBeFalsy();
+    expect(shallowCompare({}, { b: undefined })).toBeFalsy();
+    expect(shallowCompare({ test: 1 }, { test: 2 })).toBeFalsy();
   });
 });
 

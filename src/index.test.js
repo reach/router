@@ -32,7 +32,8 @@ let runWithNavigation = (element, pathname = "/") => {
   let wrapper = renderer.create(
     <LocationProvider history={history}>{element}</LocationProvider>
   );
-  const snapshot = string => {
+
+  const snapshot = () => {
     expect(wrapper.toJSON()).toMatchSnapshot();
   };
   return { history, snapshot, wrapper };
@@ -541,6 +542,84 @@ describe("links", () => {
       ReactDOM.unmountComponentAtNode(div);
     }
   });
+
+  it("calls history.replaceState when link for current path is clicked without state", () => {
+    const testSource = createMemorySource("/test");
+    testSource.history.replaceState = jest.fn();
+    const testHistory = createHistory(testSource);
+    const TestPage = () => <Link to="/test">Go To Test</Link>;
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <TestPage path="/test" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.replaceState).toHaveBeenCalledTimes(1);
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
+  it("calls history.replaceState when link for current path is clicked with the same state", () => {
+    const testSource = createMemorySource("/test");
+    testSource.history.replaceState = jest.fn();
+    const testHistory = createHistory(testSource);
+    testHistory.navigate("/test", { state: { id: "123" } });
+    const TestPage = () => (
+      <Link to="/test" state={{ id: "123" }}>
+        Go To Test
+      </Link>
+    );
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <TestPage path="/test" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.replaceState).toHaveBeenCalledTimes(1);
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
+  it("calls history.pushState when link for current path is clicked with different state", async () => {
+    const testSource = createMemorySource("/test");
+    testSource.history.pushState = jest.fn(testSource.history.pushState);
+    const testHistory = createHistory(testSource);
+    const TestPage = () => (
+      <Link to="/test" state={{ id: 1 }}>
+        Go To Test
+      </Link>
+    );
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <LocationProvider history={testHistory}>
+        <Router>
+          <TestPage path="/test" />
+        </Router>
+      </LocationProvider>,
+      div
+    );
+    try {
+      const a = div.querySelector("a");
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      await testHistory.navigate("/test", { state: { id: 2 } });
+      ReactTestUtils.Simulate.click(a, { button: 0 });
+      expect(testSource.history.pushState).toHaveBeenCalledTimes(2);
+    } finally {
+      ReactDOM.unmountComponentAtNode(div);
+    }
+  });
 });
 
 describe("transitions", () => {
@@ -607,8 +686,6 @@ describe("relative navigate prop", () => {
     await relativeNavigate("settings");
     snapshot();
   });
-
-  it("navigates relative", () => {});
 });
 
 describe("nested routers", () => {
@@ -747,5 +824,55 @@ describe("ServerLocation", () => {
 
     expect(markup).toContain("location.pathname: [/print-location]");
     expect(markup).toContain("location.search: [?it=works]");
+  });
+});
+
+describe("trailing wildcard", () => {
+  it("passes down wildcard name to the component as prop", () => {
+    const FileBrowser = ({ filePath }) => filePath;
+
+    snapshot({
+      pathname: `/files/README.md`,
+      element: (
+        <Router>
+          <FileBrowser path="files/*filePath" />
+        </Router>
+      )
+    });
+  });
+
+  it("passes down '*' as the prop name if not specified", () => {
+    const FileBrowser = props => props["*"];
+
+    snapshot({
+      pathname: `/files/README.md`,
+      element: (
+        <Router>
+          <FileBrowser path="files/*" />
+        </Router>
+      )
+    });
+  });
+
+  it("passes down to Match as well", () => {
+    snapshot({
+      pathname: `/somewhere/deep/i/mean/really/deep`,
+      element: (
+        <Match path="/somewhere/deep/*rest">
+          {props => <div>{props.match.rest}</div>}
+        </Match>
+      )
+    });
+  });
+
+  it("passes down to Match as unnamed '*'", () => {
+    snapshot({
+      pathname: `/somewhere/deep/i/mean/really/deep`,
+      element: (
+        <Match path="/somewhere/deep/*">
+          {props => <div>{props.match["*"]}</div>}
+        </Match>
+      )
+    });
   });
 });
