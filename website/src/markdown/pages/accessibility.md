@@ -6,10 +6,10 @@ Accessibility is a first-class concern for Reach Router, so, naturally, it's bak
 
 Links in a client rendered app should behave just like links in a server rendered app. Reach Router does this automatically for you:
 
-* Keyboard access
-* Assistive devices announce correctly
-* Command/Control click opens in a new tab
-* Right click "open in new window" opens in a new window
+- Keyboard access
+- Assistive devices announce correctly
+- Command/Control click opens in a new tab
+- Right click "open in new window" opens in a new window
 
 ## Focus Management
 
@@ -17,4 +17,8 @@ Whenever the content of a page changes in response to a user interaction, the fo
 
 Reach Router provides out-of-the-box focus management so your apps are significantly more accessible without you breaking a sweat.
 
-When the location changes, the top-most part of your application that changed is identified and focus is moved to it. Assistive devices then announce to the user the group of elements they are now focused on, similarly to how it works when they load up a page for the first time.
+When the location changes, the top-most part of your application that changed is identified and focus is moved to it.
+
+## Focus Management
+
+Prior to version `1.3.0-beta.1`, we used `role="group"` on the top-level element so that screen readers would announce to the user the focused group's nested elements similarly to how it works when a user loads a page for the first time. A problem we found is that some screen readers (notably VoiceOver and NVDA with Firefox) will read the group's content as if it's a long string, void of any important context provided by the interior markup.

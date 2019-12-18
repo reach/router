@@ -359,7 +359,6 @@ class FocusHandlerImpl extends React.Component {
       children,
       style,
       requestFocus,
-      role = "group",
       component: Comp = "div",
       uri,
       location,
@@ -370,7 +369,6 @@ class FocusHandlerImpl extends React.Component {
       <Comp
         style={{ outline: "none", ...style }}
         tabIndex="-1"
-        role={role}
         ref={n => (this.node = n)}
         {...domProps}
       >
