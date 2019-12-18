@@ -21,4 +21,6 @@ When the location changes, the top-most part of your application that changed is
 
 ## Focus Management
 
-Prior to version `1.3.0-beta.1`, we used `role="group"` on the top-level element so that screen readers would announce to the user the focused group's nested elements similarly to how it works when a user loads a page for the first time. A problem we found is that some screen readers (notably VoiceOver and NVDA with Firefox) will read the group's content as if it's a long string, void of any important context provided by the interior markup.
+Prior to version `1.3`, we used `role="group"` on the top-level element so that screen readers would announce to the user the focused group's nested elements similarly to how it works when a user loads a page for the first time. A problem we found is that some screen readers (notably VoiceOver and NVDA with Firefox) will read the group's content as if it's a long string, void of any important context provided by the interior markup.
+
+While we removed the group role as the router's default setting, if you believe the group role creates a better experience for your application you can still pass it as a prop to the `Router` component and it will be forwarded to the top-level element and function the same as before.
