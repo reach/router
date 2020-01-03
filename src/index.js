@@ -580,6 +580,8 @@ export {
   Link,
   Location,
   LocationProvider,
+  LocationContext,
+  BaseContext,
   Match,
   Redirect,
   Router,
