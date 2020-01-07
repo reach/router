@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
@@ -521,6 +521,24 @@ let Match = ({ path, children }) => (
   </BaseContext.Consumer>
 );
 
+let useMatch = path => {
+  const { location, navigate } = useContext(LocationContext);
+  const { baseuri } = useContext(BaseContext);
+  let resolvedPath = resolve(path, baseuri);
+  let result = match(resolvedPath, location.pathname);
+  return {
+    navigate,
+    location,
+    match: result
+      ? {
+          ...result.params,
+          uri: result.uri,
+          path
+        }
+      : null
+  };
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // Junk
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
@@ -583,6 +601,7 @@ export {
   LocationContext,
   BaseContext,
   Match,
+  useMatch,
   Redirect,
   Router,
   ServerLocation,
