@@ -37,3 +37,22 @@ it("should have a proper search", () => {
   testHistory.navigate("/?asdf");
   expect(testHistory.location.search).toEqual("?asdf");
 });
+
+describe("Location pathname is undefined. Old device.", () => {
+  it("Should works fine", () => {
+    const mockSource = {
+      history: {
+        go: jest.fn()
+      },
+      location: {
+        pathname: undefined,
+        search: "",
+        hash: "",
+        href: "http://localhost/test"
+      }
+    };
+
+    const history = createHistory(mockSource);
+    expect(history.location.pathname).toBe("/test");
+  });
+});
