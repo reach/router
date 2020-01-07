@@ -6,6 +6,7 @@
   "module": "es/index.js",
   "files": [
     "es",
+    "index.d.ts",
     "index.js",
     "umd",
     "lib"
