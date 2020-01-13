@@ -1,7 +1,7 @@
 let getLocation = source => {
   const { pathname, search, hash } = source.location;
   return {
-    pathname,
+    pathname: encodeURI(decodeURI(pathname)),
     search,
     hash,
     state: source.history.state,
