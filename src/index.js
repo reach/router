@@ -545,7 +545,14 @@ const useMatch = path => {
   const location = useLocation();
 
   const resolvedPath = resolve(path, baseuri);
-  return !!match(resolvedPath, location.pathname);
+  const result = match(resolvedPath, location.pathname);
+  return result
+    ? {
+        ...result.params,
+        uri: result.uri,
+        path
+      }
+    : null;
 };
 
 const useNavigate = () => {

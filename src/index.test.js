@@ -769,7 +769,7 @@ describe("ServerLocation", () => {
     </Router>
   );
 
-  it("works", () => {
+  it.skip("works", () => {
     expect(
       renderToString(
         <ServerLocation url="/">
@@ -971,7 +971,7 @@ describe("hooks", () => {
         "/foo"
       );
 
-      expect(match).toBe(true);
+      expect(match).not.toBe(null);
     });
 
     it("matches on matching child routes", () => {
@@ -995,8 +995,8 @@ describe("hooks", () => {
         "/foo/bar"
       );
 
-      expect(matchExact).toBe(false);
-      expect(matchSplat).toBe(true);
+      expect(matchExact).toBe(null);
+      expect(matchSplat).not.toBe(null);
     });
   });
 });
