@@ -91,6 +91,58 @@ exports[`disrespect has complete disrespect for leading and trailing slashes 1`]
 </div>
 `;
 
+exports[`hooks useLocation returns the location 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  path: /this/path/is/returned
+</div>
+`;
+
+exports[`hooks useNavigate navigates relative 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  IF_THIS_IS_IN_SNAPSHOT_BAAAAADDDDDDDD
+</div>
+`;
+
+exports[`hooks useNavigate navigates relative 2`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  THIS_IS_WHAT_WE_WANT_TO_SEE_IN_SNAPSHOT
+</div>
+`;
+
+exports[`hooks useParams gives an object of the params from the route 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  {"bar":"123","bax":"hi"}
+</div>
+`;
+
 exports[`links renders links with relative hrefs 1`] = `
 <div
   style={
