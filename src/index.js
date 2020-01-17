@@ -24,8 +24,7 @@ import {
 
 const createNamedContext = (name, defaultValue) => {
   const Ctx = createContext(defaultValue);
-  Ctx.Consumer.displayName = `${name}.Consumer`;
-  Ctx.Provider.displayName = `${name}.Provider`;
+  Ctx.displayName = name;
   return Ctx;
 };
 
