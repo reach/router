@@ -156,6 +156,18 @@ let Nav = () => (
                         <NavLink to="api/navigate">navigate</NavLink>
                       </div>
 
+                      <Header>Hooks API</Header>
+                      <div
+                        css={{
+                          fontFamily: `'SFMono-Regular', Consolas, 'Roboto Mono', 'Droid Sans Mono', 'Liberation Mono', Menlo, Courier, monospace`
+                        }}
+                      >
+                        <NavLink to="api/useLocation">useLocation</NavLink>
+                        <NavLink to="api/useMatch">useMatch</NavLink>
+                        <NavLink to="api/useNavigate">useNavigate</NavLink>
+                        <NavLink to="api/useParams">useParams</NavLink>
+                      </div>
+
                       <Header>Additional API</Header>
                       <div
                         css={{
