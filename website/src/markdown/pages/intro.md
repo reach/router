@@ -80,6 +80,16 @@ const Invoice = props => (
     <h1>Invoice {props.invoiceId}</h1>
   </div>
 )
+
+// or with hooks
+const Invoice = () => {
+  const params = useParams()
+  return (
+    <div>
+      <h1>Invoice {params.invoiceId}</h1>
+    </div>
+  )
+}
 ```
 
 It's the same as rendering the component directly.
@@ -293,20 +303,23 @@ This allows you to have all of your routes configured at the top of the app, or 
 If you need to navigate programmatically (like after a form submits), import `navigate`.
 
 ```jsx
-import { navigate } from "@reach/router"
+import { useNavigate } from "@reach/router"
 
-const Invoices = () => (
-  <div>
-    <NewInvoiceForm
-      onSubmit={async event => {
-        const newInvoice = await createInvoice(
-          event.target
-        )
-        navigate(`/invoices/${newInvoice.id}`)
-      }}
-    />
-  </div>
-)
+const Invoices = () => {
+  const navigate = useNavigate()
+  return (
+    <div>
+      <NewInvoiceForm
+        onSubmit={async event => {
+          const newInvoice = await createInvoice(
+            event.target
+          )
+          navigate(`/invoices/${newInvoice.id}`)
+        }}
+      />
+    </div>
+  )
+}
 ```
 
 Or better, yet, use `props.navigate` passed to your route components and then you can navigate to relative paths:
@@ -334,6 +347,8 @@ const Invoices = ({ navigate }) => (
 Navigate returns a promise so you can await it. It resolves after React is completely finished rendering the next screen, even with React Suspense.
 
 ```jsx
+import { navigate } from "@reach/router"
+
 class Invoices extends React.Component {
   state = {
     creatingNewInvoice: false
