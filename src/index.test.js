@@ -14,7 +14,11 @@ import {
   Match,
   Redirect,
   isRedirect,
-  ServerLocation
+  ServerLocation,
+  useLocation,
+  useNavigate,
+  useParams,
+  useRouterMatch
 } from "./index";
 
 let snapshot = ({ pathname, element }) => {
@@ -873,6 +877,126 @@ describe("trailing wildcard", () => {
           {props => <div>{props.match["*"]}</div>}
         </Match>
       )
+    });
+  });
+});
+
+describe("hooks", () => {
+  describe("useLocation", () => {
+    it("returns the location", () => {
+      function Fixture() {
+        const location = useLocation();
+        return `path: ${location.pathname}`;
+      }
+
+      snapshot({
+        pathname: `/this/path/is/returned`,
+        element: (
+          <Router>
+            <Fixture path="/this/path/is/returned" />
+          </Router>
+        )
+      });
+    });
+
+    it("throws an error if a location context hasnt been rendered", () => {
+      function Fixture() {
+        const location = useLocation();
+        return `path: ${location.pathname}`;
+      }
+
+      expect(() => {
+        renderToString(<Fixture />);
+      }).toThrow(
+        "useLocation hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+      );
+    });
+  });
+
+  describe("useNavigate", () => {
+    it("navigates relative", async () => {
+      let navigate;
+
+      const Foo = () => {
+        navigate = useNavigate();
+        return `IF_THIS_IS_IN_SNAPSHOT_BAAAAADDDDDDDD`;
+      };
+
+      const Bar = () => `THIS_IS_WHAT_WE_WANT_TO_SEE_IN_SNAPSHOT`;
+
+      const { snapshot } = runWithNavigation(
+        <Router>
+          <Foo path="/foo" />
+          <Bar path="/bar" />
+        </Router>,
+        "/foo"
+      );
+      snapshot();
+      await navigate("/bar");
+      snapshot();
+    });
+  });
+
+  describe("useParams", () => {
+    it("gives an object of the params from the route", () => {
+      const Fixture = () => {
+        const params = useParams();
+        return JSON.stringify(params);
+      };
+
+      snapshot({
+        pathname: "/foo/123/baz/hi",
+        element: (
+          <Router>
+            <Fixture path="/foo/:bar/baz/:bax" />
+          </Router>
+        )
+      });
+    });
+  });
+
+  describe("useRouterMatch", () => {
+    it("matches on direct routes", async () => {
+      let match;
+
+      const Foo = () => {
+        match = useRouterMatch("/foo");
+        return ``;
+      };
+
+      const { snapshot } = runWithNavigation(
+        <Router>
+          <Foo path="/foo" />
+        </Router>,
+        "/foo"
+      );
+
+      expect(match).not.toBe(null);
+    });
+
+    it("matches on matching child routes", () => {
+      let matchExact;
+      let matchSplat;
+
+      const Foo = () => {
+        matchExact = useRouterMatch("/foo");
+        matchSplat = useRouterMatch("/foo/*");
+        return ``;
+      };
+
+      const Bar = () => "";
+
+      const { snapshot } = runWithNavigation(
+        <Router>
+          <Foo path="/foo">
+            <Bar path="/bar" />
+          </Foo>
+        </Router>,
+        "/foo/bar"
+      );
+
+      expect(matchExact).toBe(null);
+      expect(matchSplat).not.toBe(null);
     });
   });
 });

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
@@ -521,6 +521,56 @@ let Match = ({ path, children }) => (
 );
 
 ////////////////////////////////////////////////////////////////////////////////
+// Hooks
+
+const useLocation = () => {
+  const context = useContext(LocationContext);
+
+  if (!context) {
+    throw new Error(
+      "useLocation hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+    );
+  }
+
+  return context.location;
+};
+
+const useNavigate = () => {
+  const context = useContext(LocationContext);
+
+  return context.navigate;
+};
+
+const useParams = () => {
+  const { basepath } = useContext(BaseContext);
+  const location = useLocation();
+
+  const results = match(basepath, location.pathname);
+
+  return results ? results.params : null;
+};
+
+const useRouterMatch = path => {
+  if (!path) {
+    throw new Error(
+      "useRouterMatch(path: string) requires an argument of a string to match against"
+    );
+  }
+  const { baseuri } = useContext(BaseContext);
+  const location = useLocation();
+
+  const resolvedPath = resolve(path, baseuri);
+  const result = match(resolvedPath, location.pathname);
+  return result
+    ? {
+        ...result.params,
+        uri: result.uri,
+        path
+      }
+    : null;
+};
+
+////////////////////////////////////////////////////////////////////////////////
 // Junk
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
 
@@ -589,5 +639,9 @@ export {
   navigate,
   redirectTo,
   globalHistory,
-  match as matchPath
+  match as matchPath,
+  useLocation,
+  useNavigate,
+  useParams,
+  useRouterMatch
 };
