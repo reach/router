@@ -4,7 +4,7 @@
   - `useLocation`
   - `useParams`
   - `useNavigate`
-  - `useRouterMatch`
+  - `useMatch`
 - 15298df Improved displayName for react context
 - 11e9ed6 Fixed a bug that pushed to history when a user clicks the same path
 - ccfc3c8 Added support for trailing wildcard names e.g., `path="/files/*filePath"`

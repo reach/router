@@ -538,28 +538,48 @@ const useLocation = () => {
 const useNavigate = () => {
   const context = useContext(LocationContext);
 
+  if (!context) {
+    throw new Error(
+      "useNavigate hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+    );
+  }
+
   return context.navigate;
 };
 
 const useParams = () => {
-  const { basepath } = useContext(BaseContext);
+  const context = useContext(BaseContext);
+
+  if (!context) {
+    throw new Error(
+      "useParams hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+    );
+  }
+
   const location = useLocation();
 
-  const results = match(basepath, location.pathname);
+  const results = match(context.basepath, location.pathname);
 
   return results ? results.params : null;
 };
 
-const useRouterMatch = path => {
+const useMatch = path => {
   if (!path) {
     throw new Error(
-      "useRouterMatch(path: string) requires an argument of a string to match against"
+      "useMatch(path: string) requires an argument of a string to match against"
     );
   }
-  const { baseuri } = useContext(BaseContext);
+  const context = useContext(BaseContext);
+
+  if (!context) {
+    throw new Error(
+      "useMatch hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+    );
+  }
+
   const location = useLocation();
 
-  const resolvedPath = resolve(path, baseuri);
+  const resolvedPath = resolve(path, context.baseuri);
   const result = match(resolvedPath, location.pathname);
   return result
     ? {
@@ -643,5 +663,5 @@ export {
   useLocation,
   useNavigate,
   useParams,
-  useRouterMatch
+  useMatch
 };

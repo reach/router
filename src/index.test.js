@@ -18,7 +18,7 @@ import {
   useLocation,
   useNavigate,
   useParams,
-  useRouterMatch
+  useMatch
 } from "./index";
 
 let snapshot = ({ pathname, element }) => {
@@ -955,12 +955,12 @@ describe("hooks", () => {
     });
   });
 
-  describe("useRouterMatch", () => {
+  describe("useMatch", () => {
     it("matches on direct routes", async () => {
       let match;
 
       const Foo = () => {
-        match = useRouterMatch("/foo");
+        match = useMatch("/foo");
         return ``;
       };
 
@@ -979,8 +979,8 @@ describe("hooks", () => {
       let matchSplat;
 
       const Foo = () => {
-        matchExact = useRouterMatch("/foo");
-        matchSplat = useRouterMatch("/foo/*");
+        matchExact = useMatch("/foo");
+        matchSplat = useMatch("/foo/*");
         return ``;
       };
 
