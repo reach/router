@@ -16,9 +16,9 @@ import {
   isRedirect,
   ServerLocation,
   useLocation,
-  useMatch,
   useNavigate,
-  useParams
+  useParams,
+  useRouterMatch
 } from "./index";
 
 let snapshot = ({ pathname, element }) => {
@@ -955,12 +955,12 @@ describe("hooks", () => {
     });
   });
 
-  describe("useMatch", () => {
+  describe("useRouterMatch", () => {
     it("matches on direct routes", async () => {
       let match;
 
       const Foo = () => {
-        match = useMatch("/foo");
+        match = useRouterMatch("/foo");
         return ``;
       };
 
@@ -979,8 +979,8 @@ describe("hooks", () => {
       let matchSplat;
 
       const Foo = () => {
-        matchExact = useMatch("/foo");
-        matchSplat = useMatch("/foo/*");
+        matchExact = useRouterMatch("/foo");
+        matchSplat = useRouterMatch("/foo/*");
         return ``;
       };
 

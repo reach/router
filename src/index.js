@@ -535,10 +535,25 @@ const useLocation = () => {
   return context.location;
 };
 
-const useMatch = path => {
+const useNavigate = () => {
+  const context = useContext(LocationContext);
+
+  return context.navigate;
+};
+
+const useParams = () => {
+  const { basepath } = useContext(BaseContext);
+  const location = useLocation();
+
+  const results = match(basepath, location.pathname);
+
+  return results ? results.params : null;
+};
+
+const useRouterMatch = path => {
   if (!path) {
     throw new Error(
-      "useMatch(path: string) requires an argument of a string to match against"
+      "useRouterMatch(path: string) requires an argument of a string to match against"
     );
   }
   const { baseuri } = useContext(BaseContext);
@@ -555,21 +570,6 @@ const useMatch = path => {
     : null;
 };
 
-const useNavigate = () => {
-  const context = useContext(LocationContext);
-
-  return context.navigate;
-};
-
-const useParams = () => {
-  const { basepath } = useContext(BaseContext);
-  const location = useLocation();
-
-  const results = match(basepath, location.pathname);
-
-  return results ? results.params : null;
-};
-
 ////////////////////////////////////////////////////////////////////////////////
 // Junk
 let stripSlashes = str => str.replace(/(^\/+|\/+$)/g, "");
@@ -584,12 +584,16 @@ let createRoute = basepath => element => {
   }
   invariant(
     element.props.path || element.props.default || element.type === Redirect,
-    `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${element.type}\``
+    `<Router>: Children of <Router> must have a \`path\` or \`default\` prop, or be a \`<Redirect>\`. None found on element type \`${
+      element.type
+    }\``
   );
 
   invariant(
     !(element.type === Redirect && (!element.props.from || !element.props.to)),
-    `<Redirect from="${element.props.from}" to="${element.props.to}"/> requires both "from" and "to" props when inside a <Router>.`
+    `<Redirect from="${element.props.from}" to="${
+      element.props.to
+    }"/> requires both "from" and "to" props when inside a <Router>.`
   );
 
   invariant(
@@ -597,7 +601,9 @@ let createRoute = basepath => element => {
       element.type === Redirect &&
       !validateRedirect(element.props.from, element.props.to)
     ),
-    `<Redirect from="${element.props.from} to="${element.props.to}"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`
+    `<Redirect from="${element.props.from} to="${
+      element.props.to
+    }"/> has mismatched dynamic segments, ensure both paths have the exact same dynamic segments.`
   );
 
   if (element.props.default) {
@@ -641,7 +647,7 @@ export {
   globalHistory,
   match as matchPath,
   useLocation,
-  useMatch,
   useNavigate,
-  useParams
+  useParams,
+  useRouterMatch
 };
