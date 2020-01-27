@@ -256,7 +256,8 @@ const Create = withInvalidateContacts(
           </ul>
           {state === CreateStates.ERROR && (
             <p>
-              There was an error:<br />
+              There was an error:
+              <br />
               <br />
               <b>{error}</b>
             </p>
