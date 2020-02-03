@@ -1,3 +1,7 @@
+## v1.3.1
+
+- f40ea53 Fix an accidental breaking change not exposing all location properties
+
 ## v1.3.0
 
 - 56d4dca Added 4 new Hook APIs!
