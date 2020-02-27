@@ -1,6 +1,5 @@
 let getLocation = source => {
   const {
-    pathname,
     search,
     hash,
     href,
@@ -10,6 +9,12 @@ let getLocation = source => {
     hostname,
     port
   } = source.location;
+  let { pathname } = source.location;
+
+  if (!pathname && href && canUseDOM) {
+    const url = new URL(href);
+    pathname = url.pathname;
+  }
 
   return {
     pathname: encodeURI(decodeURI(pathname)),
