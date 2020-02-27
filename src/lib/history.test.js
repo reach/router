@@ -12,6 +12,53 @@ describe("createMemorySource", () => {
   });
 });
 
+describe("createHistory", () => {
+  it("should have location with pathname", () => {
+    const mockSource = {
+      history: {},
+      location: {
+        pathname: "/page",
+        search: "",
+        hash: ""
+      }
+    };
+
+    const history = createHistory(mockSource);
+
+    expect(history.location.pathname).toEqual("/page");
+  });
+
+  it("should encode location pathname", () => {
+    const mockSource = {
+      history: {},
+      location: {
+        pathname: "/påge",
+        search: "",
+        hash: ""
+      }
+    };
+
+    const history = createHistory(mockSource);
+
+    expect(history.location.pathname).toEqual("/p%C3%A5ge");
+  });
+
+  it("should not encode location pathname if it is already encoded", () => {
+    const mockSource = {
+      history: {},
+      location: {
+        pathname: "/p%C3%A5ge",
+        search: "",
+        hash: ""
+      }
+    };
+
+    const history = createHistory(mockSource);
+
+    expect(history.location.pathname).toEqual("/p%C3%A5ge");
+  });
+});
+
 describe("navigate", () => {
   test("navigate with number as a first argument", () => {
     const goMock = jest.fn();

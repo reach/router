@@ -12,7 +12,7 @@ let getLocation = source => {
   } = source.location;
 
   return {
-    pathname,
+    pathname: encodeURI(decodeURI(pathname)),
     search,
     hash,
     href,
