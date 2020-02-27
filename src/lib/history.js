@@ -132,6 +132,15 @@ let createMemorySource = (initialPath = "/") => {
         let [pathname, search = ""] = uri.split("?");
         stack[index] = { pathname, search };
         states[index] = state;
+      },
+      go(to) {
+        let newIndex = index + to;
+
+        if (newIndex < 0 || newIndex > states.length - 1) {
+          return;
+        }
+
+        index = newIndex;
       }
     }
   };
