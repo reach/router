@@ -192,7 +192,7 @@ let Nav = () => (
                     <footer
                       css={{ fontSize: "66%", marginTop: 60, opacity: 0.66 }}
                     >
-                      <p>Copyright &copy; 2018 Reach Tech</p>
+                      <p>Copyright &copy; 2020 Reach Tech</p>
                     </footer>
                   </div>
                 </div>
