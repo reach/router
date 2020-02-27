@@ -1,3 +1,11 @@
+## v1.3.3
+
+_1.3.2 was a failed publish_
+
+- 8b93694 Fix an encoding issue with browsers who do not encode urls
+- d0962d7 Fix a bug on specific vendors that do not ship `location.pathname`
+- 244e2bf Improve compatibility for `createMemorySource`
+
 ## v1.3.1
 
 - f40ea53 Fix an accidental breaking change not exposing all location properties
