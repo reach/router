@@ -102,7 +102,7 @@ let createMemorySource = (initialPath = "/") => {
   //  everything besides the `#` character
   // 3rd group: `(#.*)?` lazily matches everything after `#`
   //
-  // NOTe: this regex should match every given string
+  // NOTE: this regex should match every given string
   const match = /([^?#]*)(\?[^#]*)?(#.*)?/.exec(initialPath);
   const [pathname, search, hash] = Array.from(match).slice(1);
 
