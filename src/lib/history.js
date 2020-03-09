@@ -107,7 +107,7 @@ let createMemorySource = (initialPath = "/") => {
   const [pathname, search, hash] = Array.from(match).slice(1);
 
   let initialLocation = {
-    pathname: pathname,
+    pathname,
     search: search || "",
     hash: hash || ""
   };
