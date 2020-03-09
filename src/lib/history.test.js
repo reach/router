@@ -10,6 +10,11 @@ describe("createMemorySource", () => {
     const testHistory = createMemorySource("/test?foo=bar");
     expect(testHistory.location.search).toBe("?foo=bar");
   });
+
+  it("creates a memory source with a hash", () => {
+    const testHistory = createMemorySource("/test?foo=bar#baz");
+    expect(testHistory.location.hash).toBe("#baz");
+  });
 });
 
 describe("createHistory", () => {
