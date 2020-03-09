@@ -96,11 +96,20 @@ let createHistory = (source, options) => {
 ////////////////////////////////////////////////////////////////////////////////
 // Stores history entries in memory for testing or other platforms like Native
 let createMemorySource = (initialPath = "/") => {
-  let searchIndex = initialPath.indexOf("?");
+  // regex breakdown:
+  // 1st group: `([^?#]*)` matches any character that's _not_ `?` or `#`
+  // 2nd group: `(\?[^#]*)?` lazily matches a string starting with `?` including
+  //  everything besides the `#` character
+  // 3rd group: `(#.*)?` lazily matches everything after `#`
+  //
+  // NOTe: this regex should match every given string
+  const match = /([^?#]*)(\?[^#]*)?(#.*)?/.exec(initialPath);
+  const [pathname, search, hash] = Array.from(match).slice(1);
+
   let initialLocation = {
-    pathname:
-      searchIndex > -1 ? initialPath.substr(0, searchIndex) : initialPath,
-    search: searchIndex > -1 ? initialPath.substr(searchIndex) : ""
+    pathname: pathname,
+    search: search || "",
+    hash: hash || ""
   };
   let index = 0;
   let stack = [initialLocation];

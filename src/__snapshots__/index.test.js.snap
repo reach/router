@@ -6,6 +6,7 @@ exports[`Match matches a path 1`] = `
   "location": {
     "pathname": "/groups/123",
     "search": "",
+    "hash": "",
     "state": null,
     "key": "initial"
   },
@@ -611,6 +612,7 @@ exports[`passed props passes the matched URI to the component 1`] = `
   "location": {
     "pathname": "/groups/123/users/456",
     "search": "",
+    "hash": "",
     "state": null,
     "key": "initial"
   }
