@@ -104,6 +104,32 @@ exports[`hooks useLocation returns the location 1`] = `
 </div>
 `;
 
+exports[`hooks useNavigate navigates absolute 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  IF_THIS_IS_IN_SNAPSHOT_BAAAAADDDDDDDD
+</div>
+`;
+
+exports[`hooks useNavigate navigates absolute 2`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  THIS_IS_WHAT_WE_WANT_TO_SEE_IN_SNAPSHOT
+</div>
+`;
+
 exports[`hooks useNavigate navigates relative 1`] = `
 <div
   style={
