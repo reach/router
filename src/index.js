@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import PropTypes from "prop-types";
 import invariant from "invariant";
 import createContext from "create-react-context";
@@ -537,14 +537,27 @@ const useLocation = () => {
 
 const useNavigate = () => {
   const context = useContext(LocationContext);
+  const baseContext = useContext(BaseContext);
 
-  if (!context) {
+  if (!context || !baseContext) {
     throw new Error(
       "useNavigate hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
     );
   }
 
-  return context.navigate;
+  const { basepath } = baseContext;
+  const { location, navigate } = context;
+
+  return useCallback(
+    (to, options) => {
+      const results = match(basepath, location.pathname);
+      const matchUri = results ? results.uri : null;
+      const resolvedUri = resolve(to, matchUri);
+
+      return navigate(resolvedUri, options);
+    },
+    [basepath, location.pathname, navigate]
+  );
 };
 
 const useParams = () => {
