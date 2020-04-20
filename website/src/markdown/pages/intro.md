@@ -300,7 +300,7 @@ This allows you to have all of your routes configured at the top of the app, or 
 
 ## Navigating Programmatically
 
-If you need to navigate programmatically (like after a form submits), import `navigate`.
+If you need to navigate programmatically (like after a form submits), import `useNavigate`.
 
 ```jsx
 import { useNavigate } from "@reach/router"
