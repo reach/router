@@ -156,6 +156,18 @@ let Nav = () => (
                         <NavLink to="api/navigate">navigate</NavLink>
                       </div>
 
+                      <Header>Hooks API</Header>
+                      <div
+                        css={{
+                          fontFamily: `'SFMono-Regular', Consolas, 'Roboto Mono', 'Droid Sans Mono', 'Liberation Mono', Menlo, Courier, monospace`
+                        }}
+                      >
+                        <NavLink to="api/useLocation">useLocation</NavLink>
+                        <NavLink to="api/useMatch">useMatch</NavLink>
+                        <NavLink to="api/useNavigate">useNavigate</NavLink>
+                        <NavLink to="api/useParams">useParams</NavLink>
+                      </div>
+
                       <Header>Additional API</Header>
                       <div
                         css={{
@@ -180,7 +192,7 @@ let Nav = () => (
                     <footer
                       css={{ fontSize: "66%", marginTop: 60, opacity: 0.66 }}
                     >
-                      <p>Copyright &copy; 2018 Reach Tech</p>
+                      <p>Copyright &copy; 2020 Reach Tech</p>
                     </footer>
                   </div>
                 </div>

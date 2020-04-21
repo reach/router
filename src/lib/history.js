@@ -1,9 +1,31 @@
 let getLocation = source => {
-  const { pathname, search, hash } = source.location;
-  return {
-    pathname,
+  const {
     search,
     hash,
+    href,
+    origin,
+    protocol,
+    host,
+    hostname,
+    port
+  } = source.location;
+  let { pathname } = source.location;
+
+  if (!pathname && href && canUseDOM) {
+    const url = new URL(href);
+    pathname = url.pathname;
+  }
+
+  return {
+    pathname: encodeURI(decodeURI(pathname)),
+    search,
+    hash,
+    href,
+    origin,
+    protocol,
+    host,
+    hostname,
+    port,
     state: source.history.state,
     key: (source.history.state && source.history.state.key) || "initial"
   };
@@ -110,6 +132,15 @@ let createMemorySource = (initialPath = "/") => {
         let [pathname, search = ""] = uri.split("?");
         stack[index] = { pathname, search };
         states[index] = state;
+      },
+      go(to) {
+        let newIndex = index + to;
+
+        if (newIndex < 0 || newIndex > states.length - 1) {
+          return;
+        }
+
+        index = newIndex;
       }
     }
   };

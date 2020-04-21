@@ -199,7 +199,7 @@ const NewInvoice = props => (
     onSubmit={event => {
       event.preventDefault()
       // do stuff w/ the form
-      navigate("somewhere-relative")
+      props.navigate("somewhere-relative")
     }}
   >
     {/* ... */}

@@ -20,7 +20,6 @@ exports[`Match matches a path 1`] = `
 
 exports[`Router children allows for fragments 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -36,7 +35,6 @@ exports[`Router children allows for fragments 1`] = `
 
 exports[`Router children ignores falsey chidlren 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -56,7 +54,6 @@ exports[`ServerLocation works 2`] = `"<div style=\\"outline:none\\" tabindex=\\"
 
 exports[`disrespect has complete disrespect for leading and trailing slashes 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -67,7 +64,6 @@ exports[`disrespect has complete disrespect for leading and trailing slashes 1`]
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -78,7 +74,6 @@ exports[`disrespect has complete disrespect for leading and trailing slashes 1`]
       <div>
         Reports 
         <div
-          role="group"
           style={
             Object {
               "outline": "none",
@@ -96,9 +91,60 @@ exports[`disrespect has complete disrespect for leading and trailing slashes 1`]
 </div>
 `;
 
+exports[`hooks useLocation returns the location 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  path: /this/path/is/returned
+</div>
+`;
+
+exports[`hooks useNavigate navigates relative 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  IF_THIS_IS_IN_SNAPSHOT_BAAAAADDDDDDDD
+</div>
+`;
+
+exports[`hooks useNavigate navigates relative 2`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  THIS_IS_WHAT_WE_WANT_TO_SEE_IN_SNAPSHOT
+</div>
+`;
+
+exports[`hooks useParams gives an object of the params from the route 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  {"bar":"123","bax":"hi"}
+</div>
+`;
+
 exports[`links renders links with relative hrefs 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -118,7 +164,6 @@ exports[`links renders links with relative hrefs 1`] = `
       /dash/reports
     </a>
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -145,7 +190,6 @@ exports[`links renders links with relative hrefs 1`] = `
 
 exports[`links uses the right href in multiple root paths 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -159,7 +203,6 @@ exports[`links uses the right href in multiple root paths 1`] = `
       /
     </div>
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -173,7 +216,6 @@ exports[`links uses the right href in multiple root paths 1`] = `
           /
         </div>
         <div
-          role="group"
           style={
             Object {
               "outline": "none",
@@ -187,7 +229,6 @@ exports[`links uses the right href in multiple root paths 1`] = `
               /one
             </div>
             <div
-              role="group"
               style={
                 Object {
                   "outline": "none",
@@ -233,7 +274,6 @@ exports[`links uses the right href in multiple root paths 1`] = `
 
 exports[`location correctly parses pathname, search and hash fields 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -258,7 +298,6 @@ exports[`location correctly parses pathname, search and hash fields 1`] = `
 
 exports[`nested rendering matches multiple nested / down to a child with a path 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -269,7 +308,6 @@ exports[`nested rendering matches multiple nested / down to a child with a path 
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -280,7 +318,6 @@ exports[`nested rendering matches multiple nested / down to a child with a path 
       <div>
         Dash 
         <div
-          role="group"
           style={
             Object {
               "outline": "none",
@@ -300,7 +337,6 @@ exports[`nested rendering matches multiple nested / down to a child with a path 
 
 exports[`nested rendering renders a child 'index' nested path 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -311,7 +347,6 @@ exports[`nested rendering renders a child 'index' nested path 1`] = `
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -329,7 +364,6 @@ exports[`nested rendering renders a child 'index' nested path 1`] = `
 
 exports[`nested rendering renders a nested path 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -340,7 +374,6 @@ exports[`nested rendering renders a nested path 1`] = `
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -358,7 +391,6 @@ exports[`nested rendering renders a nested path 1`] = `
 
 exports[`nested rendering renders a really nested path 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -369,7 +401,6 @@ exports[`nested rendering renders a really nested path 1`] = `
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -380,7 +411,6 @@ exports[`nested rendering renders a really nested path 1`] = `
       <div>
         Reports 
         <div
-          role="group"
           style={
             Object {
               "outline": "none",
@@ -400,7 +430,6 @@ exports[`nested rendering renders a really nested path 1`] = `
 
 exports[`nested rendering renders at a path with nested paths 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -416,7 +445,6 @@ exports[`nested rendering renders at a path with nested paths 1`] = `
 
 exports[`nested rendering yo dawg 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -427,7 +455,6 @@ exports[`nested rendering yo dawg 1`] = `
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -438,7 +465,6 @@ exports[`nested rendering yo dawg 1`] = `
       <div>
         Dash 
         <div
-          role="group"
           style={
             Object {
               "outline": "none",
@@ -458,7 +484,6 @@ exports[`nested rendering yo dawg 1`] = `
 
 exports[`nested rendering yo dawg again 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -469,7 +494,6 @@ exports[`nested rendering yo dawg again 1`] = `
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -480,7 +504,6 @@ exports[`nested rendering yo dawg again 1`] = `
       <div>
         Dash 
         <div
-          role="group"
           style={
             Object {
               "outline": "none",
@@ -500,7 +523,6 @@ exports[`nested rendering yo dawg again 1`] = `
 
 exports[`nested routers allows arbitrary Router nesting through context 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -511,7 +533,6 @@ exports[`nested routers allows arbitrary Router nesting through context 1`] = `
   <div>
     Home
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -529,7 +550,6 @@ exports[`nested routers allows arbitrary Router nesting through context 1`] = `
 
 exports[`passed props parses dynamic segments and passes to components 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -546,7 +566,6 @@ exports[`passed props parses dynamic segments and passes to components 1`] = `
 
 exports[`passed props parses multiple params when nested 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -557,7 +576,6 @@ exports[`passed props parses multiple params when nested 1`] = `
   <div>
     123
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -577,7 +595,6 @@ exports[`passed props parses multiple params when nested 1`] = `
 
 exports[`passed props passes the matched URI to the component 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -604,7 +621,6 @@ exports[`passed props passes the matched URI to the component 1`] = `
 
 exports[`passed props router location prop to nested path 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -615,7 +631,6 @@ exports[`passed props router location prop to nested path 1`] = `
   <div>
     Dash 
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -633,7 +648,6 @@ exports[`passed props router location prop to nested path 1`] = `
 
 exports[`passed props shadows params in nested paths 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -645,7 +659,6 @@ exports[`passed props shadows params in nested paths 1`] = `
     Group: 
     burger
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -664,7 +677,6 @@ exports[`passed props shadows params in nested paths 1`] = `
 
 exports[`relative navigate prop navigates relative 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -681,7 +693,6 @@ exports[`relative navigate prop navigates relative 1`] = `
 
 exports[`relative navigate prop navigates relative 2`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -693,7 +704,6 @@ exports[`relative navigate prop navigates relative 2`] = `
     User:
     123
     <div
-      role="group"
       style={
         Object {
           "outline": "none",
@@ -711,7 +721,6 @@ exports[`relative navigate prop navigates relative 2`] = `
 
 exports[`route ranking / 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -727,7 +736,6 @@ exports[`route ranking / 1`] = `
 
 exports[`route ranking /groups 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -743,7 +751,6 @@ exports[`route ranking /groups 1`] = `
 
 exports[`route ranking /groups/123 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -760,7 +767,6 @@ exports[`route ranking /groups/123 1`] = `
 
 exports[`route ranking /groups/123/users 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -776,7 +782,6 @@ exports[`route ranking /groups/123/users 1`] = `
 
 exports[`route ranking /groups/123/users/456 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -795,7 +800,6 @@ exports[`route ranking /groups/123/users/456 1`] = `
 
 exports[`route ranking /groups/123/users/a/bunch/of/junk 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -811,7 +815,6 @@ exports[`route ranking /groups/123/users/a/bunch/of/junk 1`] = `
 
 exports[`route ranking /groups/123/users/me 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -827,7 +830,6 @@ exports[`route ranking /groups/123/users/me 1`] = `
 
 exports[`route ranking /groups/mine 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -843,7 +845,6 @@ exports[`route ranking /groups/mine 1`] = `
 
 exports[`route ranking /groups/mine/users 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -859,7 +860,6 @@ exports[`route ranking /groups/mine/users 1`] = `
 
 exports[`route ranking /groups/mine/users/me 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -875,7 +875,6 @@ exports[`route ranking /groups/mine/users/me 1`] = `
 
 exports[`route ranking /one/two/three/four/five 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -900,7 +899,6 @@ exports[`route ranking /one/two/three/four/five 1`] = `
 
 exports[`smoke tests renders at a path 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -916,7 +914,6 @@ exports[`smoke tests renders at a path 1`] = `
 
 exports[`smoke tests renders the root component at "/" 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -932,7 +929,6 @@ exports[`smoke tests renders the root component at "/" 1`] = `
 
 exports[`trailing wildcard passes down '*' as the prop name if not specified 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -958,7 +954,6 @@ exports[`trailing wildcard passes down to Match as well 1`] = `
 
 exports[`trailing wildcard passes down wildcard name to the component as prop 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -972,7 +967,6 @@ exports[`trailing wildcard passes down wildcard name to the component as prop 1`
 
 exports[`transitions keeps the stack right on interrupted transitions 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -988,7 +982,6 @@ exports[`transitions keeps the stack right on interrupted transitions 1`] = `
 
 exports[`transitions transitions pages 1`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
@@ -1004,7 +997,6 @@ exports[`transitions transitions pages 1`] = `
 
 exports[`transitions transitions pages 2`] = `
 <div
-  role="group"
   style={
     Object {
       "outline": "none",
