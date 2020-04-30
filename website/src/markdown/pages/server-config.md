@@ -1,6 +1,6 @@
 # Server Configuration
 
-If you're app works fine until you hit "reload" or manually type in a URL and then get a 404 error, then your server is not configured correctly.
+If your app works fine until you hit "reload" or manually type in a URL and then get a 404 error, then your server is not configured correctly.
 
 Whether you are server-rendering or not, all apps using Reach Router need to be configured to deliver the same JavaScript code at every URL.
 
