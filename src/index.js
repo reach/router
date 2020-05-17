@@ -128,31 +128,6 @@ class LocationProvider extends React.Component {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Navigation Context/Provider
-let NavigationContext = createNamedContext("Navigate", globalHistory.navigate);
-
-class NavigationProvider extends React.Component {
-  static propTypes = {
-    navigate: PropTypes.func
-  };
-  static defaultProps = {
-    navigate: globalHistory.navigate
-  };
-  getContext() {
-    return this.props.navigate || globalHistory.navigate;
-  }
-  render() {
-    const { children } = this.props;
-    const context = this.getContext();
-    return (
-      <NavigationContext.Provider value={context}>
-        {typeof children === "function" ? children(context) : children || null}
-      </NavigationContext.Provider>
-    );
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
 let ServerLocation = ({ url, children }) => {
   let searchIndex = url.indexOf("?");
   let searchExists = searchIndex > -1;
@@ -186,7 +161,11 @@ let ServerLocation = ({ url, children }) => {
 };
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
-let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
+let BaseContext = createNamedContext("Base", {
+  baseuri: "/",
+  basepath: "/",
+  navigate: globalHistory.navigate
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 // The main event, welcome to the show everybody.
@@ -264,10 +243,10 @@ class RouterImpl extends React.PureComponent {
         : domProps;
 
       return (
-        <BaseContext.Provider value={{ baseuri: uri, basepath }}>
-          <NavigationProvider navigate={props.navigate}>
-            <FocusWrapper {...wrapperProps}>{clone}</FocusWrapper>
-          </NavigationProvider>
+        <BaseContext.Provider
+          value={{ baseuri: uri, basepath, navigate: props.navigate }}
+        >
+          <FocusWrapper {...wrapperProps}>{clone}</FocusWrapper>
         </BaseContext.Provider>
       );
     } else {
@@ -563,15 +542,15 @@ const useLocation = () => {
 };
 
 const useNavigate = () => {
-  const context = useContext(NavigationContext);
+  const context = useContext(BaseContext);
 
   if (!context) {
     throw new Error(
-      "useNavigate hook was used but a NavigationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+      "useNavigate hook was used but a BaseContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
     );
   }
 
-  return context;
+  return context.navigate;
 };
 
 const useParams = () => {
