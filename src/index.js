@@ -128,6 +128,31 @@ class LocationProvider extends React.Component {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Navigation Context/Provider
+let NavigationContext = createNamedContext("Navigate", globalHistory.navigate);
+
+class NavigationProvider extends React.Component {
+  static propTypes = {
+    navigate: PropTypes.func
+  };
+  static defaultProps = {
+    navigate: globalHistory.navigate
+  };
+  getContext() {
+    return this.props.navigate || globalHistory.navigate;
+  }
+  render() {
+    const { children } = this.props;
+    const context = this.getContext();
+    return (
+      <NavigationContext.Provider value={context}>
+        {typeof children === "function" ? children(context) : children || null}
+      </NavigationContext.Provider>
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 let ServerLocation = ({ url, children }) => {
   let searchIndex = url.indexOf("?");
   let searchExists = searchIndex > -1;
@@ -240,7 +265,9 @@ class RouterImpl extends React.PureComponent {
 
       return (
         <BaseContext.Provider value={{ baseuri: uri, basepath }}>
-          <FocusWrapper {...wrapperProps}>{clone}</FocusWrapper>
+          <NavigationProvider navigate={props.navigate}>
+            <FocusWrapper {...wrapperProps}>{clone}</FocusWrapper>
+          </NavigationProvider>
         </BaseContext.Provider>
       );
     } else {
@@ -536,15 +563,15 @@ const useLocation = () => {
 };
 
 const useNavigate = () => {
-  const context = useContext(LocationContext);
+  const context = useContext(NavigationContext);
 
   if (!context) {
     throw new Error(
-      "useNavigate hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+      "useNavigate hook was used but a NavigationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
     );
   }
 
-  return context.navigate;
+  return context;
 };
 
 const useParams = () => {
