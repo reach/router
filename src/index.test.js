@@ -935,6 +935,24 @@ describe("hooks", () => {
       await navigate("/bar");
       snapshot();
     });
+    it("is equals to props.navigate for route components", async () => {
+      let navigate;
+      let propNavigate;
+
+      const Foo = props => {
+        navigate = useNavigate();
+        propNavigate = props.navigate;
+        return `Foo`;
+      };
+
+      runWithNavigation(
+        <Router>
+          <Foo path="/foo" />
+        </Router>,
+        "/foo"
+      );
+      expect(navigate).toBe(propNavigate);
+    });
   });
 
   describe("useParams", () => {
