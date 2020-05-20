@@ -57,6 +57,22 @@ describe("createHistory", () => {
 
     expect(history.location.pathname).toEqual("/p%C3%A5ge");
   });
+
+  it("should have an unencoded hash", () => {
+    const mockSource = {
+      history: {},
+      location: {
+        pathname: "/page",
+        search: "",
+        hash: "%C3%A1ccentuated"
+      }
+    };
+
+    const history = createHistory(mockSource);
+    console.log(history.location);
+
+    expect(history.location.hash).toEqual("áccentuated");
+  });
 });
 
 describe("navigate", () => {
