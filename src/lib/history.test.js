@@ -57,6 +57,22 @@ describe("createHistory", () => {
 
     expect(history.location.pathname).toEqual("/p%C3%A5ge");
   });
+  
+  it("should not encode location pathname if it is already encoded", () => {
+    const mockSource = {
+      history: {},
+      location: {
+        pathname: "/%2F",
+        search: "",
+        hash: ""
+      }
+    };
+
+    const history = createHistory(mockSource);
+
+    expect(history.location.pathname).toEqual("/%2F");
+  });
+  
 });
 
 describe("navigate", () => {
