@@ -955,6 +955,43 @@ describe("hooks", () => {
     });
   });
 
+  it("useParams with embedded router", () => {
+    let contentProps;
+    let contentParams;
+    let contentRouterProps;
+    let contentRouterParams;
+
+    const ContentRouter = props => {
+      contentRouterProps = props;
+      contentRouterParams = useParams();
+      return (
+        <Router>
+          <Content path=":someOtherParam" />
+        </Router>
+      );
+    };
+
+    const Content = props => {
+      contentProps = props;
+      contentParams = useParams();
+      return JSON.stringify(contentParams);
+    };
+
+    runWithNavigation(
+      <Router>
+        <ContentRouter path=":someParam/*" />
+      </Router>,
+      "/foo/bar"
+    );
+
+    expect(contentRouterProps.someParam).toEqual("foo");
+    expect(contentProps.someParam).toEqual("foo");
+    expect(contentProps.someOtherParam).toEqual("bar");
+    // Failing check
+    expect(contentRouterParams).toEqual({ someParam: "foo" });
+    expect(contentParams).toEqual({ someParam: "foo", someOtherParam: "bar" });
+  });
+
   describe("useMatch", () => {
     it("matches on direct routes", async () => {
       let match;
