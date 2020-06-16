@@ -829,6 +829,24 @@ describe("ServerLocation", () => {
     expect(markup).toContain("location.pathname: [/print-location]");
     expect(markup).toContain("location.search: [?it=works]");
   });
+
+  test("location.href fails", () => {
+    let PrintHref = ({ location }) => (
+      <div>location.href: [{location.href}]</div>
+    );
+
+    const path = "/path";
+
+    expect(() =>
+      renderToStaticMarkup(
+        <ServerLocation url={path}>
+          <Router>
+            <PrintHref path={path} />
+          </Router>
+        </ServerLocation>
+      )
+    ).toThrow("location.href not available on the server.");
+  });
 });
 
 describe("trailing wildcard", () => {
