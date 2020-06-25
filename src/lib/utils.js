@@ -181,17 +181,22 @@ let resolve = (to, base) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // insertParams(path, params)
-let insertParams = (path, params) => {
-  let segments = segmentize(path);
-  return (
+
+const insertParams = (path, params) => {
+  let [pathBase, query = ""] = path.split("?");
+  let segments = segmentize(pathBase);
+  let constructedPath =
     "/" +
     segments
       .map(segment => {
         let match = paramRe.exec(segment);
         return match ? params[match[1]] : segment;
       })
-      .join("/")
-  );
+      .join("/");
+  const { location: { search = "" } = {} } = params;
+  const searchSplit = search.split("?")[1] || "";
+  constructedPath = addQuery(constructedPath, query, searchSplit);
+  return constructedPath;
 };
 
 let validateRedirect = (from, to) => {
@@ -248,7 +253,10 @@ let segmentize = uri =>
     .replace(/(^\/+|\/+$)/g, "")
     .split("/");
 
-let addQuery = (pathname, query) => pathname + (query ? `?${query}` : "");
+let addQuery = (pathname, ...query) => {
+  query = query.filter(q => q && q.length > 0);
+  return pathname + (query && query.length > 0 ? `?${query.join("&")}` : "");
+};
 
 let reservedNames = ["uri", "path"];
 

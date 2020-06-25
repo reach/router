@@ -95,6 +95,13 @@ describe("insertParams", () => {
         groupId: "4"
       })
     ).toEqual("/users/2/groups/4");
+    expect(
+      insertParams("/users/:userId/groups/:groupId", {
+        userId: "2",
+        groupId: "4",
+        location: { search: "?a=b&b=c" }
+      })
+    ).toEqual("/users/2/groups/4?a=b&b=c");
   });
 });
 
