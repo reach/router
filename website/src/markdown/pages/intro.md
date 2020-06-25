@@ -245,7 +245,7 @@ If you want to match the same path in two places in your app, just render two
 Routers. Again, a Router picks a single child to render based on the URL, and
 then ignores the rest.
 
-Just makes sure to mark the non-primary router(s) as `primary={false}` so that it doesn't manage the focus on those components.
+Just make sure to mark the non-primary router(s) as `primary={false}` so that it doesn't manage the focus on those components.
 
 ```jsx
 render(
@@ -275,7 +275,7 @@ render(
 
 ## Embedded Routers
 
-You can render a router anywhere you want in your app, even deep inside another Router, just makes sure to use a splat (`*`) on the parent component so nested paths match it.
+You can render a router anywhere you want in your app, even deep inside another Router, just make sure to use a splat (`*`) on the parent component so nested paths match it.
 
 ```jsx
 render(
