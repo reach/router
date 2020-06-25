@@ -1,3 +1,7 @@
+## v1.3.4
+
+- d7e4cfc Support forwarding url params with wildcard paths
+
 ## v1.3.3
 
 _1.3.2 was a failed publish_
