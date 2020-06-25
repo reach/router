@@ -161,7 +161,11 @@ let ServerLocation = ({ url, children }) => {
 };
 ////////////////////////////////////////////////////////////////////////////////
 // Sets baseuri and basepath for nested routers and links
-let BaseContext = createNamedContext("Base", { baseuri: "/", basepath: "/" });
+let BaseContext = createNamedContext("Base", {
+  baseuri: "/",
+  basepath: "/",
+  navigate: globalHistory.navigate
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 // The main event, welcome to the show everybody.
@@ -239,7 +243,9 @@ class RouterImpl extends React.PureComponent {
         : domProps;
 
       return (
-        <BaseContext.Provider value={{ baseuri: uri, basepath }}>
+        <BaseContext.Provider
+          value={{ baseuri: uri, basepath, navigate: props.navigate }}
+        >
           <FocusWrapper {...wrapperProps}>{clone}</FocusWrapper>
         </BaseContext.Provider>
       );
@@ -536,11 +542,11 @@ const useLocation = () => {
 };
 
 const useNavigate = () => {
-  const context = useContext(LocationContext);
+  const context = useContext(BaseContext);
 
   if (!context) {
     throw new Error(
-      "useNavigate hook was used but a LocationContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
+      "useNavigate hook was used but a BaseContext.Provider was not found in the parent tree. Make sure this is used in a component that is a child of Router"
     );
   }
 
