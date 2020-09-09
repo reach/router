@@ -15,11 +15,11 @@ let getLocation = source => {
     const url = new URL(href);
     pathname = url.pathname;
   }
-  
+
   const encodedPathname = pathname
-  .split("/")
-  .map(pathPart => encodeURIComponent(decodeURIComponent(pathPart)))
-  .join("/");
+    .split("/")
+    .map(pathPart => encodeURIComponent(decodeURIComponent(pathPart)))
+    .join("/");
 
   return {
     pathname: encodedPathname,
@@ -40,6 +40,7 @@ let createHistory = (source, options) => {
   let listeners = [];
   let location = getLocation(source);
   let transitioning = false;
+  let currentLocationKey = location.key;
   let resolveTransition = () => {};
 
   return {
@@ -61,7 +62,16 @@ let createHistory = (source, options) => {
 
       let popstateListener = () => {
         location = getLocation(source);
-        listener({ location, action: "POP" });
+        let action;
+        if (currentLocationKey === "initial") {
+          action = "PUSH";
+        } else if (location.key === "initial") {
+          action = "POP";
+        } else {
+          action = currentLocationKey > location.key ? "POP" : "PUSH";
+        }
+
+        listener({ location, action });
       };
 
       source.addEventListener("popstate", popstateListener);
@@ -90,9 +100,13 @@ let createHistory = (source, options) => {
       }
 
       location = getLocation(source);
+      currentLocationKey = location.key;
       transitioning = true;
       let transition = new Promise(res => (resolveTransition = res));
-      listeners.forEach(listener => listener({ location, action: "PUSH" }));
+
+      if (typeof to !== "number") {
+        listeners.forEach(listener => listener({ location, action: "PUSH" }));
+      }
       return transition;
     }
   };
