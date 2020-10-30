@@ -39,7 +39,7 @@
     "react-dom": "16.4",
     "react-media": "^1.8.0",
     "scroll-into-view-if-needed": "^2.2.7",
-    "serve": "^6.5.8",
+    "serve": "^10.1.2",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "unified": "^6.2.0",
     "unist-util-visit": "^1.3.1"
