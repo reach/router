@@ -158,7 +158,7 @@ let resolve = (to, base) => {
   }
 
   // profile, /users/789 => /users/789/profile
-  if (!startsWith(toSegments[0], ".")) {
+  if (!/\/?\./.test(toPathname)) {
     let pathname = baseSegments.concat(toSegments).join("/");
     return addQuery((basePathname === "/" ? "" : "/") + pathname, toQuery);
   }
@@ -168,7 +168,7 @@ let resolve = (to, base) => {
   // ../..      /users/123  =>  /
   // ../../one  /a/b/c/d    =>  /a/b/one
   // .././one   /a/b/c/d    =>  /a/b/c/one
-  let allSegments = baseSegments.concat(toSegments);
+  let allSegments = baseSegments.concat(toSegments).filter(Boolean);
   let segments = [];
   for (let i = 0, l = allSegments.length; i < l; i++) {
     let segment = allSegments[i];
