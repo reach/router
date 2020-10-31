@@ -142,14 +142,45 @@ let ServerLocation = ({ url, children }) => {
     pathname = url;
   }
 
+  const unsupportedLocationProps = [
+    "href",
+    "origin",
+    "host",
+    "hostname",
+    "port",
+    "protocol"
+  ];
+
+  const isProxySupported = () => typeof Proxy !== "undefined";
+
+  const wrapToFailOnUnsupportedAccess = location => {
+    if (isProxySupported()) {
+      const handler = {
+        get: (target, prop, receiver) => {
+          if (unsupportedLocationProps.indexOf(prop) >= 0) {
+            throw new Error(`location.${prop} not available on the server.`);
+          }
+
+          return Reflect.get(target, prop, receiver);
+        }
+      };
+
+      return new Proxy(location, handler);
+    } else {
+      return location;
+    }
+  };
+
+  const location = wrapToFailOnUnsupportedAccess({
+    pathname,
+    search,
+    hash
+  });
+
   return (
     <LocationContext.Provider
       value={{
-        location: {
-          pathname,
-          search,
-          hash
-        },
+        location,
         navigate: () => {
           throw new Error("You can't call navigate on the server.");
         }
