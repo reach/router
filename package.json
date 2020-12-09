@@ -28,7 +28,13 @@
   },
   "peerDependencies": {
     "react": "^15.0.0 || ^16.0.0 || ^17.0.0",
-    "react-dom": "^15.0.0 || ^16.0.0 || ^17.0.0"
+    "react-dom": "^15.0.0 || ^16.0.0 || ^17.0.0",
+    "create-react-context": "^0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "create-react-context": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -42,6 +48,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "create-react-context": "^0.3.0",
     "eslint": "^4.18.2",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.34.1",
@@ -80,7 +87,6 @@
     "printWidth": 80
   },
   "dependencies": {
-    "create-react-context": "0.3.0",
     "invariant": "^2.2.3",
     "prop-types": "^15.6.1",
     "react-lifecycles-compat": "^3.0.4"
