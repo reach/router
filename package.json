@@ -27,8 +27,8 @@
     "testURL": "http://localhost"
   },
   "peerDependencies": {
-    "react": "15.x || 16.x || 16.4.0-alpha.0911da3",
-    "react-dom": "15.x || 16.x || 16.4.0-alpha.0911da3"
+    "react": "15.x || 16.x || 16.4.0-alpha.0911da3 || ^17.0.0",
+    "react-dom": "15.x || 16.x || 16.4.0-alpha.0911da3 || ^17.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
