@@ -914,7 +914,7 @@ describe("hooks", () => {
   });
 
   describe("useNavigate", () => {
-    it("navigates relative", async () => {
+    it("navigates absolute", async () => {
       let navigate;
 
       const Foo = () => {
@@ -935,6 +935,29 @@ describe("hooks", () => {
       await navigate("/bar");
       snapshot();
     });
+
+    it("navigates relative", async () => {
+      let navigate;
+
+      const FooBar = () => {
+        navigate = useNavigate();
+        return `IF_THIS_IS_IN_SNAPSHOT_BAAAAADDDDDDDD`;
+      };
+
+      const Foo = () => `THIS_IS_WHAT_WE_WANT_TO_SEE_IN_SNAPSHOT`;
+
+      const { snapshot } = runWithNavigation(
+        <Router>
+          <FooBar path="/foo/bar" />
+          <Foo path="/foo" />
+        </Router>,
+        "/foo/bar"
+      );
+      snapshot();
+      await navigate("../");
+      snapshot();
+    });
+
     it("is equals to props.navigate for route components", async () => {
       let navigate;
       let propNavigate;
