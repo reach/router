@@ -37,6 +37,7 @@
     "prop-types": "15",
     "react": "16.4",
     "react-dom": "16.4",
+    "react-icons": "^4.1.0",
     "react-media": "^1.8.0",
     "scroll-into-view-if-needed": "^2.2.7",
     "serve": "^10.1.2",
