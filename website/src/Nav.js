@@ -10,6 +10,7 @@ import {
   SIDEBAR_SIZE,
   TOPBAR_SIZE
 } from "./theme";
+import { GiHamburgerMenu } from "react-icons/gi";
 import Component from "@reactions/component";
 import scrollIntoView from "scroll-into-view-if-needed";
 import Media from "react-media";
@@ -52,8 +53,15 @@ let Nav = () => (
                           sidebarOpen: !sidebarOpen
                         }))
                       }
+                      style={{
+                        backgroundColor: BLACK,
+                        color: "white",
+                        border: "none",
+                        textDecoration: "none",
+                        marginTop: "2px"
+                      }}
                     >
-                      toggle
+                      <GiHamburgerMenu size={25} />
                     </button>
                   </div>
                 )}
