@@ -129,6 +129,17 @@ describe("passed props", () => {
     });
   });
 
+  it("parses dynamic segments and passes to components, even if called 'key'", () => {
+    snapshot({
+      pathname: "foo/987/keychain/123",
+      element: (
+        <Router>
+          <PropsPrinter path="/foo/:bar/keychain/:key" />
+        </Router>
+      )
+    });
+  });
+
   it("passes the matched URI to the component", () => {
     snapshot({
       pathname: "/groups/123/users/456",

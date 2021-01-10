@@ -564,6 +564,32 @@ exports[`passed props parses dynamic segments and passes to components 1`] = `
 </div>
 `;
 
+exports[`passed props parses dynamic segments and passes to components, even if called 'key' 1`] = `
+<div
+  style={
+    Object {
+      "outline": "none",
+    }
+  }
+  tabIndex="-1"
+>
+  <pre>
+    {
+  "path": "/foo/:bar/keychain/:key",
+  "bar": "987",
+  "key": "123",
+  "uri": "/foo/987/keychain/123",
+  "location": {
+    "pathname": "foo/987/keychain/123",
+    "search": "",
+    "state": null,
+    "key": "initial"
+  }
+}
+  </pre>
+</div>
+`;
+
 exports[`passed props parses multiple params when nested 1`] = `
 <div
   style={
