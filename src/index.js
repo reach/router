@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import invariant from "invariant";
-import createContext from "create-react-context";
+import createContext from "@hypnosphi/create-react-context";
 import { polyfill } from "react-lifecycles-compat";
 import {
   startsWith,

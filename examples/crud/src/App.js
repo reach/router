@@ -11,7 +11,7 @@ import {
   updateContact,
   deleteContact
 } from "./utils";
-import createContext from "create-react-context";
+import createContext from "@hypnosphi/create-react-context";
 
 globalHistory.listen(({ location, action }) => {
   console.log({ location, action });
