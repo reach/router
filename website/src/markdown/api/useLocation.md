@@ -13,5 +13,5 @@ const useAnalytics = (props) => {
   useEffect(() => {
     ga.send(['pageview', location.pathname]);
   }, [])
-)
+}
 ```
