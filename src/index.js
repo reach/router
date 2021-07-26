@@ -93,6 +93,7 @@ class LocationProvider extends React.Component {
       state: { refs },
       props: { history }
     } = this;
+    this.unmounted = false;
     history._onTransitionComplete();
     refs.unlisten = history.listen(() => {
       Promise.resolve().then(() => {
