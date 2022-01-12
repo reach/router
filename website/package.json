@@ -30,7 +30,7 @@
     "@reactions/component": "^2.0.2",
     "glamor": "^2.20.40",
     "html-webpack-plugin": "^3.2.0",
-    "markdown-it": "^8.4.1",
+    "markdown-it": "^12.3.2",
     "object-assign": "^4.1.1",
     "prismjs": "^1.21.0",
     "promise": "^8.0.1",
