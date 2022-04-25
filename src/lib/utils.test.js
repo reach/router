@@ -84,6 +84,7 @@ describe("resolve", () => {
     expect(resolve("/groups?some=query", "/users?some=thing")).toEqual(
       "/groups?some=query"
     );
+    expect(resolve(-1)).toEqual(-1);
   });
 });
 
