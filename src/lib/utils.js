@@ -142,7 +142,7 @@ let match = (path, uri) => pick([{ path }], uri);
 // require less contextual information and (fingers crossed) be more intuitive.
 let resolve = (to, base) => {
   // /foo/bar, /baz/qux => /foo/bar
-  if (startsWith(to, "/")) {
+  if (typeof to === "number" || startsWith(to, "/")) {
     return to;
   }
 
