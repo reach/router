@@ -17,12 +17,12 @@ Please see [Route Components](RouteComponent) for the props Router passes and ho
   <App path="/">
     <Dashboard path="/" />
     <Event path="event/:eventId" />
-    <Calender path="calendar">
+    <Calendar path="calendar">
       <Redirect from="/" to="weekly" />
       <Monthly path="monthly" />
       <Weekly path="weekly" />
       <Daily path="daily" />
-    </Calender>
+    </Calendar>
   </App>
   <NotFound default />
 </Router>
